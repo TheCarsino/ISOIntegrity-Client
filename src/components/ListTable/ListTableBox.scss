@@ -1,0 +1,47 @@
+@import "../../styles.scss";
+
+.list-box {
+  width: 100%;
+  height: fit-content;
+  max-height: 88px;
+  position: relative;
+  overflow-y: hidden;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: start;
+  align-items: stretch;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  white-space: nowrap !important;
+}
+.list-box.overflow-x {
+  overflow-x: scroll;
+}
+
+.list-box .listitem-box {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.override-white {
+  background-color: $my-default-white !important;
+}
+.override-gray {
+  background-color: $my-gray-400 !important;
+}
+.override-success {
+  background-color: $my-status-success !important;
+}
+.override-danger {
+  background-color: $my-status-danger !important;
+}
+.override-warning {
+  background-color: $my-status-warning !important;
+}
+.override-info {
+  background-color: $my-status-info !important;
+}
+.override-disabled {
+  background-color: $my-gray-600 !important;
+}

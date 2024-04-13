@@ -1,0 +1,24 @@
+@import "../../styles.scss";
+
+.metric-box {
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+  padding: 1rem 1rem 1rem 1rem;
+  align-items: start;
+  height: fit-content;
+  border: 1px solid $my-gray-400;
+  box-shadow: $my-shadow-sm;
+}
+
+.top-text {
+  color: $my-blue-900;
+}
+
+.middle-text {
+  align-self: center;
+}
+
+.bottom-text {
+  color: $my-primary-light;
+}

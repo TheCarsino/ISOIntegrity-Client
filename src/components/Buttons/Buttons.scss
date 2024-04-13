@@ -1,0 +1,117 @@
+@mixin round ($width, $height){
+  width: $width !important;
+  height: $height !important;
+}
+
+@mixin square ($width, $height){
+  --bs-btn-border-radius: 10px !important;
+  width: $width !important;
+  height: $height !important;
+}
+
+.btn-rounded{
+  @include round(100%, 3rem);
+}
+
+.btn-rounded-selection{
+  @include round(100%, 3rem);
+  opacity: 80% !important;
+}
+
+.btn-rounded-primary{
+  @include round(100%, 3.5rem);
+  display:flex;
+  padding: 0.75rem !important;
+}
+
+.btn-link{
+  @include round(100%, 100%);
+  padding-top: 0px !important;
+  margin-top: -0.5rem !important;
+  --bs-btn-line-height: 1rem !important;
+}
+
+.btn-close{
+  @include round(100%, 100%);
+  position: relative !important;
+  padding-top: 0px !important;
+  padding: 0px !important;
+  margin-top: -0.25rem ;
+}
+
+/*        OVERRIDES           */
+
+.override-btn-outline-primary {
+  @include round(100%, 100%);
+  padding-top: 0rem !important;
+  padding-bottom: 0rem !important;
+  --bs-btn-line-height: 1rem !important;
+}
+
+.override-btn-outline-icon{
+  @include round(100%, 100%);
+  --bs-btn-hover-border-color: var(--bs-secondary) !important;
+  .btn:hover {
+      border-color: var(--bs-secondary) !important;
+  }
+  padding: 0rem !important;
+  --bs-btn-line-height: 1rem !important;
+}
+.override-btn-outline-icon-dark{
+  @include round(100%, 100%);
+  --bs-btn-hover-border-color: var(--bs-dark) !important;
+  .btn:hover {
+      border-color: var(--bs-dark) !important;
+  }
+  padding: 0rem !important;
+  --bs-btn-line-height: 1rem !important;
+}
+
+.override-btn-link-modify {
+  margin-top: -0.25rem !important;
+  padding-right: 0rem !important;
+  text-align: right !important;
+}
+
+.override-btn-group{
+  @include round(100%, 100%);
+  --bs-btn-line-height: 1.25rem !important;
+  --bs-btn-border-radius: 0.625rem !important;
+}
+
+.override-btn-primary-outline-icon{
+  @include round(100%, 100%);
+  --bs-btn-line-height: 1rem !important;
+  --bs-btn-border-radius: 0.625rem !important;
+}
+
+.override-btn-primary-icon{
+  @include square(100%, 100%);
+  --bs-btn-line-height: 1rem !important;
+  --bs-btn-border-radius: 0.625rem !important;
+  --bs-btn-padding-x: 0rem !important;
+}
+
+//For a disable component -> button
+.btn-disabled{
+  background-color: #667892 !important;
+  border-color: #667892 !important;
+}
+
+//Override for the Pagination
+.pagination{
+  --bs-pagination-border-color: var(--bs-primary) !important;
+  --bs-pagination-hover-border-color: var(--bs-primary) !important;
+  --bs-pagination-hover-bg: var(--bs-dark) !important;
+  --bs-pagination-focus-box-shadow: 0 0 0 3px rgba(4, 35, 82, 0.25) !important;
+  --bs-pagination-focus-bg: var(--bs-dark) !important;
+}
+
+.page-link:hover{
+  color: var(--bs-white) !important;
+}
+
+.disabled{
+  background-color: var(--bs-white) !important;
+  border-color: var(--bs-white) !important;
+}

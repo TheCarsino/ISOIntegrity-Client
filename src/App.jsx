@@ -1,35 +1,83 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import NavBar from "./components/NavBar/NavBar";
+import { Routes, Route } from "react-router-dom";
+import TestComponents from "./pages/TestComponents/TestComponents";
+
+import {
+  URL_TEST,
+  URL_DOCUMENTACION_ESTANDARES,
+  URL_DOCUMENTACION_REPORTES,
+  URL_ORGANIZACION_ESTRUCTURA,
+  URL_ORGANIZACION_RIESGOS,
+  URL_RIESGOS_ALERTAS,
+  URL_RIESGOS_ANALISIS,
+  URL_RIESGOS_CUESTIONARIOS,
+  URL_RIESGOS_LISTA,
+} from "./config";
+
+import Org_Estructura from "./pages/Organizacion/Estructura/Org_Estructura";
+import Org_Riesgos from "./pages/Organizacion/Riesgos/Org_Riesgos";
+import Risk_Alertas from "./pages/Riesgos/Alertas/Risk_Alertas";
+import Risk_Analisis from "./pages/Riesgos/Analisis/Risk_Analisis";
+import Risk_Cuestionario from "./pages/Riesgos/Cuestionario/Risk_Cuestionario";
+import Risk_Lista from "./pages/Riesgos/Lista/Risk_Lista";
+import Doc_Estandares from "./pages/Documentacion/Estándares/Doc_Estandares";
+import Doc_Reportes from "./pages/Documentacion/Reportes/Doc_Reportes";
+
+import "./App.scss";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="wrapper" id="main">
+      {/*Main components on each page*/}
+      <div className="app-navbar">
+        <NavBar />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+      <div className="app-component bg-white">
+        <Routes>
+          <Route
+            path={`${URL_ORGANIZACION_ESTRUCTURA}`}
+            exact
+            element={<Org_Estructura />}
+          />
+          <Route
+            path={`${URL_ORGANIZACION_RIESGOS}`}
+            exact
+            element={<Org_Riesgos />}
+          />
+
+          <Route path={`${URL_RIESGOS_LISTA}`} exact element={<Risk_Lista />} />
+          <Route
+            path={`${URL_RIESGOS_ANALISIS}`}
+            exact
+            element={<Risk_Analisis />}
+          />
+          <Route
+            path={`${URL_RIESGOS_ALERTAS}`}
+            exact
+            element={<Risk_Alertas />}
+          />
+          <Route
+            path={`${URL_RIESGOS_CUESTIONARIOS}`}
+            exact
+            element={<Risk_Cuestionario />}
+          />
+
+          <Route
+            path={`${URL_DOCUMENTACION_ESTANDARES}`}
+            exact
+            element={<Doc_Estandares />}
+          />
+          <Route
+            path={`${URL_DOCUMENTACION_REPORTES}`}
+            exact
+            element={<Doc_Reportes />}
+          />
+
+          <Route path={`${URL_TEST}`} exact element={<TestComponents />} />
+        </Routes>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
