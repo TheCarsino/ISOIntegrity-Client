@@ -19,7 +19,7 @@ import "./NavBar.scss";
 
 //Barra de navegación que estará presente en todas las pantallas
 //position-absolute top-0 start-50 translate-middle
-function NavBar({ title }) {
+function NavBar() {
   const [activeNavs, setActiveNavs] = useState({
     main: "",
     sub: "",

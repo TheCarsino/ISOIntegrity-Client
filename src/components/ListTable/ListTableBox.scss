@@ -2,24 +2,23 @@
 
 .list-box {
   width: 100%;
-  height: fit-content;
-  max-height: 88px;
   position: relative;
   overflow-y: hidden;
   display: flex !important;
-  flex-direction: row !important;
+  flex-direction: column !important;
   justify-content: start;
   align-items: stretch;
-  white-space: nowrap;
   text-overflow: ellipsis;
-  white-space: nowrap !important;
+  border-top: 1px solid $my-gray-400;
+  border-bottom: 1px solid $my-gray-400;
 }
 .list-box.overflow-x {
   overflow-x: scroll;
 }
 
 .list-box .listitem-box {
-  width: 100%;
+  width: fit-content;
+  height: 100%;
   display: flex;
   align-items: center;
 }
@@ -28,7 +27,7 @@
   background-color: $my-default-white !important;
 }
 .override-gray {
-  background-color: $my-gray-400 !important;
+  background-color: $my-gray-100 !important;
 }
 .override-success {
   background-color: $my-status-success !important;
@@ -44,4 +43,7 @@
 }
 .override-disabled {
   background-color: $my-gray-600 !important;
+}
+.override-noPadding {
+  padding: 0 !important;
 }

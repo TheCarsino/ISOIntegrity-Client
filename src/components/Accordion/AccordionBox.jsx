@@ -54,6 +54,7 @@ function AccordionBox({
   overrideColor = "",
   overrideColorBody = "",
   width = "100%",
+  noPadding = false,
 }) {
   let index = 0;
 
@@ -65,9 +66,11 @@ function AccordionBox({
       {accordionItems.map((card) => (
         <Card
           key={card.id || Math.random().toString()}
-          className={`${style} ${overrideColor}`}
+          className={`${style}  ${overrideColor}`}
         >
-          <Card.Header className={overrideColor}>
+          <Card.Header
+            className={`${noPadding != false && "no-padding"} ${overrideColor}`}
+          >
             <ContextAwareToggle
               eventKey={index++}
               toggleArrow={card.hasBody}
@@ -100,6 +103,7 @@ function AccordionBox({
   style: Background color of the accordion
   overrideColor and Body: colors that overrides the current background color
   width: width that occupies the accordion
+  noPadding: If it's neccesary to eliminate padding
 */
 
 AccordionBox.propTypes = {
@@ -115,6 +119,7 @@ AccordionBox.propTypes = {
   overrideColor: PropTypes.string,
   overrideColorBody: PropTypes.string,
   width: PropTypes.string,
+  noPadding: PropTypes.bool,
 };
 
 export default AccordionBox;

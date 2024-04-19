@@ -2,6 +2,9 @@
 
 .header-box {
   height: 100%;
+  max-height: 96px;
+  overflow: hidden;
+  text-overflow: ellipsis;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -29,5 +32,8 @@
   background-color: $my-default-white !important;
 }
 .override-gray {
-  background-color: $my-gray-400 !important;
+  background-color: $my-gray-100 !important;
+}
+.no-padding {
+  padding: 0rem 1rem 0rem 0rem !important;
 }

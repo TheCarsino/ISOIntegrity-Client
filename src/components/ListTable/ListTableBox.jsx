@@ -3,7 +3,13 @@ import { useEffect, useRef, useState } from "react";
 import ListGroup from "react-bootstrap/ListGroup";
 import "./ListTableBox.scss";
 
-function ListTableBox({ listItems, style, overrideColor = "override-white" }) {
+function ListTableBox({
+  header,
+  listItems,
+  style,
+  overrideColor = "override-white",
+  noPadding = false,
+}) {
   const listBoxRef = useRef(null); // Ref to the list-box element
   const [contentExceedsWidth, setContentExceedsWidth] = useState(false);
 
@@ -29,13 +35,14 @@ function ListTableBox({ listItems, style, overrideColor = "override-white" }) {
         contentExceedsWidth ? "overflow-x" : ""
       }`}
     >
+      {header}
       {listItems.map((item) => (
         <ListGroup.Item
           key={item.key}
           as="li"
           className={`listitem-box ${
-            item.cellColor != null ? item.cellColor : "override-white"
-          }`}
+            item.cellColor != null && item.cellColor
+          } ${noPadding != false && "override-noPadding"}`}
           ref={listBoxRef}
         >
           {item.content}
@@ -47,6 +54,7 @@ function ListTableBox({ listItems, style, overrideColor = "override-white" }) {
 
 /*
   LIST TABLE VALUES ARE THE FOLLOWING
+  header: Of the current listtable to define columns
   accordionItems: Array of objects that defines the header, and body of each accordion item.
     {
       key: String defined to identify the id of the list item
@@ -56,9 +64,11 @@ function ListTableBox({ listItems, style, overrideColor = "override-white" }) {
   color: Background color of the accordion
   overrideColor: colors that overrides the current background color
   width: width that occupies the accordion
+  noPadding: if we want the listitem-box to have no padding
 */
 
 ListTableBox.propTypes = {
+  header: PropTypes.node,
   listItems: PropTypes.arrayOf(
     PropTypes.shape({
       key: PropTypes.string.isRequired,
@@ -68,6 +78,7 @@ ListTableBox.propTypes = {
   ).isRequired,
   style: PropTypes.string,
   overrideColor: PropTypes.string,
+  noPadding: PropTypes.bool,
 };
 
 export default ListTableBox;

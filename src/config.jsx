@@ -1,4 +1,4 @@
-export const API_URL = "https://mesapartescarcpucp.com/sigea-mp-rest";
+export const API_URL = "http://localhost:3000";
 export const URL_TEST = "/test";
 export const URL_ORGANIZACION_ESTRUCTURA = "/organizacion/estructura";
 export const URL_ORGANIZACION_RIESGOS = "/organizacion/riesgos";

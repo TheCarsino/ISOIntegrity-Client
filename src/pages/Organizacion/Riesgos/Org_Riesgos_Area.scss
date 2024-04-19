@@ -1,0 +1,217 @@
+@import "../../../styles.scss";
+@import "../../../styles.scss";
+
+.unidad-desc {
+  width: 100%;
+  height: 262px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem 0.5rem 1rem 0.5rem;
+}
+
+.unidad-desc .header-display {
+  height: fit-content;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.unidad-desc .descripcion-medicion {
+  height: 144px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  gap: 1rem;
+  align-items: start;
+}
+
+.accordion-procesos {
+  display: flex;
+  flex-direction: column;
+}
+.accordion-procesos .unidad-procesos-header {
+  width: 100%;
+  height: 32px;
+  margin-bottom: 1rem;
+}
+.accordion-procesos {
+  width: 100%;
+  padding-left: 1rem;
+}
+.accordion-procesos .accordion-procesos-header {
+  width: 100%;
+  height: 49px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  border-top: 1px solid $my-gray-400;
+  border-bottom: 1px solid $my-gray-400;
+}
+.accordion-procesos .lista-procesos {
+  width: 100%;
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+  justify-content: start;
+}
+.accordion-procesos .lista-procesos .lista-procesos-item1 {
+  width: 42px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.accordion-procesos .lista-procesos .lista-procesos-item2 {
+  width: 136px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.accordion-procesos .lista-procesos .lista-procesos-item3 {
+  width: 709px;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.accordion-procesos .lista-procesos .lista-procesos-item4 {
+  width: 225px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.accordion-procesos .lista-procesos .lista-procesos-item5 {
+  width: 122px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.accordion-lista-body {
+  width: 100%;
+  height: fit-content;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  text-overflow: ellipsis;
+  padding-top: 1rem;
+  padding-left: 1rem;
+  background-color: $my-gray-200;
+}
+.accordion-lista-body .procesos-riesgos-header {
+  width: 100%;
+  height: 32px;
+  margin-bottom: 1rem;
+}
+.accordion-lista-body .accordion-riesgos-header {
+  width: fit-content;
+  height: 49px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  border-top: 1px solid $my-gray-400;
+  background-color: $my-gray-200;
+  border-bottom: 1px solid $my-gray-400;
+}
+
+.accordion-lista-body .lista-riesgos {
+  width: fit-content;
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+  justify-content: start;
+}
+.accordion-lista-body .lista-riesgos .lista-riesgos-item1 {
+  width: 42px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.accordion-lista-body .lista-riesgos .lista-riesgos-item2 {
+  width: 136px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.accordion-lista-body .lista-riesgos .lista-riesgos-item3 {
+  width: 709px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.accordion-lista-body .lista-riesgos .lista-riesgos-item4 {
+  width: 232px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.accordion-lista-body .lista-riesgos .lista-riesgos-item5 {
+  width: 232px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.accordion-lista-body .lista-riesgos .lista-riesgos-item6 {
+  width: 232px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.accordion-lista-body .lista-riesgos .lista-riesgos-item7 {
+  width: 122px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.header-text {
+  padding: 0.75rem;
+}
+
+.modal-newgrouped-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.modal-newgrouped-body .risk-metrics {
+  height: 122px;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+  text-align: center;
+}
+.modal-newgrouped-body .risk-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modal-newgrouped-body .container-form-controls {
+  width: 100%;
+  padding: 1rem 0 1rem 0;
+  border-top: 1px solid $my-gray-400;
+  border-bottom: 1px solid $my-gray-400;
+}

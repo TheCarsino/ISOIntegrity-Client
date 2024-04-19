@@ -104,8 +104,19 @@ function TestComponents() {
                           {
                             key: "1",
                             content: (
-                              <div style={{ width: "500px" }}>
-                                <div className="fw-bold">Subheading</div>
+                              <div style={{ display: "flex" }}>
+                                <div style={{ width: "500px" }}>
+                                  <div className="fw-bold">Subheading</div>
+                                </div>
+                                <div style={{ width: "500px" }}>
+                                  <div className="fw-bold">Subheading</div>
+                                </div>
+                                <div style={{ width: "500px" }}>
+                                  <div className="fw-bold">Subheading</div>
+                                </div>
+                                <div style={{ width: "500px" }}>
+                                  <div className="fw-bold">Subheading</div>
+                                </div>
                               </div>
                             ),
                           },

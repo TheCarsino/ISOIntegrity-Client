@@ -16,6 +16,7 @@ import {
 
 import Org_Estructura from "./pages/Organizacion/Estructura/Org_Estructura";
 import Org_Riesgos from "./pages/Organizacion/Riesgos/Org_Riesgos";
+import Org_Riesgos_Area from "./pages/Organizacion/Riesgos/Org_Riesgos_Area";
 import Risk_Alertas from "./pages/Riesgos/Alertas/Risk_Alertas";
 import Risk_Analisis from "./pages/Riesgos/Analisis/Risk_Analisis";
 import Risk_Cuestionario from "./pages/Riesgos/Cuestionario/Risk_Cuestionario";
@@ -43,6 +44,11 @@ function App() {
             path={`${URL_ORGANIZACION_RIESGOS}`}
             exact
             element={<Org_Riesgos />}
+          />
+          <Route
+            path={`${URL_ORGANIZACION_RIESGOS}/detalle`}
+            exact
+            element={<Org_Riesgos_Area />}
           />
 
           <Route path={`${URL_RIESGOS_LISTA}`} exact element={<Risk_Lista />} />

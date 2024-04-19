@@ -36,8 +36,15 @@ body {
 @import "../node_modules/bootstrap/scss/_variables";
 
 p {
+  width: 100%;
   margin-bottom: 0rem !important;
 }
 h1 {
+  margin-bottom: 0rem !important;
+}
+h5 {
+  margin-bottom: 0rem !important;
+}
+h6 {
   margin-bottom: 0rem !important;
 }

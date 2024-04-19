@@ -82,6 +82,7 @@ function Modals(props) {
                   <div className="cancel-button">
                     {footer.length === 2 && (
                       <Button
+                        style={{ minWidth: "150px" }}
                         variant="outline-primary"
                         onClick={
                           handleCancel
@@ -96,7 +97,8 @@ function Modals(props) {
                   <div className="accept-button">
                     {footer.length >= 1 && (
                       <Button
-                        variant="secondary"
+                        style={{ minWidth: "150px" }}
+                        variant="primary"
                         onClick={
                           handleConfirm
                             ? handleConfirm
