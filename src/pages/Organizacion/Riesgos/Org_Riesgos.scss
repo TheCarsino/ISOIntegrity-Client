@@ -46,7 +46,7 @@
   align-items: center;
   flex-direction: row;
   height: 52px;
-  background-color: $my-gray-200;
+  background-color: $my-gray-100;
   border: 1px solid $my-gray-400;
 }
 
@@ -111,17 +111,17 @@
   overflow: hidden;
 }
 
-.accordion-lista-body {
+.accordion-lista-unidades {
   width: 100%;
 }
-.accordion-lista-body .lista-unidades {
+.accordion-lista-unidades .lista-unidades {
   width: 100%;
   display: flex;
   align-items: stretch;
   flex-direction: row;
   justify-content: start;
 }
-.accordion-lista-body .lista-unidades .lista-unidades-item1 {
+.accordion-lista-unidades .lista-unidades .lista-unidades-item1 {
   width: 42px;
   display: flex;
   flex-direction: column;
@@ -129,7 +129,7 @@
   text-overflow: ellipsis;
   overflow: hidden;
 }
-.accordion-lista-body .lista-unidades .lista-unidades-item2 {
+.accordion-lista-unidades .lista-unidades .lista-unidades-item2 {
   width: 136px;
   display: flex;
   flex-direction: column;
@@ -137,7 +137,7 @@
   text-overflow: ellipsis;
   overflow: hidden;
 }
-.accordion-lista-body .lista-unidades .lista-unidades-item3 {
+.accordion-lista-unidades .lista-unidades .lista-unidades-item3 {
   width: 574px;
   display: flex;
   flex-direction: column;
@@ -145,7 +145,7 @@
   text-overflow: ellipsis;
   overflow: hidden;
 }
-.accordion-lista-body .lista-unidades .lista-unidades-item4 {
+.accordion-lista-unidades .lista-unidades .lista-unidades-item4 {
   width: 225px;
   height: fit-content;
   display: flex;
@@ -153,7 +153,7 @@
   text-overflow: ellipsis;
   overflow: hidden;
 }
-.accordion-lista-body .lista-unidades .lista-unidades-item5 {
+.accordion-lista-unidades .lista-unidades .lista-unidades-item5 {
   width: 122px;
   display: flex;
   flex-direction: column;

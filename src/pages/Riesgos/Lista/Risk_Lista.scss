@@ -1,1 +1,132 @@
 @import "../../../styles.scss";
+
+.header-risk {
+  width: 100%;
+  height: 38px;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.button-group {
+  flex-grow: 1;
+  width: 456px;
+  align-items: center;
+  display: flex;
+  column-gap: 0.5rem;
+  justify-content: end;
+}
+
+.lista-body-riesgos {
+  width: 100%;
+  height: fit-content;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  text-overflow: ellipsis;
+  padding-top: 1rem;
+  padding-left: 1rem;
+}
+.lista-body-riesgos .procesos-riesgos-header {
+  width: 100%;
+  height: 32px;
+  margin-bottom: 1rem;
+}
+.lista-body-riesgos .accordion-riesgos-header {
+  width: fit-content;
+  height: 49px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  border-top: 1px solid $my-gray-400;
+  border-bottom: 1px solid $my-gray-400;
+}
+
+.lista-body-riesgos .lista-riesgos {
+  width: fit-content;
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+  justify-content: start;
+}
+.lista-body-riesgos .lista-riesgos .lista-riesgos-item1 {
+  width: 42px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.lista-body-riesgos .lista-riesgos .lista-riesgos-item2 {
+  width: 136px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.lista-body-riesgos .lista-riesgos .lista-riesgos-item3 {
+  width: 709px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.lista-body-riesgos .lista-riesgos .lista-riesgos-item4 {
+  width: 232px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.lista-body-riesgos .lista-riesgos .lista-riesgos-item5 {
+  width: 232px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.lista-body-riesgos .lista-riesgos .lista-riesgos-item6 {
+  width: 232px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.lista-body-riesgos .lista-riesgos .lista-riesgos-item7 {
+  width: 122px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.modal-detailrisk-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.modal-detailrisk-body .risk-metrics {
+  height: 122px;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+  text-align: center;
+}
+.modal-detailrisk-body .risk-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modal-detailrisk-body .container-form-controls {
+  width: 100%;
+  padding: 1rem 0 1rem 0;
+  border-top: 1px solid $my-gray-400;
+  border-bottom: 1px solid $my-gray-400;
+}

@@ -16,10 +16,12 @@ import {
   URL_RIESGOS_LISTA,
 } from "../../config";
 import "./NavBar.scss";
+import Button from "react-bootstrap/esm/Button";
+import { useAuth } from "../../hooks/AuthProvider";
 
-//Barra de navegación que estará presente en todas las pantallas
-//position-absolute top-0 start-50 translate-middle
 function NavBar() {
+  const { userData, logout } = useAuth();
+
   const [activeNavs, setActiveNavs] = useState({
     main: "",
     sub: "",
@@ -43,6 +45,10 @@ function NavBar() {
     }
   }, []);
 
+  const handleCloseSesion = () => {
+    logout();
+  };
+
   return (
     <div className="iso-main-navbar">
       <div className="div-main-nav">
@@ -56,18 +62,20 @@ function NavBar() {
               />
             </Navbar.Brand>
             <Nav className="me-auto my-2 my-lg-0 nav-sublinks">
-              <Nav.Link
-                className={`${
-                  activeNavs != null
-                    ? activeNavs.main === "org"
-                      ? "nav-sub-links-active"
+              {userData != null && userData.Role.nombre !== "Colaborador" && (
+                <Nav.Link
+                  className={`${
+                    activeNavs != null
+                      ? activeNavs.main === "org"
+                        ? "nav-sub-links-active"
+                        : "nav-sublinks-link"
                       : "nav-sublinks-link"
-                    : "nav-sublinks-link"
-                }`}
-                onClick={() => setActiveNavs({ main: "org", sub: "" })}
-              >
-                <p className="text-white">Organización</p>
-              </Nav.Link>
+                  }`}
+                  onClick={() => setActiveNavs({ main: "org", sub: "" })}
+                >
+                  <p className="text-white">Organización</p>
+                </Nav.Link>
+              )}
               <Nav.Link
                 className={`${
                   activeNavs != null
@@ -80,18 +88,20 @@ function NavBar() {
               >
                 <p className="text-white">Riesgos</p>
               </Nav.Link>
-              <Nav.Link
-                className={`${
-                  activeNavs != null
-                    ? activeNavs.main === "doc"
-                      ? "nav-sub-links-active"
+              {(userData != null && userData.Role.nombre) !== "Colaborador" && (
+                <Nav.Link
+                  className={`${
+                    activeNavs != null
+                      ? activeNavs.main === "doc"
+                        ? "nav-sub-links-active"
+                        : "nav-sublinks-link"
                       : "nav-sublinks-link"
-                    : "nav-sublinks-link"
-                }`}
-                onClick={() => setActiveNavs({ main: "doc", sub: "" })}
-              >
-                <p className="text-white">Documentación</p>
-              </Nav.Link>
+                  }`}
+                  onClick={() => setActiveNavs({ main: "doc", sub: "" })}
+                >
+                  <p className="text-white">Documentación</p>
+                </Nav.Link>
+              )}
             </Nav>
             <Navbar.Collapse className="justify-content-end nav-user">
               <NavDropdown
@@ -111,6 +121,13 @@ function NavBar() {
                   <h5>Nombre del Usuario</h5>
                   <h6 className="text-secondary">Rol de Usuario</h6>
                   <h6 className="text-light">Correo del usuario</h6>
+                  <Button
+                    size="sm"
+                    style={{ marginTop: "0.75rem" }}
+                    onClick={() => handleCloseSesion()}
+                  >
+                    Cerrar Sesión
+                  </Button>
                 </div>
               </NavDropdown>
             </Navbar.Collapse>
@@ -155,28 +172,38 @@ function NavBar() {
               <Container fluid>
                 <div style={{ width: "76px" }}></div>
                 <Nav className="me-auto my-2 my-lg-0 nav-sublinks">
-                  <Nav.Link
-                    href={URL_RIESGOS_ANALISIS}
-                    className={` ${
-                      activeNavs.sub === "anal"
-                        ? "nav-sub-links-underlined"
-                        : "nav-sublinks-link"
-                    }`}
-                    onClick={() => setActiveNavs({ main: "risk", sub: "anal" })}
-                  >
-                    <p className="text-white">Análisis</p>
-                  </Nav.Link>
-                  <Nav.Link
-                    href={URL_RIESGOS_LISTA}
-                    className={` ${
-                      activeNavs.sub === "risk"
-                        ? "nav-sub-links-underlined"
-                        : "nav-sublinks-link"
-                    }`}
-                    onClick={() => setActiveNavs({ main: "risk", sub: "risk" })}
-                  >
-                    <p className="text-white">Riesgos</p>
-                  </Nav.Link>
+                  {(userData != null && userData.Role.nombre) !==
+                    "Colaborador" && (
+                    <Nav.Link
+                      href={URL_RIESGOS_ANALISIS}
+                      className={` ${
+                        activeNavs.sub === "anal"
+                          ? "nav-sub-links-underlined"
+                          : "nav-sublinks-link"
+                      }`}
+                      onClick={() =>
+                        setActiveNavs({ main: "risk", sub: "anal" })
+                      }
+                    >
+                      <p className="text-white">Análisis</p>
+                    </Nav.Link>
+                  )}
+                  {(userData != null && userData.Role.nombre) !==
+                    "Colaborador" && (
+                    <Nav.Link
+                      href={URL_RIESGOS_LISTA}
+                      className={` ${
+                        activeNavs.sub === "risk"
+                          ? "nav-sub-links-underlined"
+                          : "nav-sublinks-link"
+                      }`}
+                      onClick={() =>
+                        setActiveNavs({ main: "risk", sub: "risk" })
+                      }
+                    >
+                      <p className="text-white">Riesgos</p>
+                    </Nav.Link>
+                  )}
                   <Nav.Link
                     href={URL_RIESGOS_ALERTAS}
                     className={` ${
@@ -190,17 +217,22 @@ function NavBar() {
                   >
                     <p className="text-white">Alertas</p>
                   </Nav.Link>
-                  <Nav.Link
-                    href={URL_RIESGOS_CUESTIONARIOS}
-                    className={` ${
-                      activeNavs.sub === "surv"
-                        ? "nav-sub-links-underlined"
-                        : "nav-sublinks-link"
-                    }`}
-                    onClick={() => setActiveNavs({ main: "risk", sub: "surv" })}
-                  >
-                    <p className="text-white">Cuestionarios</p>
-                  </Nav.Link>
+                  {(userData != null && userData.Role.nombre) !==
+                    "Colaborador" && (
+                    <Nav.Link
+                      href={URL_RIESGOS_CUESTIONARIOS}
+                      className={` ${
+                        activeNavs.sub === "surv"
+                          ? "nav-sub-links-underlined"
+                          : "nav-sublinks-link"
+                      }`}
+                      onClick={() =>
+                        setActiveNavs({ main: "risk", sub: "surv" })
+                      }
+                    >
+                      <p className="text-white">Cuestionarios</p>
+                    </Nav.Link>
+                  )}
                 </Nav>
               </Container>
             </Navbar>

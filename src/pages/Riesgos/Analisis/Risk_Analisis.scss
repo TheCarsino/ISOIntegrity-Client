@@ -1,1 +1,272 @@
 @import "../../../styles.scss";
+
+.analisis-header {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem 0.5rem 1rem 0.5rem;
+  border: 1px solid $my-gray-400;
+}
+
+.analisis-header .header-display {
+  height: 36px;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.analisis-header .analisis-content {
+  width: 100%;
+  height: 304px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  gap: 1rem;
+  align-items: start;
+}
+.analisis-header .analisis-content .analisis-dashboard {
+  width: 705px;
+}
+.analisis-header .analisis-content .analisis-medicion {
+  height: 304px;
+  width: 560px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: start;
+}
+
+.lista-body-indicadores {
+  width: 100%;
+  height: fit-content;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  text-overflow: ellipsis;
+  padding-top: 1rem;
+  padding-left: 1rem;
+}
+.lista-body-indicadores .procesos-indicadores-header {
+  width: 100%;
+  height: 32px;
+  margin-bottom: 1rem;
+}
+.lista-body-indicadores .accordion-indicadores-header {
+  width: fit-content;
+  height: 49px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  border-top: 1px solid $my-gray-400;
+  border-bottom: 1px solid $my-gray-400;
+}
+
+.lista-body-indicadores .lista-indicadores {
+  width: fit-content;
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+  justify-content: start;
+}
+.lista-body-indicadores .lista-indicadores .lista-indicadores-item1 {
+  width: 42px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.lista-body-indicadores .lista-indicadores .lista-indicadores-item2 {
+  width: 136px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.lista-body-indicadores .lista-indicadores .lista-indicadores-item3 {
+  width: 709px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.lista-body-indicadores .lista-indicadores .lista-indicadores-item4 {
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.lista-body-indicadores .lista-indicadores .lista-indicadores-item5 {
+  width: 212px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.lista-body-indicadores .lista-indicadores .lista-indicadores-item6 {
+  width: 252px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.lista-body-indicadores .lista-indicadores .lista-indicadores-item7 {
+  width: 122px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.modal-detailind-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.modal-detailind-body .ind-metrics {
+  height: 122px;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+  text-align: center;
+}
+.modal-detailind-body .ind-metrics .sub-detail {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+  text-align: center;
+}
+.modal-detailind-body .ind-details {
+  display: flex;
+  width: 1080px;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modal-detailind-body .ind-details .lista-requisitos {
+  width: 100%;
+  min-height: 122px;
+  display: flex;
+  flex-direction: column;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid $my-gray-400;
+  border-radius: 0.375rem;
+}
+.modal-detailind-body .ind-details .lista-subrequisitos {
+  width: 100%;
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+  padding-left: 2.25rem;
+}
+
+.modal-detailind-body .container-form-controls {
+  width: 100%;
+  padding: 1rem 0 1rem 0;
+  border-top: 1px solid $my-gray-400;
+  border-bottom: 1px solid $my-gray-400;
+}
+
+.lista-body-riesgos-ind {
+  width: 100%;
+  height: fit-content;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  text-overflow: ellipsis;
+  padding-top: 1rem;
+  padding-left: 1rem;
+}
+.lista-body-riesgos-ind .procesos-riesgos-header {
+  width: 100%;
+  height: 32px;
+  margin-bottom: 1rem;
+}
+.lista-body-riesgos-ind .accordion-riesgos-header {
+  width: fit-content;
+  height: 49px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  border-top: 1px solid $my-gray-400;
+  border-bottom: 1px solid $my-gray-400;
+}
+
+.lista-body-riesgos-ind .lista-riesgos {
+  width: fit-content;
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+  justify-content: start;
+}
+.lista-body-riesgos-ind .lista-riesgos .lista-riesgos-item1 {
+  width: 42px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.lista-body-riesgos-ind .lista-riesgos .lista-riesgos-item2 {
+  width: 136px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.lista-body-riesgos-ind .lista-riesgos .lista-riesgos-item3 {
+  width: 709px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.lista-body-riesgos-ind .lista-riesgos .lista-riesgos-item4 {
+  width: 232px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.lista-body-riesgos-ind .lista-riesgos .lista-riesgos-item5 {
+  width: 232px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.lista-body-riesgos-ind .lista-riesgos .lista-riesgos-item6 {
+  width: 232px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.lista-body-riesgos-ind .lista-riesgos .lista-riesgos-item7 {
+  width: 122px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

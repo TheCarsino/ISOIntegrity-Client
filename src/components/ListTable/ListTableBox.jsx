@@ -40,7 +40,7 @@ function ListTableBox({
         <ListGroup.Item
           key={item.key}
           as="li"
-          className={`listitem-box ${
+          className={`listitem-box ${overrideColor} ${
             item.cellColor != null && item.cellColor
           } ${noPadding != false && "override-noPadding"}`}
           ref={listBoxRef}
