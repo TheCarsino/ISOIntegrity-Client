@@ -1,7 +1,7 @@
 // DEV
 //export const API_URL = "http://localhost:3000";
 //  TEST
-export const API_URL = "http://107.22.119.201";
+export const API_URL = "http://107.22.119.201:8080";
 export const URL_TEST = "/test";
 export const URL_ORGANIZACION_ESTRUCTURA = "/organizacion/estructura";
 export const URL_ORGANIZACION_RIESGOS = "/organizacion/riesgos";
