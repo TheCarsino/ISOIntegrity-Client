@@ -277,17 +277,15 @@ function Org_Riesgos_Area() {
             </div>
             <div className="descripcion-medicion">
               <p className="text-dark" style={{ width: "562px" }}>
-                Órgano de línea técnico, normativo y ejecutivo responsable del
-                diseño, conducción, coordinación, supervisión y evaluación de
-                las políticas públicas regionales de desarrollo social y humano,
-                en las materias específicas de educación, cultura, ciencia y
-                tecnología, recreación, deportes, salud, vivienda, trabajo,
-                población saneamiento, desarrollo social e igualdad de
-                oportunidades.
+                La Dirección Regional de Trabajo y Promoción del Empleo (DRTPE)
+                es un organismo descentralizado que opera en diferentes regiones
+                del Perú. Su función principal es liderar la implementación de
+                políticas y programas relacionados con el empleo y el desarrollo
+                económico.
               </p>
               <MetricBox
                 topText="Evaluacion de Riesgos"
-                middleText="45.80"
+                middleText="3"
                 bottomText="Inventario Total"
                 order="top-bottom-middle"
                 status="secondary"
@@ -296,7 +294,7 @@ function Org_Riesgos_Area() {
               />
               <MetricBox
                 topText="Tolerancia de Riesgo"
-                middleText="3"
+                middleText="1"
                 bottomText="Riesgos Excedidos"
                 order="top-bottom-middle"
                 status="danger"
@@ -305,10 +303,10 @@ function Org_Riesgos_Area() {
               />
               <MetricBox
                 topText="Nivel de Riesgo"
-                middleText="75.85"
+                middleText="35.45"
                 bottomText="Crítico"
                 order="top-bottom-middle"
-                status="danger"
+                status="warning"
                 width="224px"
                 gap="0.5rem"
               />
@@ -516,11 +514,215 @@ function Org_Riesgos_Area() {
                               </div>
                             ),
                           },
+                          {
+                            key: "2",
+                            content: (
+                              <div className="lista-riesgos">
+                                <div className="lista-riesgos-item1">
+                                  <p className="text-primary header-text">
+                                    <b>2</b>
+                                  </p>
+                                </div>
+                                <div className="lista-riesgos-item2">
+                                  <p className="text-primary header-text">
+                                    PRTR002
+                                  </p>
+                                </div>
+                                <div className="lista-riesgos-item3 header-text">
+                                  <p className="text-primary">
+                                    Servidor de Producción - Mal funcionamiento
+                                    del equipamiento
+                                  </p>
+                                </div>
+                                <div className="lista-riesgos-item4 header-text">
+                                  <p className="text-primary">
+                                    <b>Tratamiento:</b> Aceptación
+                                  </p>
+                                  <p className="text-primary">
+                                    <b>Indicador de Riesgo:</b> SH16
+                                  </p>
+                                </div>
+                                <div className="lista-riesgos-item5 header-text">
+                                  <p className="text-primary">
+                                    <b>Probabilidad:</b> Bajo
+                                  </p>
+                                  <p className="text-primary">
+                                    <b>Impacto:</b> Medio
+                                  </p>
+                                  <hr style={{ margin: "0" }} />
+                                  <p className="text-warning">
+                                    <b>Medio</b>
+                                  </p>
+                                </div>
+                                <div className="lista-riesgos-item6 header-text">
+                                  <p className="text-primary">
+                                    <b>Irregularidades:</b> 0
+                                  </p>
+                                  <p className="text-primary">
+                                    <b>Factores:</b> 0
+                                  </p>
+                                </div>
+                                <div
+                                  className={`lista-riesgos-item7 header-text ${"bg-success"}`}
+                                >
+                                  <h5 className="text-white text-center">
+                                    25.00
+                                  </h5>
+                                </div>
+                                <div className="lista-riesgos-item1">
+                                  <Button
+                                    onClick={() => setOpenRiskDetail(true)}
+                                    variant="outline-secondary"
+                                  >
+                                    <FontAwesomeIcon
+                                      icon={faArrowRightFromBracket}
+                                      style={{
+                                        fontSize: "1rem",
+                                      }}
+                                    />
+                                  </Button>
+                                </div>
+                              </div>
+                            ),
+                          },
+                          {
+                            key: "3",
+                            content: (
+                              <div className="lista-riesgos">
+                                <div className="lista-riesgos-item1">
+                                  <p className="text-primary header-text">
+                                    <b>3</b>
+                                  </p>
+                                </div>
+                                <div className="lista-riesgos-item2">
+                                  <p className="text-primary header-text">
+                                    PRTR003
+                                  </p>
+                                </div>
+                                <div className="lista-riesgos-item3 header-text">
+                                  <p className="text-primary">
+                                    Datos de contratistas - Disponibilidad de
+                                    backups
+                                  </p>
+                                </div>
+                                <div className="lista-riesgos-item4 header-text">
+                                  <p className="text-primary">
+                                    <b>Tratamiento:</b> Transferencia
+                                  </p>
+                                  <p className="text-primary">
+                                    <b>Indicador de Riesgo:</b> SH16
+                                  </p>
+                                </div>
+                                <div className="lista-riesgos-item5 header-text">
+                                  <p className="text-primary">
+                                    <b>Probabilidad:</b> Medio
+                                  </p>
+                                  <p className="text-primary">
+                                    <b>Impacto:</b> Alto
+                                  </p>
+                                  <hr style={{ margin: "0" }} />
+                                  <p className="text-danger">
+                                    <b>Severo</b>
+                                  </p>
+                                </div>
+                                <div className="lista-riesgos-item6 header-text">
+                                  <p className="text-primary">
+                                    <b>Irregularidades:</b> 1
+                                  </p>
+                                  <p className="text-primary">
+                                    <b>Factores:</b> 0
+                                  </p>
+                                </div>
+                                <div
+                                  className={`lista-riesgos-item7 header-text ${"bg-danger"}`}
+                                >
+                                  <h5 className="text-white text-center">
+                                    75.00
+                                  </h5>
+                                </div>
+                                <div className="lista-riesgos-item1">
+                                  <Button
+                                    onClick={() => setOpenRiskDetail(true)}
+                                    variant="outline-secondary"
+                                  >
+                                    <FontAwesomeIcon
+                                      icon={faArrowRightFromBracket}
+                                      style={{
+                                        fontSize: "1rem",
+                                      }}
+                                    />
+                                  </Button>
+                                </div>
+                              </div>
+                            ),
+                          },
                         ]}
                         overrideColor="override-gray"
                       />
                     </div>
                   ),
+                },
+                {
+                  header: (
+                    <div className="lista-procesos">
+                      <div className="lista-procesos-item1">
+                        <p className="text-primary header-text">
+                          <b>2</b>
+                        </p>
+                      </div>
+                      <div className="lista-procesos-item2">
+                        <p className="text-primary header-text">PRO002</p>
+                      </div>
+                      <div className="lista-procesos-item3 header-text">
+                        <p className="text-primary">
+                          Procedimiento de selección de nuevos colaboradores
+                        </p>
+                        <p className="text-danger">
+                          No tiene controles antisoborno
+                        </p>
+                      </div>
+                      <div className="lista-procesos-item4 header-text">
+                        <p className="text-primary">Total: 0 riesgos</p>
+                      </div>
+                      <div
+                        className={`lista-procesos-item5 header-text ${"bg-dark"}`}
+                      >
+                        <h5 className="text-white text-center">0</h5>
+                      </div>
+                    </div>
+                  ),
+                  hasBody: false,
+                },
+                {
+                  header: (
+                    <div className="lista-procesos">
+                      <div className="lista-procesos-item1">
+                        <p className="text-primary header-text">
+                          <b>3</b>
+                        </p>
+                      </div>
+                      <div className="lista-procesos-item2">
+                        <p className="text-primary header-text">PRO003</p>
+                      </div>
+                      <div className="lista-procesos-item3 header-text">
+                        <p className="text-primary">
+                          Proceso de promoción vertical
+                        </p>
+                        <p className="text-danger ">
+                          No tiene controles antisoborno
+                        </p>
+                      </div>
+                      <div className="lista-procesos-item4 header-text">
+                        <p className="text-primary">Total: 0 riesgos</p>
+                      </div>
+                      <div
+                        className={`lista-procesos-item5 header-text ${"bg-dark"}`}
+                      >
+                        <h5 className="text-white text-center">0</h5>
+                      </div>
+                    </div>
+                  ),
+                  hasBody: false,
                 },
               ]}
               overrideBorders={true}

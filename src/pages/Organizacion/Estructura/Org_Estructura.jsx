@@ -673,11 +673,128 @@ function Org_Estructura() {
                                               </div>
                                             ),
                                           },
+                                          {
+                                            key: "2",
+                                            content: (
+                                              <div className="lista-unidades-procesos-item">
+                                                <div className="lista-unidades-procesos-item1">
+                                                  <p className="text-primary">
+                                                    <b>
+                                                      PRO002 - Procedimiento de
+                                                      selección de nuevos
+                                                      colaboradores
+                                                    </b>
+                                                  </p>
+                                                  <small className="text-dark">
+                                                    Proceso de contratación es
+                                                    fundamental para asegurar
+                                                    que se incorpore al personal
+                                                    adecuado y que se cumplan
+                                                    las necesidades de la
+                                                    empresa
+                                                  </small>
+                                                  <small className="text-danger">
+                                                    No presenta controles
+                                                    antisoborno
+                                                  </small>
+                                                </div>
+                                                <div className="button-group">
+                                                  <Button
+                                                    onClick={() =>
+                                                      setOpenEditUnitProcess(
+                                                        true
+                                                      )
+                                                    }
+                                                    size="md"
+                                                    variant="primary"
+                                                  >
+                                                    <FontAwesomeIcon
+                                                      icon={faGear}
+                                                      style={{
+                                                        fontSize: "1.25rem",
+                                                      }}
+                                                    />
+                                                  </Button>
+                                                </div>
+                                              </div>
+                                            ),
+                                          },
+                                          {
+                                            key: "1",
+                                            content: (
+                                              <div className="lista-unidades-procesos-item">
+                                                <div className="lista-unidades-procesos-item1">
+                                                  <p className="text-primary">
+                                                    <b>
+                                                      PRO003 - Proceso de
+                                                      promoción vertical
+                                                    </b>
+                                                  </p>
+                                                  <small className="text-dark">
+                                                    Proceso de contratación es
+                                                    fundamental para asegurar
+                                                    que se incorpore al personal
+                                                    adecuado y que se cumplan
+                                                    las necesidades de la
+                                                    empresa
+                                                  </small>
+                                                  <small className="text-success">
+                                                    Presenta controles
+                                                    antisoborno
+                                                  </small>
+                                                </div>
+                                                <div className="button-group">
+                                                  <Button
+                                                    onClick={() =>
+                                                      setOpenEditUnitProcess(
+                                                        true
+                                                      )
+                                                    }
+                                                    size="md"
+                                                    variant="primary"
+                                                  >
+                                                    <FontAwesomeIcon
+                                                      icon={faGear}
+                                                      style={{
+                                                        fontSize: "1.25rem",
+                                                      }}
+                                                    />
+                                                  </Button>
+                                                </div>
+                                              </div>
+                                            ),
+                                          },
                                         ]}
                                         overrideColor="override-white"
                                       />
                                     </div>
                                   ),
+                                },
+                                {
+                                  header: (
+                                    <div className="accordion-unidades-lista-header">
+                                      <h6 className="text-secondary">
+                                        <b>
+                                          Dirección Regional de Vivienda,
+                                          Construcción y Saneamiento - DRS002
+                                        </b>
+                                      </h6>
+                                    </div>
+                                  ),
+                                  hasBody: false,
+                                },
+                                {
+                                  header: (
+                                    <div className="accordion-unidades-lista-header">
+                                      <h6 className="text-secondary">
+                                        <b>
+                                          Dirección Regional de Educación -
+                                          DRS003
+                                        </b>
+                                      </h6>
+                                    </div>
+                                  ),
+                                  hasBody: false,
                                 },
                               ]}
                               overrideColor="override-white"
@@ -707,8 +824,8 @@ function Org_Estructura() {
                                     <div className="lista-unidades-procesos-item1">
                                       <p className="text-primary">
                                         <b>
-                                          PRO001- Proceso de Gestionamiento de
-                                          Contrataciones
+                                          PRO004- Proceso de Gestionamiento de
+                                          Contrataciones en el Área
                                         </b>
                                       </p>
                                       <small className="text-dark">
@@ -745,6 +862,105 @@ function Org_Estructura() {
                           />
                         </div>
                       ),
+                    },
+                    {
+                      header: (
+                        <div className="accordion-estructura-areas-header">
+                          <h5 className="text-primary">
+                            <b>
+                              Gerencia Regional de Desarrollo Económico - LIN002
+                            </b>
+                          </h5>
+                        </div>
+                      ),
+                      hasBody: false,
+                    },
+                    {
+                      header: (
+                        <div className="accordion-estructura-areas-header">
+                          <h5 className="text-primary">
+                            <b>
+                              Gerencia Regional de Infrasestructura - LIN003
+                            </b>
+                          </h5>
+                        </div>
+                      ),
+                      hasBody: false,
+                    },
+                    {
+                      header: (
+                        <div className="accordion-estructura-areas-header">
+                          <h5 className="text-primary">
+                            <b>
+                              Gerencia Regional de Recursos Naturales y Gestión
+                              del Medio Ambiente - LIN004
+                            </b>
+                          </h5>
+                        </div>
+                      ),
+                      hasBody: false,
+                    },
+                  ]}
+                  overrideColor="override-white"
+                ></AccordionBox>
+              </div>
+              <div className="grouped-areas">
+                <h4 className="text-primary">
+                  <b>Órganos de apoyo - GER 002</b>
+                </h4>
+                <div className="button-group">
+                  <Button
+                    onClick={() => setOpenNewAreas(true)}
+                    size="md"
+                    variant="outline-primary"
+                  >
+                    Nueva Área
+                  </Button>
+                  <Button
+                    onClick={() => setOpenEditGroupedAreas(true)}
+                    size="md"
+                    variant="outline-primary"
+                  >
+                    Configuración
+                  </Button>
+                </div>
+              </div>
+              {/* Lista de Areas */}
+              <div className="accordion-areas">
+                <AccordionBox
+                  accordionItems={[
+                    {
+                      header: (
+                        <div className="accordion-estructura-areas-header">
+                          <h5 className="text-primary">
+                            <b>Gerencia Regional de Administración - APO001</b>
+                          </h5>
+                        </div>
+                      ),
+                      hasBody: false,
+                    },
+                    {
+                      header: (
+                        <div className="accordion-estructura-areas-header">
+                          <h5 className="text-primary">
+                            <b>Secretaria de Consejo Regional - APO002</b>
+                          </h5>
+                        </div>
+                      ),
+                      hasBody: false,
+                    },
+                    {
+                      header: (
+                        <div className="accordion-estructura-areas-header">
+                          <h5 className="text-primary">
+                            <b>
+                              Oficina de Promoción de la Inversión Privada -
+                              APO003
+                            </b>
+                          </h5>
+                        </div>
+                      ),
+                      hasBody: false,
                     },
                   ]}
                   overrideColor="override-white"

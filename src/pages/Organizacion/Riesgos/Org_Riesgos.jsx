@@ -101,9 +101,9 @@ function Org_Riesgos() {
                             onClick={() =>
                               handleUnitAreaDetail({
                                 id: 1,
-                                codigo: "DRSO001",
+                                codigo: "LIN001",
                                 nombre:
-                                  "Dirección Regional de Trabajo y Promoción del Empleo",
+                                  "Gerencial Regional de Desarrollo Social",
                               })
                             }
                             variant="outline-secondary"
@@ -164,7 +164,135 @@ function Org_Riesgos() {
                                       </h5>
                                     </div>
                                     <Button
-                                      onClick={() => handleUnitAreaDetail()}
+                                      onClick={() =>
+                                        handleUnitAreaDetail({
+                                          id: 1,
+                                          codigo: "DRSO001",
+                                          nombre:
+                                            "Dirección Regional de Trabajo y Promoción del Empleo",
+                                        })
+                                      }
+                                      variant="outline-secondary"
+                                    >
+                                      <div
+                                        style={{
+                                          display: "flex",
+                                          gap: "0.5rem",
+                                          alignItems: "center",
+                                        }}
+                                      >
+                                        Ver Detalle
+                                        <FontAwesomeIcon
+                                          icon={faArrowRight}
+                                          style={{
+                                            fontSize: "1.25rem",
+                                          }}
+                                        />
+                                      </div>
+                                    </Button>
+                                  </div>
+                                ),
+                              },
+                              {
+                                key: "2",
+                                content: (
+                                  <div className="lista-unidades">
+                                    <div className="lista-unidades-item1"></div>
+                                    <div className="lista-unidades-item2">
+                                      <p className="text-primary header-text">
+                                        DRS002
+                                      </p>
+                                    </div>
+                                    <div className="lista-unidades-item3 header-text">
+                                      <p className="text-primary">
+                                        Dirección Regional de Vivienda,
+                                        Construcción y Saneamiento
+                                      </p>
+                                    </div>
+                                    <div className="lista-unidades-item4 header-text">
+                                      <p className="text-primary">
+                                        Total: 3 riesgos
+                                      </p>
+                                      <p className="text-danger">
+                                        2 exceden el nivel de tolerancia
+                                      </p>
+                                    </div>
+                                    <div
+                                      className={`lista-unidades-item5 header-text ${"bg-danger"}`}
+                                    >
+                                      <h5 className="text-white text-center">
+                                        56.45
+                                      </h5>
+                                    </div>
+                                    <Button
+                                      onClick={() =>
+                                        handleUnitAreaDetail({
+                                          id: 2,
+                                          codigo: "DRSO002",
+                                          nombre:
+                                            "Dirección Regional de Vivienda, Construcción y Saneamiento",
+                                        })
+                                      }
+                                      variant="outline-secondary"
+                                    >
+                                      <div
+                                        style={{
+                                          display: "flex",
+                                          gap: "0.5rem",
+                                          alignItems: "center",
+                                        }}
+                                      >
+                                        Ver Detalle
+                                        <FontAwesomeIcon
+                                          icon={faArrowRight}
+                                          style={{
+                                            fontSize: "1.25rem",
+                                          }}
+                                        />
+                                      </div>
+                                    </Button>
+                                  </div>
+                                ),
+                              },
+                              {
+                                key: "1",
+                                content: (
+                                  <div className="lista-unidades">
+                                    <div className="lista-unidades-item1"></div>
+                                    <div className="lista-unidades-item2">
+                                      <p className="text-primary header-text">
+                                        DRS003
+                                      </p>
+                                    </div>
+                                    <div className="lista-unidades-item3 header-text">
+                                      <p className="text-primary">
+                                        Dirección Regional de Educación
+                                      </p>
+                                    </div>
+                                    <div className="lista-unidades-item4 header-text">
+                                      <p className="text-primary">
+                                        Total: 1 riesgos
+                                      </p>
+                                      <p className="text-success">
+                                        0 exceden el nivel de tolerancia
+                                      </p>
+                                    </div>
+                                    <div
+                                      className={`lista-unidades-item5 header-text ${"bg-success"}`}
+                                    >
+                                      <h5 className="text-white text-center">
+                                        15.00
+                                      </h5>
+                                    </div>
+                                    <Button
+                                      onClick={() =>
+                                        handleUnitAreaDetail({
+                                          id: 3,
+                                          codigo: "DRSO003",
+                                          nombre:
+                                            "Dirección Regional  de Educación",
+                                        })
+                                      }
                                       variant="outline-secondary"
                                     >
                                       <div
@@ -191,6 +319,150 @@ function Org_Riesgos() {
                           />
                         </div>
                       ),
+                    },
+                    {
+                      header: (
+                        <div className="lista-areas">
+                          <div className="lista-areas-item1">
+                            <p className="text-primary header-text">
+                              <b>2</b>
+                            </p>
+                          </div>
+                          <div className="lista-areas-item2">
+                            <p className="text-primary header-text">LIN002</p>
+                          </div>
+                          <div className="lista-areas-item3 header-text">
+                            <p className="text-primary">
+                              Gerencia Regional de Desarrollo Económico
+                            </p>
+                          </div>
+                          <div className="lista-areas-item4 header-text">
+                            <p className="text-primary">Total: 5 riesgos</p>
+                            <p className="text-danger ">
+                              1 exceden el nivel de tolerancia
+                            </p>
+                          </div>
+                          <div
+                            className={`lista-areas-item5 header-text ${"bg-warning"}`}
+                          >
+                            <h5 className="text-white text-center">52.46</h5>
+                          </div>
+                          <Button
+                            onClick={() =>
+                              handleUnitAreaDetail({
+                                id: 2,
+                                codigo: "LIN002",
+                                nombre:
+                                  "Gerencia Regional de Desarrollo Económico",
+                              })
+                            }
+                            variant="outline-secondary"
+                          >
+                            <div
+                              style={{
+                                display: "flex",
+                                gap: "0.5rem",
+                                alignItems: "center",
+                              }}
+                            >
+                              Ver Detalle
+                              <FontAwesomeIcon
+                                icon={faArrowRight}
+                                style={{
+                                  fontSize: "1.25rem",
+                                }}
+                              />
+                            </div>
+                          </Button>
+                        </div>
+                      ),
+                      hasBody: false,
+                    },
+                    {
+                      header: (
+                        <div className="lista-areas">
+                          <div className="lista-areas-item1">
+                            <p className="text-primary header-text">
+                              <b>3</b>
+                            </p>
+                          </div>
+                          <div className="lista-areas-item2">
+                            <p className="text-primary header-text">LIN003</p>
+                          </div>
+                          <div className="lista-areas-item3 header-text">
+                            <p className="text-primary">
+                              Gerencia Regional de Infrasestructura
+                            </p>
+                          </div>
+                          <div className="lista-areas-item4 header-text">
+                            <p className="text-primary">Total: 5 riesgos</p>
+                            <p className="text-success ">
+                              0 exceden el nivel de tolerancia
+                            </p>
+                          </div>
+                          <div
+                            className={`lista-areas-item5 header-text ${"bg-success"}`}
+                          >
+                            <h5 className="text-white text-center">25.00</h5>
+                          </div>
+                          <Button
+                            onClick={() =>
+                              handleUnitAreaDetail({
+                                id: 3,
+                                codigo: "LIN003",
+                                nombre: "Gerencia Regional de Infrasestructura",
+                              })
+                            }
+                            variant="outline-secondary"
+                          >
+                            <div
+                              style={{
+                                display: "flex",
+                                gap: "0.5rem",
+                                alignItems: "center",
+                              }}
+                            >
+                              Ver Detalle
+                              <FontAwesomeIcon
+                                icon={faArrowRight}
+                                style={{
+                                  fontSize: "1.25rem",
+                                }}
+                              />
+                            </div>
+                          </Button>
+                        </div>
+                      ),
+                      hasBody: false,
+                    },
+                    {
+                      header: (
+                        <div className="lista-areas">
+                          <div className="lista-areas-item1">
+                            <p className="text-primary header-text">
+                              <b>1</b>
+                            </p>
+                          </div>
+                          <div className="lista-areas-item2">
+                            <p className="text-primary header-text">LIN004</p>
+                          </div>
+                          <div className="lista-areas-item3 header-text">
+                            <p className="text-primary">
+                              Gerencia Regional de Recursos Naturales y Gestión
+                              del Medio Ambiente
+                            </p>
+                          </div>
+                          <div className="lista-areas-item4 header-text">
+                            <p className="text-primary">Total: 0 riesgos</p>
+                          </div>
+                          <div
+                            className={`lista-areas-item5 header-text ${"bg-dark"}`}
+                          >
+                            <h5 className="text-white text-center">0</h5>
+                          </div>
+                        </div>
+                      ),
+                      hasBody: false,
                     },
                   ]}
                   overrideBorders={true}
