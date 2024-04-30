@@ -165,7 +165,7 @@ function modalRiskDetail() {
                   <Form.Label>Causas del Riesgo</Form.Label>
                   <Form.Control
                     as="textarea"
-                    placeholder="Ingrese sintomas del riesgo"
+                    placeholder="Ingrese causas del riesgo"
                     value="La falta de mantenimiento adecuado de los sistemas web ocasiona su inactividad, generando interrupciones en las operaciones diarias y provocando pérdida de tiempo y recursos."
                   />
                 </Form.Group>
@@ -469,7 +469,7 @@ function modalNewRisks() {
                   <Form.Label>Causas del Riesgo</Form.Label>
                   <Form.Control
                     as="textarea"
-                    placeholder="Ingrese sintomas del riesgo"
+                    placeholder="Ingrese causas del riesgo"
                     value=""
                   />
                 </Form.Group>
@@ -771,7 +771,7 @@ function modalEditRisks() {
                   <Form.Label>Causas del Riesgo</Form.Label>
                   <Form.Control
                     as="textarea"
-                    placeholder="Ingrese sintomas del riesgo"
+                    placeholder="Ingrese causas del riesgo"
                     value="La falta de mantenimiento adecuado de los sistemas web ocasiona su inactividad, generando interrupciones en las operaciones diarias y provocando pérdida de tiempo y recursos."
                   />
                 </Form.Group>

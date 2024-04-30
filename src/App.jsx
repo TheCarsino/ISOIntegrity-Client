@@ -6,7 +6,8 @@ import {
   URL_DOCUMENTACION_REPORTES,
   URL_ORGANIZACION_ESTRUCTURA,
   URL_ORGANIZACION_RIESGOS,
-  URL_RIESGOS_ALERTAS,
+  URL_RIESGOS_ALERTAS_IRREGULARIDADES,
+  URL_RIESGOS_ALERTAS_FACTORES,
   URL_RIESGOS_ANALISIS,
   URL_RIESGOS_CUESTIONARIOS,
   URL_RIESGOS_LISTA,
@@ -18,7 +19,8 @@ import Doc_Reportes from "./pages/Documentacion/Reportes/Doc_Reportes";
 import Org_Estructura from "./pages/Organizacion/Estructura/Org_Estructura";
 import Org_Riesgos from "./pages/Organizacion/Riesgos/Org_Riesgos";
 import Org_Riesgos_Area from "./pages/Organizacion/Riesgos/Org_Riesgos_Area";
-import Risk_Alertas from "./pages/Riesgos/Alertas/Risk_Alertas";
+import Risk_Alertas_Irr from "./pages/Riesgos/Alertas/Risk_Alertas_Irr";
+import Risk_Alertas_Fact from "./pages/Riesgos/Alertas/Risk_Alertas_Fact";
 import Risk_Analisis from "./pages/Riesgos/Analisis/Risk_Analisis";
 import Risk_Cuestionario from "./pages/Riesgos/Cuestionario/Risk_Cuestionario";
 import Risk_Cuestionario_Categoria from "./pages/Riesgos/Cuestionario/Risk_Cuestionario_Categoria";
@@ -93,7 +95,7 @@ function App() {
           }
         />
         <Route
-          path={`${URL_RIESGOS_ALERTAS}`}
+          path={`${URL_RIESGOS_ALERTAS_IRREGULARIDADES}`}
           exact
           element={
             <PrivateRoute
@@ -104,7 +106,18 @@ function App() {
                 "Colaborador",
               ]}
             >
-              <Risk_Alertas />
+              <Risk_Alertas_Irr />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path={`${URL_RIESGOS_ALERTAS_FACTORES}`}
+          exact
+          element={
+            <PrivateRoute
+              role={["Administrador", "Alta Directiva", "Gestor de Proyectos"]}
+            >
+              <Risk_Alertas_Fact />
             </PrivateRoute>
           }
         />

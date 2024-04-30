@@ -52,3 +52,9 @@ h5 {
 h6 {
   margin-bottom: 0rem !important;
 }
+
+.itemlist-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

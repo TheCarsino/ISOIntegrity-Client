@@ -8,7 +8,10 @@ import Col from "react-bootstrap/esm/Col";
 
 import "../App.scss";
 import { useNavigate } from "react-router-dom";
-import { URL_RIESGOS_ALERTAS, URL_RIESGOS_ANALISIS } from "../config";
+import {
+  URL_RIESGOS_ALERTAS_IRREGULARIDADES,
+  URL_RIESGOS_ANALISIS,
+} from "../config";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -31,7 +34,7 @@ const Login = () => {
           "activeNavs",
           JSON.stringify({ main: "risk", sub: "alert" })
         );
-        navigate(`${URL_RIESGOS_ALERTAS}`);
+        navigate(`${URL_RIESGOS_ALERTAS_IRREGULARIDADES}`);
       }
     }
   }, []);

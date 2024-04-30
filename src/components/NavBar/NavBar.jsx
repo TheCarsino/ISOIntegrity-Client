@@ -10,7 +10,7 @@ import {
   URL_DOCUMENTACION_REPORTES,
   URL_ORGANIZACION_ESTRUCTURA,
   URL_ORGANIZACION_RIESGOS,
-  URL_RIESGOS_ALERTAS,
+  URL_RIESGOS_ALERTAS_IRREGULARIDADES,
   URL_RIESGOS_ANALISIS,
   URL_RIESGOS_CUESTIONARIOS,
   URL_RIESGOS_LISTA,
@@ -205,7 +205,7 @@ function NavBar() {
                     </Nav.Link>
                   )}
                   <Nav.Link
-                    href={URL_RIESGOS_ALERTAS}
+                    href={URL_RIESGOS_ALERTAS_IRREGULARIDADES}
                     className={` ${
                       activeNavs.sub === "alert"
                         ? "nav-sub-links-underlined"
