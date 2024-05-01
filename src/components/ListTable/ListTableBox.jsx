@@ -9,16 +9,21 @@ function ListTableBox({
   style,
   overrideColor = "override-white",
   noPadding = false,
+  maxHeight = "100%",
 }) {
   const listBoxRef = useRef(null); // Ref to the list-box element
   const [contentExceedsWidth, setContentExceedsWidth] = useState(false);
+  const [contentExceedsHeight, setContentExceedsHeight] = useState(false);
 
   useEffect(() => {
     const checkOverflow = () => {
       if (listBoxRef.current) {
         const contentWidth = listBoxRef.current.scrollWidth;
         const containerWidth = listBoxRef.current.clientWidth;
+        const contentHeight = listBoxRef.current.scrollHeight;
+        const containerHeight = listBoxRef.current.clientHeight;
         setContentExceedsWidth(contentWidth > containerWidth);
+        setContentExceedsHeight(contentHeight > containerHeight);
       }
     };
 
@@ -29,26 +34,30 @@ function ListTableBox({
   }, []);
 
   return (
-    <ListGroup
-      variant="flush"
-      className={`list-box ${style} ${overrideColor} ${
-        contentExceedsWidth ? "overflow-x" : ""
-      }`}
-    >
-      {header}
-      {listItems.map((item) => (
-        <ListGroup.Item
-          key={item.key}
-          as="li"
-          className={`listitem-box ${overrideColor} ${
-            item.cellColor != null && item.cellColor
-          } ${noPadding != false && "override-noPadding"}`}
-          ref={listBoxRef}
-        >
-          {item.content}
-        </ListGroup.Item>
-      ))}
-    </ListGroup>
+    <>
+      <ListGroup
+        variant="flush"
+        className={`list-box ${style} ${overrideColor} ${
+          contentExceedsWidth ? "overflow-x" : ""
+        }
+        ${contentExceedsHeight ? "overflow-y" : ""}`}
+        ref={listBoxRef}
+        style={{ maxHeight: maxHeight }}
+      >
+        {header}
+        {listItems.map((item) => (
+          <ListGroup.Item
+            key={item.key}
+            as="li"
+            className={`listitem-box ${overrideColor} ${
+              item.cellColor != null && item.cellColor
+            } ${noPadding != false && "override-noPadding"}`}
+          >
+            {item.content}
+          </ListGroup.Item>
+        ))}
+      </ListGroup>
+    </>
   );
 }
 
@@ -65,6 +74,7 @@ function ListTableBox({
   overrideColor: colors that overrides the current background color
   width: width that occupies the accordion
   noPadding: if we want the listitem-box to have no padding
+  maxHeight: define the max Height
 */
 
 ListTableBox.propTypes = {
@@ -79,6 +89,7 @@ ListTableBox.propTypes = {
   style: PropTypes.string,
   overrideColor: PropTypes.string,
   noPadding: PropTypes.bool,
+  maxHeight: PropTypes.string,
 };
 
 export default ListTableBox;

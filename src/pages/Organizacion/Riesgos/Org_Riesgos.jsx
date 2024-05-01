@@ -1,4 +1,3 @@
-import React from "react";
 import MainContainer from "../../../components/Main/MainContainer";
 import Button from "react-bootstrap/Button";
 import AccordionBox from "../../../components/Accordion/AccordionBox";
@@ -87,15 +86,15 @@ function Org_Riesgos() {
                             </p>
                           </div>
                           <div className="lista-areas-item4 header-text">
-                            <p className="text-primary">Total: 7 riesgos</p>
+                            <p className="text-primary">Total: 3 riesgos</p>
                             <p className="text-danger ">
-                              3 exceden el nivel de tolerancia
+                              2 exceden el nivel de tolerancia
                             </p>
                           </div>
                           <div
                             className={`lista-areas-item5 header-text ${"bg-danger"}`}
                           >
-                            <h5 className="text-white text-center">75.85</h5>
+                            <h5 className="text-white text-center">65.00</h5>
                           </div>
                           <Button
                             onClick={() =>
@@ -153,14 +152,14 @@ function Org_Riesgos() {
                                         Total: 3 riesgos
                                       </p>
                                       <p className="text-danger">
-                                        1 exceden el nivel de tolerancia
+                                        2 exceden el nivel de tolerancia
                                       </p>
                                     </div>
                                     <div
                                       className={`lista-unidades-item5 header-text ${"bg-warning"}`}
                                     >
                                       <h5 className="text-white text-center">
-                                        35.45
+                                        45.00
                                       </h5>
                                     </div>
                                     <Button
@@ -337,7 +336,7 @@ function Org_Riesgos() {
                             </p>
                           </div>
                           <div className="lista-areas-item4 header-text">
-                            <p className="text-primary">Total: 5 riesgos</p>
+                            <p className="text-primary">Total: 1 riesgos</p>
                             <p className="text-danger ">
                               1 exceden el nivel de tolerancia
                             </p>
@@ -395,7 +394,7 @@ function Org_Riesgos() {
                             </p>
                           </div>
                           <div className="lista-areas-item4 header-text">
-                            <p className="text-primary">Total: 5 riesgos</p>
+                            <p className="text-primary">Total: 1 riesgos</p>
                             <p className="text-success ">
                               0 exceden el nivel de tolerancia
                             </p>

@@ -25,7 +25,7 @@ function modalRiskDetail() {
       <div className="risk-metrics">
         <MetricBox
           topText="Casos de Riesgo"
-          middleText="1"
+          middleText="0"
           bottomText="Divulgación de irregularidades"
           status="secondary"
           width="224px"
@@ -35,15 +35,15 @@ function modalRiskDetail() {
           topText="Casos de Riesgo"
           middleText="0"
           bottomText="Factores de evaluación riesgos"
-          status="danger"
+          status="secondary"
           width="224px"
           gap="0rem"
         />
         <MetricBox
           topText="Nivel de Riesgo"
-          middleText="57.50"
+          middleText="50.00"
           bottomText="Relaciona casos reportados y severidad"
-          status="danger"
+          status="warning"
           width="274px"
           gap="0rem"
         />
@@ -294,7 +294,7 @@ function Org_Riesgos_Area() {
               />
               <MetricBox
                 topText="Tolerancia de Riesgo"
-                middleText="1"
+                middleText="2"
                 bottomText="Riesgos Excedidos"
                 order="top-bottom-middle"
                 status="danger"
@@ -303,7 +303,7 @@ function Org_Riesgos_Area() {
               />
               <MetricBox
                 topText="Nivel de Riesgo"
-                middleText="35.45"
+                middleText="45.00"
                 bottomText="Crítico"
                 order="top-bottom-middle"
                 status="warning"
@@ -381,7 +381,7 @@ function Org_Riesgos_Area() {
                       <div
                         className={`lista-procesos-item5 header-text ${"bg-warning"}`}
                       >
-                        <h5 className="text-white text-center">54.46</h5>
+                        <h5 className="text-white text-center">45.00</h5>
                       </div>
                     </div>
                   ),
@@ -485,17 +485,17 @@ function Org_Riesgos_Area() {
                                 </div>
                                 <div className="lista-riesgos-item6 header-text">
                                   <p className="text-primary">
-                                    <b>Irregularidades:</b> 1
+                                    <b>Irregularidades:</b> 0
                                   </p>
                                   <p className="text-primary">
                                     <b>Factores:</b> 0
                                   </p>
                                 </div>
                                 <div
-                                  className={`lista-riesgos-item7 header-text ${"bg-danger"}`}
+                                  className={`lista-riesgos-item7 header-text ${"bg-warning"}`}
                                 >
                                   <h5 className="text-white text-center">
-                                    57.50
+                                    50.00
                                   </h5>
                                 </div>
                                 <div className="lista-riesgos-item1">
@@ -627,17 +627,17 @@ function Org_Riesgos_Area() {
                                 </div>
                                 <div className="lista-riesgos-item6 header-text">
                                   <p className="text-primary">
-                                    <b>Irregularidades:</b> 1
+                                    <b>Irregularidades:</b> 0
                                   </p>
                                   <p className="text-primary">
                                     <b>Factores:</b> 0
                                   </p>
                                 </div>
                                 <div
-                                  className={`lista-riesgos-item7 header-text ${"bg-danger"}`}
+                                  className={`lista-riesgos-item7 header-text ${"bg-warning"}`}
                                 >
                                   <h5 className="text-white text-center">
-                                    75.00
+                                    50.00
                                   </h5>
                                 </div>
                                 <div className="lista-riesgos-item1">
