@@ -1,19 +1,52 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import MainContainer from "../../../components/Main/MainContainer";
 import "./Risk_Cuestionario.scss";
 import Button from "react-bootstrap/esm/Button";
 import { useNavigate } from "react-router-dom";
 import { URL_RIESGOS_CUESTIONARIOS } from "../../../config";
 import NavBar from "../../../components/NavBar/NavBar";
+import {
+  verifyResultsforOneMonth,
+  getSurveyResultbyId,
+} from "../../../services/surveyscale.services";
 
 function Risk_Cuestionario() {
-  const navigate = useNavigate();
+  async function pingSurveyResult() {
+    const data = await getSurveyResultbyId(1);
 
-  const handleContinueSurvey = () => {};
+    return data;
+  }
+  async function pingVerifyResult() {
+    const data = await verifyResultsforOneMonth();
+
+    return data;
+  }
+  const handleContinueSurvey = () => {
+    navigate(`${URL_RIESGOS_CUESTIONARIOS}/categorias`, { state: null });
+  };
   const handleNewSurvey = () => {
     navigate(`${URL_RIESGOS_CUESTIONARIOS}/categorias`, { state: null });
   };
-  const handleModifySurvey = () => {};
+  const handleModifySurvey = () => {
+    navigate(`${URL_RIESGOS_CUESTIONARIOS}/categorias`, { state: null });
+  };
+
+  const [isNew, setNew] = useState(1);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    pingSurveyResult().then((returnData) => {
+      if (returnData.SurveyResult != null) {
+        setNew(2);
+      }
+      pingVerifyResult().then((verification) => {
+        let currentPage = localStorage.getItem("currentPageCuestionary");
+        if (!currentPage) currentPage = 1;
+
+        if (verification && currentPage > 1) setNew(0);
+      });
+    });
+  }, []);
 
   return (
     <>
@@ -37,7 +70,7 @@ function Risk_Cuestionario() {
               mediciones adecuadas que reflejen la realidad diaria de la
               organización en cuanto a los riesgos de soborno
             </p>
-            {true ? (
+            {isNew == 1 ? (
               <Button
                 onClick={() => handleNewSurvey()}
                 size="md"
@@ -45,7 +78,7 @@ function Risk_Cuestionario() {
               >
                 Iniciar el Cuestionario
               </Button>
-            ) : false ? (
+            ) : isNew == 0 ? (
               <Button
                 onClick={() => handleContinueSurvey()}
                 size="md"

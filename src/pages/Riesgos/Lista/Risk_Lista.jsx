@@ -21,7 +21,7 @@ function modalRiskDetail() {
       <div className="risk-metrics">
         <MetricBox
           topText="Casos de Riesgo"
-          middleText="1"
+          middleText="0"
           bottomText="Divulgación de irregularidades"
           status="secondary"
           width="224px"
@@ -828,6 +828,1007 @@ function modalEditRisks() {
 }
 
 function Risk_Lista() {
+  const retrieveListaContent = () => {
+    return [
+      {
+        key: "1",
+        content: (
+          <div className="lista-riesgos">
+            <div className="lista-riesgos-item1">
+              <p className="text-primary header-text">
+                <b>1</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item2">
+              <p className="text-primary header-text">PRTR001</p>
+            </div>
+            <div className="lista-riesgos-item3 header-text">
+              <p className="text-primary">
+                Servidor de Producción - Degradación en desempeño del sistema
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">
+                <b>Tratamiento:</b> Transferencia
+              </p>
+              <p className="text-primary">
+                <b>Indicador de Riesgo:</b> SH16
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">{"Unidad"} DRSO001</p>
+              <p className="text-primary">
+                <b>Proceso PRO001</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item5 header-text">
+              <p className="text-primary">
+                <b>Probabilidad:</b> Medio
+              </p>
+              <p className="text-primary">
+                <b>Impacto:</b> Alto
+              </p>
+              <hr style={{ margin: "0" }} />
+              <p className="text-danger">
+                <b>Severo</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item6 header-text">
+              <p className="text-primary">
+                <b>Irregularidades:</b> 0
+              </p>
+              <p className="text-primary">
+                <b>Factores:</b> 0
+              </p>
+            </div>
+            <div className={`lista-riesgos-item7 header-text ${"bg-warning"}`}>
+              <h5 className="text-white text-center">50.00</h5>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenEditRisks(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faGear}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenRiskDetail(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faArrowRightFromBracket}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+          </div>
+        ),
+      },
+      {
+        key: "2",
+        content: (
+          <div className="lista-riesgos">
+            <div className="lista-riesgos-item1">
+              <p className="text-primary header-text">
+                <b>2</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item2">
+              <p className="text-primary header-text">PRTR002</p>
+            </div>
+            <div className="lista-riesgos-item3 header-text">
+              <p className="text-primary">
+                Servidor de Producción - Mal funcionamiento del equipamiento
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">
+                <b>Tratamiento:</b> Aceptación
+              </p>
+              <p className="text-primary">
+                <b>Indicador de Riesgo:</b> SH16
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">{"Unidad"} DRSO001</p>
+              <p className="text-primary">
+                <b>Proceso PRO001</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item5 header-text">
+              <p className="text-primary">
+                <b>Probabilidad:</b> Bajo
+              </p>
+              <p className="text-primary">
+                <b>Impacto:</b> Medio
+              </p>
+              <hr style={{ margin: "0" }} />
+              <p className="text-warning">
+                <b>Medio</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item6 header-text">
+              <p className="text-primary">
+                <b>Irregularidades:</b> 0
+              </p>
+              <p className="text-primary">
+                <b>Factores:</b> 0
+              </p>
+            </div>
+            <div className={`lista-riesgos-item7 header-text ${"bg-success"}`}>
+              <h5 className="text-white text-center">25.00</h5>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenEditRisks(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faGear}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenRiskDetail(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faArrowRightFromBracket}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+          </div>
+        ),
+      },
+      {
+        key: "3",
+        content: (
+          <div className="lista-riesgos">
+            <div className="lista-riesgos-item1">
+              <p className="text-primary header-text">
+                <b>1</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item2">
+              <p className="text-primary header-text">PRTR003</p>
+            </div>
+            <div className="lista-riesgos-item3 header-text">
+              <p className="text-primary">
+                Datos de contratistas - Disponibilidad de backups
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">
+                <b>Tratamiento:</b> Transferencia
+              </p>
+              <p className="text-primary">
+                <b>Indicador de Riesgo:</b> SH16
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">{"Unidad"} DRSO001</p>
+              <p className="text-primary">
+                <b>Proceso PRO001</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item5 header-text">
+              <p className="text-primary">
+                <b>Probabilidad:</b> Medio
+              </p>
+              <p className="text-primary">
+                <b>Impacto:</b> Alto
+              </p>
+              <hr style={{ margin: "0" }} />
+              <p className="text-danger">
+                <b>Severo</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item6 header-text">
+              <p className="text-primary">
+                <b>Irregularidades:</b> 0
+              </p>
+              <p className="text-primary">
+                <b>Factores:</b> 0
+              </p>
+            </div>
+            <div className={`lista-riesgos-item7 header-text ${"bg-warning"}`}>
+              <h5 className="text-white text-center">50.00</h5>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenEditRisks(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faGear}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenRiskDetail(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faArrowRightFromBracket}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+          </div>
+        ),
+      },
+      {
+        key: "4",
+        content: (
+          <div className="lista-riesgos">
+            <div className="lista-riesgos-item1">
+              <p className="text-primary header-text">
+                <b>4</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item2">
+              <p className="text-primary header-text">PRTR004</p>
+            </div>
+            <div className="lista-riesgos-item3 header-text">
+              <p className="text-primary">
+                Servidor de Producción - Degradación en desempeño del sistema
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">
+                <b>Tratamiento:</b> Transferencia
+              </p>
+              <p className="text-primary">
+                <b>Indicador de Riesgo:</b> SH16
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">{"Unidad"} DRS002</p>
+              <p className="text-primary">
+                <b>Proceso PRO004</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item5 header-text">
+              <p className="text-primary">
+                <b>Probabilidad:</b> Medio
+              </p>
+              <p className="text-primary">
+                <b>Impacto:</b> Alto
+              </p>
+              <hr style={{ margin: "0" }} />
+              <p className="text-danger">
+                <b>Severo</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item6 header-text">
+              <p className="text-primary">
+                <b>Irregularidades:</b> 0
+              </p>
+              <p className="text-primary">
+                <b>Factores:</b> 0
+              </p>
+            </div>
+            <div className={`lista-riesgos-item7 header-text ${"bg-warning"}`}>
+              <h5 className="text-white text-center">50.00</h5>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenEditRisks(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faGear}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenRiskDetail(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faArrowRightFromBracket}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+          </div>
+        ),
+      },
+      {
+        key: "5",
+        content: (
+          <div className="lista-riesgos">
+            <div className="lista-riesgos-item1">
+              <p className="text-primary header-text">
+                <b>5</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item2">
+              <p className="text-primary header-text">PRTR005</p>
+            </div>
+            <div className="lista-riesgos-item3 header-text">
+              <p className="text-primary">
+                Servidor de Producción - Mal funcionamiento del equipamiento
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">
+                <b>Tratamiento:</b> Aceptación
+              </p>
+              <p className="text-primary">
+                <b>Indicador de Riesgo:</b> SH16
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">{"Unidad"} DRS002</p>
+              <p className="text-primary">
+                <b>Proceso PRO004</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item5 header-text">
+              <p className="text-primary">
+                <b>Probabilidad:</b> Bajo
+              </p>
+              <p className="text-primary">
+                <b>Impacto:</b> Medio
+              </p>
+              <hr style={{ margin: "0" }} />
+              <p className="text-warning">
+                <b>Medio</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item6 header-text">
+              <p className="text-primary">
+                <b>Irregularidades:</b> 0
+              </p>
+              <p className="text-primary">
+                <b>Factores:</b> 0
+              </p>
+            </div>
+            <div className={`lista-riesgos-item7 header-text ${"bg-success"}`}>
+              <h5 className="text-white text-center">25.00</h5>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenEditRisks(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faGear}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenRiskDetail(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faArrowRightFromBracket}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+          </div>
+        ),
+      },
+      {
+        key: "6",
+        content: (
+          <div className="lista-riesgos">
+            <div className="lista-riesgos-item1">
+              <p className="text-primary header-text">
+                <b>6</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item2">
+              <p className="text-primary header-text">PRTR006</p>
+            </div>
+            <div className="lista-riesgos-item3 header-text">
+              <p className="text-primary">
+                Datos de contratistas - Disponibilidad de backups
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">
+                <b>Tratamiento:</b> Transferencia
+              </p>
+              <p className="text-primary">
+                <b>Indicador de Riesgo:</b> SH16
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">{"Unidad"} DRS002</p>
+              <p className="text-primary">
+                <b>Proceso PRO004</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item5 header-text">
+              <p className="text-primary">
+                <b>Probabilidad:</b> Medio
+              </p>
+              <p className="text-primary">
+                <b>Impacto:</b> Alto
+              </p>
+              <hr style={{ margin: "0" }} />
+              <p className="text-danger">
+                <b>Severo</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item6 header-text">
+              <p className="text-primary">
+                <b>Irregularidades:</b> 0
+              </p>
+              <p className="text-primary">
+                <b>Factores:</b> 0
+              </p>
+            </div>
+            <div className={`lista-riesgos-item7 header-text ${"bg-warning"}`}>
+              <h5 className="text-white text-center">50.00</h5>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenEditRisks(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faGear}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenRiskDetail(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faArrowRightFromBracket}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+          </div>
+        ),
+      },
+      {
+        key: "7",
+        content: (
+          <div className="lista-riesgos">
+            <div className="lista-riesgos-item1">
+              <p className="text-primary header-text">
+                <b>7</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item2">
+              <p className="text-primary header-text">PRTR007</p>
+            </div>
+            <div className="lista-riesgos-item3 header-text">
+              <p className="text-primary">
+                Servidor de Producción - Mal funcionamiento del equipamiento
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">
+                <b>Tratamiento:</b> Aceptación
+              </p>
+              <p className="text-primary">
+                <b>Indicador de Riesgo:</b> SH16
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">{"Unidad"} DRS003</p>
+              <p className="text-primary">
+                <b>Proceso PRO005</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item5 header-text">
+              <p className="text-primary">
+                <b>Probabilidad:</b> Bajo
+              </p>
+              <p className="text-primary">
+                <b>Impacto:</b> Medio
+              </p>
+              <hr style={{ margin: "0" }} />
+              <p className="text-warning">
+                <b>Medio</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item6 header-text">
+              <p className="text-primary">
+                <b>Irregularidades:</b> 0
+              </p>
+              <p className="text-primary">
+                <b>Factores:</b> 0
+              </p>
+            </div>
+            <div className={`lista-riesgos-item7 header-text ${"bg-success"}`}>
+              <h5 className="text-white text-center">25.00</h5>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenEditRisks(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faGear}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenRiskDetail(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faArrowRightFromBracket}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+          </div>
+        ),
+      },
+      {
+        key: "8",
+        content: (
+          <div className="lista-riesgos">
+            <div className="lista-riesgos-item1">
+              <p className="text-primary header-text">
+                <b>8</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item2">
+              <p className="text-primary header-text">PRTR008</p>
+            </div>
+            <div className="lista-riesgos-item3 header-text">
+              <p className="text-primary">
+                Servidor de Producción - Degradación en desempeño del sistema
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">
+                <b>Tratamiento:</b> Transferencia
+              </p>
+              <p className="text-primary">
+                <b>Indicador de Riesgo:</b> SH16
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">{"Área"} LIN001</p>
+              <p className="text-primary">
+                <b>Proceso PRO006</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item5 header-text">
+              <p className="text-primary">
+                <b>Probabilidad:</b> Medio
+              </p>
+              <p className="text-primary">
+                <b>Impacto:</b> Alto
+              </p>
+              <hr style={{ margin: "0" }} />
+              <p className="text-danger">
+                <b>Severo</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item6 header-text">
+              <p className="text-primary">
+                <b>Irregularidades:</b> 0
+              </p>
+              <p className="text-primary">
+                <b>Factores:</b> 0
+              </p>
+            </div>
+            <div className={`lista-riesgos-item7 header-text ${"bg-warning"}`}>
+              <h5 className="text-white text-center">50.00</h5>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenEditRisks(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faGear}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenRiskDetail(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faArrowRightFromBracket}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+          </div>
+        ),
+      },
+      {
+        key: "9",
+        content: (
+          <div className="lista-riesgos">
+            <div className="lista-riesgos-item1">
+              <p className="text-primary header-text">
+                <b>9</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item2">
+              <p className="text-primary header-text">PRTR009</p>
+            </div>
+            <div className="lista-riesgos-item3 header-text">
+              <p className="text-primary">
+                Servidor de Producción - Mal funcionamiento del equipamiento
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">
+                <b>Tratamiento:</b> Aceptación
+              </p>
+              <p className="text-primary">
+                <b>Indicador de Riesgo:</b> SH16
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">{"Área"} LIN001</p>
+              <p className="text-primary">
+                <b>Proceso PRO006</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item5 header-text">
+              <p className="text-primary">
+                <b>Probabilidad:</b> Bajo
+              </p>
+              <p className="text-primary">
+                <b>Impacto:</b> Medio
+              </p>
+              <hr style={{ margin: "0" }} />
+              <p className="text-warning">
+                <b>Medio</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item6 header-text">
+              <p className="text-primary">
+                <b>Irregularidades:</b> 0
+              </p>
+              <p className="text-primary">
+                <b>Factores:</b> 0
+              </p>
+            </div>
+            <div className={`lista-riesgos-item7 header-text ${"bg-success"}`}>
+              <h5 className="text-white text-center">25.00</h5>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenEditRisks(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faGear}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenRiskDetail(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faArrowRightFromBracket}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+          </div>
+        ),
+      },
+      {
+        key: "10",
+        content: (
+          <div className="lista-riesgos">
+            <div className="lista-riesgos-item1">
+              <p className="text-primary header-text">
+                <b>10</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item2">
+              <p className="text-primary header-text">PRTR010</p>
+            </div>
+            <div className="lista-riesgos-item3 header-text">
+              <p className="text-primary">
+                Datos de contratistas - Disponibilidad de backups
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">
+                <b>Tratamiento:</b> Transferencia
+              </p>
+              <p className="text-primary">
+                <b>Indicador de Riesgo:</b> SH16
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">{"Área"} LIN001</p>
+              <p className="text-primary">
+                <b>Proceso PRO006</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item5 header-text">
+              <p className="text-primary">
+                <b>Probabilidad:</b> Medio
+              </p>
+              <p className="text-primary">
+                <b>Impacto:</b> Alto
+              </p>
+              <hr style={{ margin: "0" }} />
+              <p className="text-danger">
+                <b>Severo</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item6 header-text">
+              <p className="text-primary">
+                <b>Irregularidades:</b> 0
+              </p>
+              <p className="text-primary">
+                <b>Factores:</b> 0
+              </p>
+            </div>
+            <div className={`lista-riesgos-item7 header-text ${"bg-warning"}`}>
+              <h5 className="text-white text-center">50.00</h5>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenEditRisks(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faGear}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenRiskDetail(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faArrowRightFromBracket}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+          </div>
+        ),
+      },
+      {
+        key: "11",
+        content: (
+          <div className="lista-riesgos">
+            <div className="lista-riesgos-item1">
+              <p className="text-primary header-text">
+                <b>11</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item2">
+              <p className="text-primary header-text">PRTR011</p>
+            </div>
+            <div className="lista-riesgos-item3 header-text">
+              <p className="text-primary">
+                Servidor de Producción - Degradación en desempeño del sistema
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">
+                <b>Tratamiento:</b> Transferencia
+              </p>
+              <p className="text-primary">
+                <b>Indicador de Riesgo:</b> SH16
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">{"Área"} LIN002</p>
+              <p className="text-primary">
+                <b>Proceso PRO007</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item5 header-text">
+              <p className="text-primary">
+                <b>Probabilidad:</b> Medio
+              </p>
+              <p className="text-primary">
+                <b>Impacto:</b> Alto
+              </p>
+              <hr style={{ margin: "0" }} />
+              <p className="text-danger">
+                <b>Severo</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item6 header-text">
+              <p className="text-primary">
+                <b>Irregularidades:</b> 0
+              </p>
+              <p className="text-primary">
+                <b>Factores:</b> 0
+              </p>
+            </div>
+            <div className={`lista-riesgos-item7 header-text ${"bg-warning"}`}>
+              <h5 className="text-white text-center">50.00</h5>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenEditRisks(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faGear}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenRiskDetail(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faArrowRightFromBracket}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+          </div>
+        ),
+      },
+      {
+        key: "12",
+        content: (
+          <div className="lista-riesgos">
+            <div className="lista-riesgos-item1">
+              <p className="text-primary header-text">
+                <b>12</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item2">
+              <p className="text-primary header-text">PRTR012</p>
+            </div>
+            <div className="lista-riesgos-item3 header-text">
+              <p className="text-primary">
+                Servidor de Producción - Mal funcionamiento del equipamiento
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">
+                <b>Tratamiento:</b> Aceptación
+              </p>
+              <p className="text-primary">
+                <b>Indicador de Riesgo:</b> SH16
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">{"Área"} LIN003</p>
+              <p className="text-primary">
+                <b>Proceso PRO008</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item5 header-text">
+              <p className="text-primary">
+                <b>Probabilidad:</b> Bajo
+              </p>
+              <p className="text-primary">
+                <b>Impacto:</b> Medio
+              </p>
+              <hr style={{ margin: "0" }} />
+              <p className="text-warning">
+                <b>Medio</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item6 header-text">
+              <p className="text-primary">
+                <b>Irregularidades:</b> 0
+              </p>
+              <p className="text-primary">
+                <b>Factores:</b> 0
+              </p>
+            </div>
+            <div className={`lista-riesgos-item7 header-text ${"bg-success"}`}>
+              <h5 className="text-white text-center">25.00</h5>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenEditRisks(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faGear}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+            <div className="lista-riesgos-item1">
+              <Button
+                onClick={() => setOpenRiskDetail(true)}
+                variant="outline-secondary"
+              >
+                <FontAwesomeIcon
+                  icon={faArrowRightFromBracket}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </Button>
+            </div>
+          </div>
+        ),
+      },
+    ];
+  };
+
   const [openRiskDetail, setOpenRiskDetail] = useState(false);
   const [openNewRisks, setOpenNewRisks] = useState(false);
   const [openEditRisks, setOpenEditRisks] = useState(false);
@@ -913,95 +1914,9 @@ function Risk_Lista() {
                   <div style={{ width: "84px" }}></div>
                 </div>
               }
-              listItems={[
-                {
-                  key: "1",
-                  content: (
-                    <div className="lista-riesgos">
-                      <div className="lista-riesgos-item1">
-                        <p className="text-primary header-text">
-                          <b>1</b>
-                        </p>
-                      </div>
-                      <div className="lista-riesgos-item2">
-                        <p className="text-primary header-text">PRTR001</p>
-                      </div>
-                      <div className="lista-riesgos-item3 header-text">
-                        <p className="text-primary">
-                          Servidor de Producción - Degradación en desempeño del
-                          sistema
-                        </p>
-                      </div>
-                      <div className="lista-riesgos-item4 header-text">
-                        <p className="text-primary">
-                          <b>Tratamiento:</b> Transferencia
-                        </p>
-                        <p className="text-primary">
-                          <b>Indicador de Riesgo:</b> SH16
-                        </p>
-                      </div>
-                      <div className="lista-riesgos-item4 header-text">
-                        <p className="text-primary">{"Área"} LIN001</p>
-                        <p className="text-primary">
-                          <b>Proceso DRS001</b>
-                        </p>
-                      </div>
-                      <div className="lista-riesgos-item5 header-text">
-                        <p className="text-primary">
-                          <b>Probabilidad:</b> Medio
-                        </p>
-                        <p className="text-primary">
-                          <b>Impacto:</b> Alto
-                        </p>
-                        <hr style={{ margin: "0" }} />
-                        <p className="text-danger">
-                          <b>Severo</b>
-                        </p>
-                      </div>
-                      <div className="lista-riesgos-item6 header-text">
-                        <p className="text-primary">
-                          <b>Irregularidades:</b> 1
-                        </p>
-                        <p className="text-primary">
-                          <b>Factores:</b> 0
-                        </p>
-                      </div>
-                      <div
-                        className={`lista-riesgos-item7 header-text ${"bg-danger"}`}
-                      >
-                        <h5 className="text-white text-center">57.50</h5>
-                      </div>
-                      <div className="lista-riesgos-item1">
-                        <Button
-                          onClick={() => setOpenEditRisks(true)}
-                          variant="outline-secondary"
-                        >
-                          <FontAwesomeIcon
-                            icon={faGear}
-                            style={{
-                              fontSize: "1rem",
-                            }}
-                          />
-                        </Button>
-                      </div>
-                      <div className="lista-riesgos-item1">
-                        <Button
-                          onClick={() => setOpenRiskDetail(true)}
-                          variant="outline-secondary"
-                        >
-                          <FontAwesomeIcon
-                            icon={faArrowRightFromBracket}
-                            style={{
-                              fontSize: "1rem",
-                            }}
-                          />
-                        </Button>
-                      </div>
-                    </div>
-                  ),
-                },
-              ]}
+              listItems={retrieveListaContent()}
               overrideColor="override-white"
+              maxHeight="632px"
             />
           </div>
         </MainContainer>

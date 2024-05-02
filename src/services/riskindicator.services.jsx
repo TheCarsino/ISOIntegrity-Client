@@ -3,6 +3,16 @@ import { API_URL } from "../config";
 
 const baseUrl = `${API_URL}/indicator`;
 
+export const getGeneralRiskinOrg = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/organization`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching risk indicators:", error);
+    throw error;
+  }
+};
+
 export const getRiskIndicator = async () => {
   try {
     const response = await axios.get(`${baseUrl}`);

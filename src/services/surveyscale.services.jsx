@@ -13,6 +13,19 @@ export const getSurveyResult = async () => {
   }
 };
 
+export const verifyResultsforOneMonth = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/verify`);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching survey verification of previous data:",
+      error
+    );
+    throw error;
+  }
+};
+
 export const getSurveyResultbyId = async (id) => {
   try {
     const response = await axios.get(`${baseUrl}/${id}`);
@@ -46,9 +59,10 @@ export const getSurveyResultbyIndicatorId = async (indId) => {
   }
 };
 
-export const createSurveyResult = async (data) => {
+export const createSurveyResult = async (scaleId, data) => {
   try {
-    const response = await axios.post(baseUrl, data);
+    const response = await axios.post(`${baseUrl}/${scaleId}`, data);
+    if (response.status == 204) return null;
     return response.data;
   } catch (error) {
     console.error("Error creating survey result:", error);

@@ -11,9 +11,11 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import NavBar from "../../../components/NavBar/NavBar";
+import Placeholder from "react-bootstrap/Placeholder";
+import Spinner from "react-bootstrap/Spinner";
 import {
+  getGeneralRiskinOrg,
   getRiskIndicatorDetail,
-  getRiskIndicatorDetailbyId,
 } from "../../../services/riskindicator.services";
 import {
   colorTextPercentage,
@@ -413,6 +415,11 @@ function modalIndDetail(riskIndicator) {
 }
 
 function Risk_Analisis() {
+  async function retrieveOrgMetrics() {
+    const data = await getGeneralRiskinOrg();
+
+    return data;
+  }
   async function retrieveRiskDetails() {
     const data = await getRiskIndicatorDetail();
 
@@ -520,6 +527,9 @@ function Risk_Analisis() {
   useEffect(() => {
     retrieveRiskDetails().then((data) => {
       setListIndicators(data);
+      retrieveOrgMetrics().then((data) => {
+        setOrgAnalisis(data);
+      });
     });
   }, []);
 
@@ -554,48 +564,88 @@ function Risk_Analisis() {
                   transparente y responsable.
                 </p>
               </div>
-              <div className="analisis-medicion">
-                <MetricBox
-                  topText="Evaluacion de Riesgos"
-                  middleText="43"
-                  bottomText="Inventario Total"
-                  order="top-bottom-middle"
-                  status="secondary"
-                  width="222px"
-                  height="144px"
-                  gap="0.5rem"
-                />
-                <MetricBox
-                  topText="Nivel de Riesgo de la Organización"
-                  middleText="45.80"
-                  bottomText="En la evaluación original"
-                  order="top-bottom-middle"
-                  status="warning"
-                  width="320px"
-                  height="144px"
-                  gap="0.5rem"
-                />
-                <MetricBox
-                  topText="Tolerancia de Riesgo"
-                  middleText="3"
-                  bottomText="Riesgos Excedidos"
-                  order="top-bottom-middle"
-                  status="danger"
-                  width="222px"
-                  height="144px"
-                  gap="0.5rem"
-                />
-                <MetricBox
-                  topText="Nivel de Riesgo de la Organización"
-                  middleText="75.85"
-                  bottomText="En la actualidad"
-                  order="top-bottom-middle"
-                  status="danger"
-                  width="320px"
-                  height="144px"
-                  gap="0.5rem"
-                />
-              </div>
+              {orgAnalisis != null ? (
+                <div className="analisis-medicion">
+                  <MetricBox
+                    topText="Evaluacion de Riesgos"
+                    // middleText={orgAnalisis.inventario_riesgo}
+                    middleText="12"
+                    bottomText="Inventario Total"
+                    order="top-bottom-middle"
+                    status="secondary"
+                    width="222px"
+                    height="144px"
+                    gap="0.5rem"
+                  />
+                  <MetricBox
+                    topText="Nivel de Riesgo de la Organización"
+                    middleText={convertToPercentage(orgAnalisis.evaluacion_org)}
+                    bottomText="En la evaluación original"
+                    order="top-bottom-middle"
+                    status={statusPercentage(orgAnalisis.evaluacion_org)}
+                    width="320px"
+                    height="144px"
+                    gap="0.5rem"
+                  />
+                  <MetricBox
+                    topText="Tolerancia de Riesgo"
+                    //middleText={orgAnalisis.inventario_excedido}
+                    middleText="7"
+                    bottomText="Riesgos Excedidos"
+                    order="top-bottom-middle"
+                    // status={
+                    //   orgAnalisis.inventario_excedido > 0 ? "danger" : "success"
+                    // }
+                    status="danger"
+                    width="222px"
+                    height="144px"
+                    gap="0.5rem"
+                  />
+                  <MetricBox
+                    topText="Nivel de Riesgo de la Organización"
+                    middleText={convertToPercentage(
+                      orgAnalisis.nivel_riesgo_org
+                    )}
+                    bottomText="En la actualidad"
+                    order="top-bottom-middle"
+                    status={statusPercentage(orgAnalisis.nivel_riesgo_org)}
+                    width="320px"
+                    height="144px"
+                    gap="0.5rem"
+                  />
+                </div>
+              ) : (
+                <div className="analisis-medicion">
+                  <Placeholder
+                    as="p"
+                    animation="glow"
+                    style={{ width: "222px", height: "144px" }}
+                  >
+                    <Placeholder style={{ width: "222px", height: "144px" }} />
+                  </Placeholder>
+                  <Placeholder
+                    as="p"
+                    animation="glow"
+                    style={{ width: "320px", height: "144px" }}
+                  >
+                    <Placeholder style={{ width: "320px", height: "144px" }} />
+                  </Placeholder>
+                  <Placeholder
+                    as="p"
+                    animation="glow"
+                    style={{ width: "222px", height: "144px" }}
+                  >
+                    <Placeholder style={{ width: "222px", height: "144px" }} />
+                  </Placeholder>
+                  <Placeholder
+                    as="p"
+                    animation="glow"
+                    style={{ width: "320px", height: "144px" }}
+                  >
+                    <Placeholder style={{ width: "320px", height: "144px" }} />
+                  </Placeholder>
+                </div>
+              )}
             </div>
           </div>
           <div className="lista-body-indicadores">
@@ -606,7 +656,7 @@ function Risk_Analisis() {
                 </b>
               </h5>
             </div>
-            {listIndicators && (
+            {listIndicators != null ? (
               <ListTableBox
                 noPadding={true}
                 header={
@@ -660,6 +710,18 @@ function Risk_Analisis() {
                 overrideColor="override-white"
                 maxHeight="576px"
               />
+            ) : (
+              <div
+                style={{
+                  width: "100%",
+                  height: "120px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Spinner animation="border" variant="primary" size="lg" />
+              </div>
             )}
           </div>
         </MainContainer>
