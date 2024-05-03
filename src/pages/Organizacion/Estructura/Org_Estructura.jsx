@@ -1,6 +1,6 @@
 import { faGear } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -11,6 +11,11 @@ import MainContainer from "../../../components/Main/MainContainer";
 import Modal from "../../../components/Modals/Modals";
 import NavBar from "../../../components/NavBar/NavBar";
 import "./Org_Estructura.scss";
+import {
+  getOrganizationById,
+  getOrganizationStructure,
+} from "../../../services/organization.services";
+import Spinner from "react-bootstrap/esm/Spinner";
 
 function modalNewGroupedAreas() {
   return (
@@ -432,6 +437,245 @@ function modalEditAreasProcess() {
 }
 
 function Org_Estructura() {
+  async function retrieveOrganizationInfo() {
+    const data = await getOrganizationById(1);
+
+    return data;
+  }
+  async function retrieveOrganizationStructure() {
+    const data = await getOrganizationStructure();
+
+    return data;
+  }
+  /* ONE VARIABLE TO STORE EVERY ITEM FROM THE ORG STRUCTURE */
+  const [structure, setStructure] = useState({
+    Organization: null,
+    GroupedAreas: null,
+  });
+
+  useEffect(() => {
+    retrieveOrganizationInfo().then((retrievedOrg) => {
+      retrieveOrganizationStructure().then((retrieveStructure) => {
+        setStructure({
+          ...structure,
+          Organization: retrievedOrg,
+          GroupedAreas: retrieveStructure,
+        });
+      });
+    });
+  }, []);
+
+  const fillProcesos = (listProcesos) => {
+    let renderProcesos = [];
+
+    listProcesos.forEach((proceso) => {
+      renderProcesos.push({
+        key: proceso.id.toString(),
+        content: (
+          <div className="lista-unidades-procesos-item">
+            <div className="lista-unidades-procesos-item1">
+              <p className="text-primary">
+                <b>{`${proceso.codigo} - ${proceso.nombre}`}</b>
+              </p>
+              <small className="text-dark">{proceso.descripcion}</small>
+              <small
+                className={
+                  proceso.tiene_controles ? "text-success" : "text-danger"
+                }
+              >
+                {proceso.tiene_controles ? "P" : "No P"}resenta controles
+                antisoborno
+              </small>
+            </div>
+            <div className="button-group">
+              <Button
+                onClick={() => setOpenEditUnitProcess(true)}
+                size="md"
+                variant="primary"
+              >
+                <FontAwesomeIcon
+                  icon={faGear}
+                  style={{
+                    fontSize: "1.25rem",
+                  }}
+                />
+              </Button>
+            </div>
+          </div>
+        ),
+      });
+    });
+
+    return renderProcesos;
+  };
+  const fillProcesosArea = (listProcesosArea) => {
+    let renderProcesosArea = [];
+
+    listProcesosArea.forEach((proceso) => {
+      renderProcesosArea.push({
+        key: proceso.id.toString(),
+        content: (
+          <div className="lista-unidades-procesos-item">
+            <div className="lista-unidades-procesos-item1">
+              <p className="text-primary">
+                <b>{`${proceso.codigo} - ${proceso.nombre}`}</b>
+              </p>
+              <small className="text-dark">{proceso.descripcion}</small>
+              <small
+                className={
+                  proceso.tiene_controles ? "text-success" : "text-danger"
+                }
+              >
+                {proceso.tiene_controles ? "P" : "No P"}resenta controles
+                antisoborno
+              </small>
+            </div>
+            <div className="button-group">
+              <Button
+                onClick={() => setOpenEditAreasProcess(true)}
+                size="md"
+                variant="primary"
+              >
+                <FontAwesomeIcon
+                  icon={faGear}
+                  style={{
+                    fontSize: "1.25rem",
+                  }}
+                />
+              </Button>
+            </div>
+          </div>
+        ),
+      });
+    });
+
+    return renderProcesosArea;
+  };
+  const fillUnidades = (listUnidades) => {
+    let renderUnidades = [];
+
+    listUnidades.forEach((unidad) => {
+      renderUnidades.push({
+        header: (
+          <div key={unidad.id} className="accordion-unidades-lista-header">
+            <h6 className="text-secondary">
+              <b>{`${unidad.nombre} - ${unidad.codigo}`}</b>
+            </h6>
+          </div>
+        ),
+        hasBody: true,
+        body: (
+          <div className="accordion-unidades-lista-body">
+            <p className="text-secondary">{unidad.descripcion}</p>
+            <div className="accordion-unidades-procesos">
+              <h6 className="text-secondary">
+                <b>Lista de Procesos</b>
+              </h6>
+              <div className="button-group">
+                <Button
+                  onClick={() => setOpenNewUnitProcess(true)}
+                  size="md"
+                  variant="secondary"
+                >
+                  Nuevo Proceso
+                </Button>
+                <Button
+                  onClick={() => setOpenEditUnitAreas(true)}
+                  size="md"
+                  variant="secondary"
+                >
+                  Configuración de la Unidad
+                </Button>
+              </div>
+            </div>
+            {unidad.Processes != null && (
+              <ListTableBox
+                listItems={fillProcesos(unidad.Processes)}
+                overrideColor="override-white"
+              />
+            )}
+          </div>
+        ),
+      });
+    });
+
+    return renderUnidades;
+  };
+  const fillAreas = (listAreas) => {
+    let renderAreas = [];
+
+    listAreas.forEach((area) => {
+      renderAreas.push({
+        header: (
+          <div key={area.id} className="accordion-estructura-areas-header">
+            <h5 className="text-primary">
+              <b>{`${area.nombre} - ${area.codigo}`}</b>
+            </h5>
+          </div>
+        ),
+        hasBody: true,
+        body: (
+          <div className="accordion-areas-body">
+            <p className="text-dark">{area.descripcion}</p>
+            {/* Lista de Unidades */}
+            <div className="accordion-unidades-header">
+              <h5 className="text-primary">
+                <b>Lista de Unidades</b>
+              </h5>
+              <div className="button-group">
+                <Button
+                  onClick={() => setOpenNewUnitAreas(true)}
+                  size="md"
+                  variant="primary"
+                >
+                  Nueva Unidad
+                </Button>
+                <Button
+                  onClick={() => setOpenEditAreas(true)}
+                  size="md"
+                  variant="primary"
+                >
+                  Configuración del Área
+                </Button>
+              </div>
+            </div>
+            {area.Unit_Unit !== null && (
+              <div className="accordion-unidades-body">
+                <AccordionBox
+                  accordionItems={fillUnidades(area.Unit_Unit)}
+                  overrideColor="override-white"
+                ></AccordionBox>
+              </div>
+            )}
+            {/* Lista de Procesos del Area*/}
+            <div className="accordion-procesosarea-header">
+              <h5 className="text-primary">
+                <b>Lista de Procesos del Area</b>
+              </h5>
+              <div className="button-group">
+                <Button
+                  onClick={() => setOpenNewAreasProcess(true)}
+                  size="md"
+                  variant="secondary"
+                >
+                  Nuevo Proceso
+                </Button>
+              </div>
+            </div>
+            {area.Area_Unit[0].Processes != null && (
+              <ListTableBox
+                listItems={fillProcesosArea(area.Area_Unit[0].Processes)}
+                overrideColor="override-gray"
+              />
+            )}
+          </div>
+        ),
+      });
+    });
+
+    return renderAreas;
+  };
+
   const [openNewGroupedAreas, setOpenNewGroupedAreas] = useState(false);
   const [openEditGroupedAreas, setOpenEditGroupedAreas] = useState(false);
   const [openNewAreas, setOpenNewAreas] = useState(false);
@@ -450,523 +694,121 @@ function Org_Estructura() {
       </div>
       <div className="app-component bg-white">
         <MainContainer title="Estructura de la Organizacion">
-          <div className="header-org">
-            <img
-              src="/assets/company-logo.png"
-              className="d-inline-block align-text-top"
-              style={{ height: "100%", width: "196px" }}
-              alt="Company Logo"
-            />
-            <div className="content-org">
-              <h5 className="text-primary" style={{ width: "100%" }}>
-                <b>Generic AB Organization S.A.C</b>
-              </h5>
-              <h6
-                className="text-primary text-end"
-                style={{ width: "13.25rem" }}
-              >
-                <b>Rubro: </b>
-              </h6>
-              <p className="text-dark" style={{ width: "53.5rem" }}>
-                Consultoras en Mercadotecnia / Marketing / Comercialización
-              </p>
-              <h6
-                className="text-primary text-end"
-                style={{ width: "13.25rem" }}
-              >
-                <b>Categoría: </b>
-              </h6>
-              <p className="text-dark" style={{ width: "53.5rem" }}>
-                Empresa privada - Sociedad o asociación civil
-              </p>
-              <h6
-                className="text-primary text-end"
-                style={{ width: "13.25rem" }}
-              >
-                <b>Dirección: </b>
-              </h6>
-              <p className="text-dark" style={{ width: "53.5rem" }}>
-                Calle 200, Carretera de Ciudad Real-Almadén. Castilla-La Mancha,
-                Abenójar
-              </p>
-              <div className="button-group">
-                <Button
-                  onClick={() => setOpenNewGroupedAreas(true)}
-                  variant="primary"
+          {structure.Organization != null ? (
+            <div className="header-org">
+              <img
+                src={structure.Organization.logo_filename}
+                className="d-inline-block align-text-top"
+                style={{ height: "100%", width: "196px" }}
+                alt="Company Logo"
+              />
+              <div className="content-org">
+                <h5 className="text-primary" style={{ width: "100%" }}>
+                  <b>{structure.Organization.nombre}</b>
+                </h5>
+                <h6
+                  className="text-primary text-end"
+                  style={{ width: "13.25rem" }}
                 >
-                  Nuevo Grupo de Áreas
-                </Button>
-                {/* <Button variant="primary" disabled>
+                  <b>Rubro: </b>
+                </h6>
+                <p className="text-dark" style={{ width: "53.5rem" }}>
+                  {structure.Organization.rubro}
+                </p>
+                <h6
+                  className="text-primary text-end"
+                  style={{ width: "13.25rem" }}
+                >
+                  <b>Categoría: </b>
+                </h6>
+                <p className="text-dark" style={{ width: "53.5rem" }}>
+                  {`${structure.Organization.tipo} - ${structure.Organization.categoria}`}
+                </p>
+                <h6
+                  className="text-primary text-end"
+                  style={{ width: "13.25rem" }}
+                >
+                  <b>Dirección: </b>
+                </h6>
+                <p className="text-dark" style={{ width: "53.5rem" }}>
+                  {`${structure.Organization.direccion}. ${structure.Organization.ciudad}, ${structure.Organization.pais}`}
+                </p>
+                <div className="button-group">
+                  <Button
+                    onClick={() => setOpenNewGroupedAreas(true)}
+                    variant="primary"
+                  >
+                    Nuevo Grupo de Áreas
+                  </Button>
+                  {/* <Button variant="primary" disabled>
                 Cargar Lista de Procesos
               </Button> */}
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div
+              style={{
+                width: "100%",
+                height: "120px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Spinner animation="border" variant="primary" size="lg" />
+            </div>
+          )}
           <div className="accordion-group">
-            <div className="accordion-body">
-              <div className="grouped-areas">
-                <h4 className="text-primary">
-                  <b>Órganos de línea - GER 0001</b>
-                </h4>
-                <div className="button-group">
-                  <Button
-                    onClick={() => setOpenNewAreas(true)}
-                    size="md"
-                    variant="outline-primary"
-                  >
-                    Nueva Área
-                  </Button>
-                  <Button
-                    onClick={() => setOpenEditGroupedAreas(true)}
-                    size="md"
-                    variant="outline-primary"
-                  >
-                    Configuración
-                  </Button>
-                </div>
+            {structure.GroupedAreas != null ? (
+              <div className="accordion-body">
+                {structure.GroupedAreas.map((group) => (
+                  <>
+                    <div key={group.id} className="grouped-areas">
+                      <h4 className="text-primary">
+                        <b>{`${group.nombre} - ${group.codigo}`}</b>
+                      </h4>
+                      <div className="button-group">
+                        <Button
+                          onClick={() => setOpenNewAreas(true)}
+                          size="md"
+                          variant="outline-primary"
+                        >
+                          Nueva Área
+                        </Button>
+                        <Button
+                          onClick={() => setOpenEditGroupedAreas(true)}
+                          size="md"
+                          variant="outline-primary"
+                        >
+                          Configuración
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="accordion-areas">
+                      {group.Areas != null && (
+                        <AccordionBox
+                          accordionItems={fillAreas(group.Areas)}
+                          overrideColor="override-white"
+                        ></AccordionBox>
+                      )}
+                    </div>
+                  </>
+                ))}
               </div>
-              {/* Lista de Areas */}
-              <div className="accordion-areas">
-                <AccordionBox
-                  accordionItems={[
-                    {
-                      header: (
-                        <div className="accordion-estructura-areas-header">
-                          <h5 className="text-primary">
-                            <b>
-                              Gerencia Regional de Desarrollo Social - LIN001
-                            </b>
-                          </h5>
-                        </div>
-                      ),
-                      hasBody: true,
-                      body: (
-                        <div className="accordion-areas-body">
-                          <p className="text-dark">
-                            Órgano de línea técnico, normativo y ejecutivo
-                            responsable del diseño, conducción, coordinación,
-                            supervisión y evaluación de las políticas públicas
-                            regionales de desarrollo social y humano, en las
-                            materias específicas de educación, cultura, ciencia
-                            y tecnología, recreación, deportes, salud, vivienda,
-                            trabajo, población saneamiento, desarrollo social e
-                            igualdad de oportunidades.
-                          </p>
-                          {/* Lista de Unidades */}
-                          <div className="accordion-unidades-header">
-                            <h5 className="text-primary">
-                              <b>Lista de Unidades</b>
-                            </h5>
-                            <div className="button-group">
-                              <Button
-                                onClick={() => setOpenNewUnitAreas(true)}
-                                size="md"
-                                variant="primary"
-                              >
-                                Nueva Unidad
-                              </Button>
-                              <Button
-                                onClick={() => setOpenEditAreas(true)}
-                                size="md"
-                                variant="primary"
-                              >
-                                Configuración del Área
-                              </Button>
-                            </div>
-                          </div>
-                          <div className="accordion-unidades-body">
-                            <AccordionBox
-                              accordionItems={[
-                                {
-                                  header: (
-                                    <div className="accordion-unidades-lista-header">
-                                      <h6 className="text-secondary">
-                                        <b>
-                                          Dirección Regional de Trabajo y
-                                          Promoción del Empleo - DRS001
-                                        </b>
-                                      </h6>
-                                    </div>
-                                  ),
-                                  hasBody: true,
-                                  body: (
-                                    <div className="accordion-unidades-lista-body">
-                                      <p className="text-secondary">
-                                        La Dirección Regional de Trabajo y
-                                        Promoción del Empleo (DRTPE) es un
-                                        organismo descentralizado que opera en
-                                        diferentes regiones del Perú. Su función
-                                        principal es liderar la implementación
-                                        de políticas y programas relacionados
-                                        con el empleo y el desarrollo económico.
-                                      </p>
-                                      <div className="accordion-unidades-procesos">
-                                        <h6 className="text-secondary">
-                                          <b>Lista de Procesos</b>
-                                        </h6>
-                                        <div className="button-group">
-                                          <Button
-                                            onClick={() =>
-                                              setOpenNewUnitProcess(true)
-                                            }
-                                            size="md"
-                                            variant="secondary"
-                                          >
-                                            Nuevo Proceso
-                                          </Button>
-                                          <Button
-                                            onClick={() =>
-                                              setOpenEditUnitAreas(true)
-                                            }
-                                            size="md"
-                                            variant="secondary"
-                                          >
-                                            Configuración de la Unidad
-                                          </Button>
-                                        </div>
-                                      </div>
-                                      <ListTableBox
-                                        listItems={[
-                                          {
-                                            key: "1",
-                                            content: (
-                                              <div className="lista-unidades-procesos-item">
-                                                <div className="lista-unidades-procesos-item1">
-                                                  <p className="text-primary">
-                                                    <b>
-                                                      PRO001- Proceso de
-                                                      Gestionamiento de
-                                                      Contrataciones
-                                                    </b>
-                                                  </p>
-                                                  <small className="text-dark">
-                                                    Proceso de contratación es
-                                                    fundamental para asegurar
-                                                    que se incorpore al personal
-                                                    adecuado y que se cumplan
-                                                    las necesidades de la
-                                                    empresa
-                                                  </small>
-                                                  <small className="text-success">
-                                                    Presenta controles
-                                                    antisoborno
-                                                  </small>
-                                                </div>
-                                                <div className="button-group">
-                                                  <Button
-                                                    onClick={() =>
-                                                      setOpenEditUnitProcess(
-                                                        true
-                                                      )
-                                                    }
-                                                    size="md"
-                                                    variant="primary"
-                                                  >
-                                                    <FontAwesomeIcon
-                                                      icon={faGear}
-                                                      style={{
-                                                        fontSize: "1.25rem",
-                                                      }}
-                                                    />
-                                                  </Button>
-                                                </div>
-                                              </div>
-                                            ),
-                                          },
-                                          {
-                                            key: "2",
-                                            content: (
-                                              <div className="lista-unidades-procesos-item">
-                                                <div className="lista-unidades-procesos-item1">
-                                                  <p className="text-primary">
-                                                    <b>
-                                                      PRO002 - Procedimiento de
-                                                      selección de nuevos
-                                                      colaboradores
-                                                    </b>
-                                                  </p>
-                                                  <small className="text-dark">
-                                                    Proceso de contratación es
-                                                    fundamental para asegurar
-                                                    que se incorpore al personal
-                                                    adecuado y que se cumplan
-                                                    las necesidades de la
-                                                    empresa
-                                                  </small>
-                                                  <small className="text-danger">
-                                                    No presenta controles
-                                                    antisoborno
-                                                  </small>
-                                                </div>
-                                                <div className="button-group">
-                                                  <Button
-                                                    onClick={() =>
-                                                      setOpenEditUnitProcess(
-                                                        true
-                                                      )
-                                                    }
-                                                    size="md"
-                                                    variant="primary"
-                                                  >
-                                                    <FontAwesomeIcon
-                                                      icon={faGear}
-                                                      style={{
-                                                        fontSize: "1.25rem",
-                                                      }}
-                                                    />
-                                                  </Button>
-                                                </div>
-                                              </div>
-                                            ),
-                                          },
-                                          {
-                                            key: "1",
-                                            content: (
-                                              <div className="lista-unidades-procesos-item">
-                                                <div className="lista-unidades-procesos-item1">
-                                                  <p className="text-primary">
-                                                    <b>
-                                                      PRO003 - Proceso de
-                                                      promoción vertical
-                                                    </b>
-                                                  </p>
-                                                  <small className="text-dark">
-                                                    Proceso de contratación es
-                                                    fundamental para asegurar
-                                                    que se incorpore al personal
-                                                    adecuado y que se cumplan
-                                                    las necesidades de la
-                                                    empresa
-                                                  </small>
-                                                  <small className="text-success">
-                                                    Presenta controles
-                                                    antisoborno
-                                                  </small>
-                                                </div>
-                                                <div className="button-group">
-                                                  <Button
-                                                    onClick={() =>
-                                                      setOpenEditUnitProcess(
-                                                        true
-                                                      )
-                                                    }
-                                                    size="md"
-                                                    variant="primary"
-                                                  >
-                                                    <FontAwesomeIcon
-                                                      icon={faGear}
-                                                      style={{
-                                                        fontSize: "1.25rem",
-                                                      }}
-                                                    />
-                                                  </Button>
-                                                </div>
-                                              </div>
-                                            ),
-                                          },
-                                        ]}
-                                        overrideColor="override-white"
-                                      />
-                                    </div>
-                                  ),
-                                },
-                                {
-                                  header: (
-                                    <div className="accordion-unidades-lista-header">
-                                      <h6 className="text-secondary">
-                                        <b>
-                                          Dirección Regional de Vivienda,
-                                          Construcción y Saneamiento - DRS002
-                                        </b>
-                                      </h6>
-                                    </div>
-                                  ),
-                                  hasBody: false,
-                                },
-                                {
-                                  header: (
-                                    <div className="accordion-unidades-lista-header">
-                                      <h6 className="text-secondary">
-                                        <b>
-                                          Dirección Regional de Educación -
-                                          DRS003
-                                        </b>
-                                      </h6>
-                                    </div>
-                                  ),
-                                  hasBody: false,
-                                },
-                              ]}
-                              overrideColor="override-white"
-                            ></AccordionBox>
-                          </div>
-                          {/* Lista de Procesos del Area*/}
-                          <div className="accordion-procesosarea-header">
-                            <h5 className="text-primary">
-                              <b>Lista de Procesos del Area</b>
-                            </h5>
-                            <div className="button-group">
-                              <Button
-                                onClick={() => setOpenNewAreasProcess(true)}
-                                size="md"
-                                variant="secondary"
-                              >
-                                Nuevo Proceso
-                              </Button>
-                            </div>
-                          </div>
-                          <ListTableBox
-                            listItems={[
-                              {
-                                key: "1",
-                                content: (
-                                  <div className="lista-unidades-procesos-item">
-                                    <div className="lista-unidades-procesos-item1">
-                                      <p className="text-primary">
-                                        <b>
-                                          PRO004- Proceso de Gestionamiento de
-                                          Contrataciones en el Área
-                                        </b>
-                                      </p>
-                                      <small className="text-dark">
-                                        Proceso de contratación es fundamental
-                                        para asegurar que se incorpore al
-                                        personal adecuado y que se cumplan las
-                                        necesidades de la empresa
-                                      </small>
-                                      <small className="text-success">
-                                        Presenta controles antisoborno
-                                      </small>
-                                    </div>
-                                    <div className="button-group">
-                                      <Button
-                                        onClick={() =>
-                                          setOpenEditAreasProcess(true)
-                                        }
-                                        size="md"
-                                        variant="primary"
-                                      >
-                                        <FontAwesomeIcon
-                                          icon={faGear}
-                                          style={{
-                                            fontSize: "1.25rem",
-                                          }}
-                                        />
-                                      </Button>
-                                    </div>
-                                  </div>
-                                ),
-                              },
-                            ]}
-                            overrideColor="override-gray"
-                          />
-                        </div>
-                      ),
-                    },
-                    {
-                      header: (
-                        <div className="accordion-estructura-areas-header">
-                          <h5 className="text-primary">
-                            <b>
-                              Gerencia Regional de Desarrollo Económico - LIN002
-                            </b>
-                          </h5>
-                        </div>
-                      ),
-                      hasBody: false,
-                    },
-                    {
-                      header: (
-                        <div className="accordion-estructura-areas-header">
-                          <h5 className="text-primary">
-                            <b>
-                              Gerencia Regional de Infrasestructura - LIN003
-                            </b>
-                          </h5>
-                        </div>
-                      ),
-                      hasBody: false,
-                    },
-                    {
-                      header: (
-                        <div className="accordion-estructura-areas-header">
-                          <h5 className="text-primary">
-                            <b>
-                              Gerencia Regional de Recursos Naturales y Gestión
-                              del Medio Ambiente - LIN004
-                            </b>
-                          </h5>
-                        </div>
-                      ),
-                      hasBody: false,
-                    },
-                  ]}
-                  overrideColor="override-white"
-                ></AccordionBox>
+            ) : (
+              <div
+                style={{
+                  width: "100%",
+                  height: "120px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Spinner animation="border" variant="primary" size="lg" />
               </div>
-              <div className="grouped-areas">
-                <h4 className="text-primary">
-                  <b>Órganos de apoyo - GER 002</b>
-                </h4>
-                <div className="button-group">
-                  <Button
-                    onClick={() => setOpenNewAreas(true)}
-                    size="md"
-                    variant="outline-primary"
-                  >
-                    Nueva Área
-                  </Button>
-                  <Button
-                    onClick={() => setOpenEditGroupedAreas(true)}
-                    size="md"
-                    variant="outline-primary"
-                  >
-                    Configuración
-                  </Button>
-                </div>
-              </div>
-              {/* Lista de Areas */}
-              <div className="accordion-areas">
-                <AccordionBox
-                  accordionItems={[
-                    {
-                      header: (
-                        <div className="accordion-estructura-areas-header">
-                          <h5 className="text-primary">
-                            <b>Gerencia Regional de Administración - APO001</b>
-                          </h5>
-                        </div>
-                      ),
-                      hasBody: false,
-                    },
-                    {
-                      header: (
-                        <div className="accordion-estructura-areas-header">
-                          <h5 className="text-primary">
-                            <b>Secretaria de Consejo Regional - APO002</b>
-                          </h5>
-                        </div>
-                      ),
-                      hasBody: false,
-                    },
-                    {
-                      header: (
-                        <div className="accordion-estructura-areas-header">
-                          <h5 className="text-primary">
-                            <b>
-                              Oficina de Promoción de la Inversión Privada -
-                              APO003
-                            </b>
-                          </h5>
-                        </div>
-                      ),
-                      hasBody: false,
-                    },
-                  ]}
-                  overrideColor="override-white"
-                ></AccordionBox>
-              </div>
-            </div>
+            )}
           </div>
         </MainContainer>
         {/* Lista de Modales */}

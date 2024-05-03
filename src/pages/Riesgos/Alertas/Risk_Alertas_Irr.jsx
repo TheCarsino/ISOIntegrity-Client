@@ -52,7 +52,7 @@ function modalAlertIrrDetail() {
             controlId="formGridRegCodigo"
           >
             <Form.Label>Código de Registro</Form.Label>
-            <Form.Control type="text" placeholder="" readOnly value="IRR021" />
+            <Form.Control type="text" placeholder="" readOnly value="IRR001" />
           </Form.Group>
           <Form.Group
             as={Col}
@@ -64,7 +64,7 @@ function modalAlertIrrDetail() {
               type="text"
               placeholder=""
               readOnly
-              value="24/03/2024"
+              value="30/04/2024"
             />
           </Form.Group>
         </div>
@@ -92,7 +92,7 @@ function modalAlertIrrDetail() {
                 <Form.Control
                   type="text"
                   placeholder="Ingrese su nombre"
-                  value="Pedro Jesus Guerrero Mansilla"
+                  value="Will Smith Table"
                 />
               </Form.Group>
             </Row>
@@ -118,7 +118,7 @@ function modalAlertIrrDetail() {
                 <Form.Control
                   type="text"
                   placeholder=""
-                  value="pjguerrero@gmail.com"
+                  value="willsmith@example.com"
                 />
               </Form.Group>
             </Row>
@@ -645,22 +645,22 @@ function Risk_Alertas() {
                       </div>
                       <div className="lista-alerts-item2 header-text">
                         <p className="text-primary itemlist-text">
-                          Pedro Jesus Guerrrero Mansilla
+                          Will Smith Table
                         </p>
                         <p className="text-secondary itemlist-text">
                           Oficinista de RR.HH.
                         </p>
                       </div>
                       <div className="lista-alerts-item3 header-text">
-                        <p className="text-primary">Fecha: {"24/03/2024"}</p>
-                        <p className="text-primary">Codigo: {"IRR021"}</p>
+                        <p className="text-primary">Fecha: {"30/04/2024"}</p>
+                        <p className="text-primary">Codigo: {"IRR001"}</p>
                       </div>
                       <div className="lista-alerts-item4 header-text">
                         <p className="text-primary">
                           <b>Teléfono:</b> +51 948168849
                         </p>
                         <p className="text-primary">
-                          <b>Correo:</b> pjguerrero@gmail.com
+                          <b>Correo:</b> willsmith@example.com
                         </p>
                       </div>
                       <div className="lista-alerts-item5 header-text">

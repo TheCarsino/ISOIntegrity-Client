@@ -18,6 +18,7 @@ import { URL_ORGANIZACION_RIESGOS } from "../../../config";
 import MetricBox from "../../../components/Metrics/MetricBox";
 import Modals from "../../../components/Modals/Modals";
 import NavBar from "../../../components/NavBar/NavBar";
+import { getProcessbyUnitAreaId } from "../../../services/unitarea.services";
 
 function modalRiskDetail() {
   return (
@@ -234,6 +235,333 @@ function Org_Riesgos_Area() {
     if (receivedData == null) navigate(`${URL_ORGANIZACION_RIESGOS}`);
   }, []);
 
+  async function retrieveProcessforUnit() {
+    const data = await getProcessbyUnitAreaId(receivedData.id);
+
+    return data;
+  }
+  /* ONE VARIABLE TO STORE EVERY ITEM FROM THE ORG STRUCTURE */
+  const [process, setProcess] = useState(null);
+
+  useEffect(() => {
+    retrieveProcessforUnit().then((retrieveProcess) => {
+      setProcess(retrieveProcess);
+    });
+  }, []);
+
+  const fillProcesos = (listProcesos) => {
+    let renderProcesos = [];
+
+    listProcesos.forEach((proceso) => {
+      renderProcesos.push({
+        header: (
+          <div className="lista-procesos">
+            <div className="lista-procesos-item1">
+              <p className="text-primary header-text">
+                <b>{proceso.id}</b>
+              </p>
+            </div>
+            <div className="lista-procesos-item2">
+              <p className="text-primary header-text">{proceso.codigo}</p>
+            </div>
+            <div className="lista-procesos-item3 header-text">
+              <p className="text-primary">{proceso.nombre}</p>
+              <p className="text-success ">Tiene controles antisoborno</p>
+            </div>
+            <div className="lista-procesos-item4 header-text">
+              <p className="text-primary">{`Total: ${
+                proceso.id == 4 || proceso.id == 1 ? "3" : "3"
+              } riesgos`}</p>
+              <p
+                className={
+                  proceso.id == 4 || proceso.id == 1
+                    ? "text-danger"
+                    : "text-success"
+                }
+              >{`${
+                proceso.id == 4 || proceso.id == 1 ? "2" : "0"
+              } exceden el riesgo de tolerancia`}</p>
+            </div>
+            <div
+              className={`lista-procesos-item5 header-text ${
+                proceso.id == 4 || proceso.id == 1 ? "bg-warning" : "bg-dark"
+              }`}
+            >
+              <h5 className="text-white text-center">
+                {proceso.id == 4 || proceso.id == 1 ? "45.00" : "0"}
+              </h5>
+            </div>
+          </div>
+        ),
+        hasBody: proceso.id == 4 || proceso.id == 1,
+        body: (
+          <div className="accordion-lista-body">
+            <div className="procesos-riesgos-header">
+              <h5 className="text-secondary">
+                <b>Lista de Riesgos</b>
+              </h5>
+            </div>
+            <ListTableBox
+              noPadding={true}
+              header={
+                <div className="accordion-riesgos-header">
+                  <h6
+                    className="text-primary header-text"
+                    style={{ width: "42px", alignSelf: "center" }}
+                  >
+                    <b>#</b>
+                  </h6>
+                  <h6
+                    className="text-primary header-text"
+                    style={{ width: "136px" }}
+                  >
+                    <b>Código</b>
+                  </h6>
+                  <h6
+                    className="text-primary header-text"
+                    style={{ width: "709px" }}
+                  >
+                    <b>Nombre</b>
+                  </h6>
+                  <h6
+                    className="text-primary header-text"
+                    style={{ width: "232px" }}
+                  >
+                    <b>Categoría</b>
+                  </h6>
+                  <h6
+                    className="text-primary header-text"
+                    style={{ width: "232px" }}
+                  >
+                    <b>Severidad</b>
+                  </h6>
+                  <h6
+                    className="text-primary header-text"
+                    style={{ width: "232px" }}
+                  >
+                    <b>Casos</b>
+                  </h6>
+                  <h6
+                    className="text-primary header-text"
+                    style={{ width: "122px" }}
+                  >
+                    <b>Nivel Riesgo</b>
+                  </h6>
+                  <div style={{ width: "42px" }}></div>
+                </div>
+              }
+              listItems={[
+                {
+                  key: "1",
+                  content: (
+                    <div className="lista-riesgos">
+                      <div className="lista-riesgos-item1">
+                        <p className="text-primary header-text">
+                          <b>1</b>
+                        </p>
+                      </div>
+                      <div className="lista-riesgos-item2">
+                        <p className="text-primary header-text">PRTR001</p>
+                      </div>
+                      <div className="lista-riesgos-item3 header-text">
+                        <p className="text-primary">
+                          Servidor de Producción - Degradación en desempeño del
+                          sistema
+                        </p>
+                      </div>
+                      <div className="lista-riesgos-item4 header-text">
+                        <p className="text-primary">
+                          <b>Tratamiento:</b> Transferencia
+                        </p>
+                        <p className="text-primary">
+                          <b>Indicador de Riesgo:</b> SH16
+                        </p>
+                      </div>
+                      <div className="lista-riesgos-item5 header-text">
+                        <p className="text-primary">
+                          <b>Probabilidad:</b> Medio
+                        </p>
+                        <p className="text-primary">
+                          <b>Impacto:</b> Alto
+                        </p>
+                        <hr style={{ margin: "0" }} />
+                        <p className="text-danger">
+                          <b>Severo</b>
+                        </p>
+                      </div>
+                      <div className="lista-riesgos-item6 header-text">
+                        <p className="text-primary">
+                          <b>Irregularidades:</b> 0
+                        </p>
+                        <p className="text-primary">
+                          <b>Factores:</b> 0
+                        </p>
+                      </div>
+                      <div
+                        className={`lista-riesgos-item7 header-text ${"bg-warning"}`}
+                      >
+                        <h5 className="text-white text-center">50.00</h5>
+                      </div>
+                      <div className="lista-riesgos-item1">
+                        <Button
+                          onClick={() => setOpenRiskDetail(true)}
+                          variant="outline-secondary"
+                        >
+                          <FontAwesomeIcon
+                            icon={faArrowRightFromBracket}
+                            style={{
+                              fontSize: "1rem",
+                            }}
+                          />
+                        </Button>
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  key: "2",
+                  content: (
+                    <div className="lista-riesgos">
+                      <div className="lista-riesgos-item1">
+                        <p className="text-primary header-text">
+                          <b>2</b>
+                        </p>
+                      </div>
+                      <div className="lista-riesgos-item2">
+                        <p className="text-primary header-text">PRTR002</p>
+                      </div>
+                      <div className="lista-riesgos-item3 header-text">
+                        <p className="text-primary">
+                          Servidor de Producción - Mal funcionamiento del
+                          equipamiento
+                        </p>
+                      </div>
+                      <div className="lista-riesgos-item4 header-text">
+                        <p className="text-primary">
+                          <b>Tratamiento:</b> Aceptación
+                        </p>
+                        <p className="text-primary">
+                          <b>Indicador de Riesgo:</b> SH16
+                        </p>
+                      </div>
+                      <div className="lista-riesgos-item5 header-text">
+                        <p className="text-primary">
+                          <b>Probabilidad:</b> Bajo
+                        </p>
+                        <p className="text-primary">
+                          <b>Impacto:</b> Medio
+                        </p>
+                        <hr style={{ margin: "0" }} />
+                        <p className="text-warning">
+                          <b>Medio</b>
+                        </p>
+                      </div>
+                      <div className="lista-riesgos-item6 header-text">
+                        <p className="text-primary">
+                          <b>Irregularidades:</b> 0
+                        </p>
+                        <p className="text-primary">
+                          <b>Factores:</b> 0
+                        </p>
+                      </div>
+                      <div
+                        className={`lista-riesgos-item7 header-text ${"bg-success"}`}
+                      >
+                        <h5 className="text-white text-center">25.00</h5>
+                      </div>
+                      <div className="lista-riesgos-item1">
+                        <Button
+                          onClick={() => setOpenRiskDetail(true)}
+                          variant="outline-secondary"
+                        >
+                          <FontAwesomeIcon
+                            icon={faArrowRightFromBracket}
+                            style={{
+                              fontSize: "1rem",
+                            }}
+                          />
+                        </Button>
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  key: "3",
+                  content: (
+                    <div className="lista-riesgos">
+                      <div className="lista-riesgos-item1">
+                        <p className="text-primary header-text">
+                          <b>3</b>
+                        </p>
+                      </div>
+                      <div className="lista-riesgos-item2">
+                        <p className="text-primary header-text">PRTR003</p>
+                      </div>
+                      <div className="lista-riesgos-item3 header-text">
+                        <p className="text-primary">
+                          Datos de contratistas - Disponibilidad de backups
+                        </p>
+                      </div>
+                      <div className="lista-riesgos-item4 header-text">
+                        <p className="text-primary">
+                          <b>Tratamiento:</b> Transferencia
+                        </p>
+                        <p className="text-primary">
+                          <b>Indicador de Riesgo:</b> SH16
+                        </p>
+                      </div>
+                      <div className="lista-riesgos-item5 header-text">
+                        <p className="text-primary">
+                          <b>Probabilidad:</b> Medio
+                        </p>
+                        <p className="text-primary">
+                          <b>Impacto:</b> Alto
+                        </p>
+                        <hr style={{ margin: "0" }} />
+                        <p className="text-danger">
+                          <b>Severo</b>
+                        </p>
+                      </div>
+                      <div className="lista-riesgos-item6 header-text">
+                        <p className="text-primary">
+                          <b>Irregularidades:</b> 0
+                        </p>
+                        <p className="text-primary">
+                          <b>Factores:</b> 0
+                        </p>
+                      </div>
+                      <div
+                        className={`lista-riesgos-item7 header-text ${"bg-warning"}`}
+                      >
+                        <h5 className="text-white text-center">50.00</h5>
+                      </div>
+                      <div className="lista-riesgos-item1">
+                        <Button
+                          onClick={() => setOpenRiskDetail(true)}
+                          variant="outline-secondary"
+                        >
+                          <FontAwesomeIcon
+                            icon={faArrowRightFromBracket}
+                            style={{
+                              fontSize: "1rem",
+                            }}
+                          />
+                        </Button>
+                      </div>
+                    </div>
+                  ),
+                },
+              ]}
+              overrideColor="override-gray"
+            />
+          </div>
+        ),
+      });
+    });
+
+    return renderProcesos;
+  };
+
   const navigate = useNavigate();
 
   const handleUnitAreaRisk = () => {
@@ -246,7 +574,11 @@ function Org_Riesgos_Area() {
         <NavBar />
       </div>
       <div className="app-component bg-white">
-        <MainContainer title="Riesgos por Área Organizacional">
+        <MainContainer
+          title={`Riesgos por ${
+            receivedData != null && receivedData.esArea ? "Área" : "Unidad"
+          } Organizacional`}
+        >
           <div className="unidad-desc">
             <div className="header-display">
               <Button
@@ -277,11 +609,7 @@ function Org_Riesgos_Area() {
             </div>
             <div className="descripcion-medicion">
               <p className="text-dark" style={{ width: "562px" }}>
-                La Dirección Regional de Trabajo y Promoción del Empleo (DRTPE)
-                es un organismo descentralizado que opera en diferentes regiones
-                del Perú. Su función principal es liderar la implementación de
-                políticas y programas relacionados con el empleo y el desarrollo
-                económico.
+                {receivedData?.descripcion}
               </p>
               <MetricBox
                 topText="Evaluacion de Riesgos"
@@ -318,416 +646,48 @@ function Org_Riesgos_Area() {
                 <b>Lista de Procesos</b>
               </h5>
             </div>
-            <div className="accordion-procesos-header">
-              <h6
-                className="text-primary header-text"
-                style={{ width: "42px", alignSelf: "center" }}
-              >
-                <b>#</b>
-              </h6>
-              <h6
-                className="text-primary header-text"
-                style={{ width: "136px" }}
-              >
-                <b>Código</b>
-              </h6>
-              <h6
-                className="text-primary header-text"
-                style={{ width: "709px" }}
-              >
-                <b>Nombre</b>
-              </h6>
-              <h6
-                className="text-primary header-text"
-                style={{ width: "225px" }}
-              >
-                <b>Mediciones</b>
-              </h6>
-              <h6
-                className="text-primary header-text"
-                style={{ width: "122px" }}
-              >
-                <b>Nivel Riesgo</b>
-              </h6>
-            </div>
-            <AccordionBox
-              noPadding={true}
-              accordionItems={[
-                {
-                  header: (
-                    <div className="lista-procesos">
-                      <div className="lista-procesos-item1">
-                        <p className="text-primary header-text">
-                          <b>1</b>
-                        </p>
-                      </div>
-                      <div className="lista-procesos-item2">
-                        <p className="text-primary header-text">PRO001</p>
-                      </div>
-                      <div className="lista-procesos-item3 header-text">
-                        <p className="text-primary">
-                          Proceso de Gestionamiento de Contrataciones
-                        </p>
-                        <p className="text-success ">
-                          Tiene controles antisoborno
-                        </p>
-                      </div>
-                      <div className="lista-procesos-item4 header-text">
-                        <p className="text-primary">Total: 3 riesgos</p>
-                        <p className="text-danger ">
-                          2 exceden el nivel de tolerancia
-                        </p>
-                      </div>
-                      <div
-                        className={`lista-procesos-item5 header-text ${"bg-warning"}`}
-                      >
-                        <h5 className="text-white text-center">45.00</h5>
-                      </div>
-                    </div>
-                  ),
-                  hasBody: true,
-                  body: (
-                    <div className="accordion-lista-body">
-                      <div className="procesos-riesgos-header">
-                        <h5 className="text-secondary">
-                          <b>Lista de Riesgos</b>
-                        </h5>
-                      </div>
-                      <ListTableBox
-                        noPadding={true}
-                        header={
-                          <div className="accordion-riesgos-header">
-                            <h6
-                              className="text-primary header-text"
-                              style={{ width: "42px", alignSelf: "center" }}
-                            >
-                              <b>#</b>
-                            </h6>
-                            <h6
-                              className="text-primary header-text"
-                              style={{ width: "136px" }}
-                            >
-                              <b>Código</b>
-                            </h6>
-                            <h6
-                              className="text-primary header-text"
-                              style={{ width: "709px" }}
-                            >
-                              <b>Nombre</b>
-                            </h6>
-                            <h6
-                              className="text-primary header-text"
-                              style={{ width: "232px" }}
-                            >
-                              <b>Categoría</b>
-                            </h6>
-                            <h6
-                              className="text-primary header-text"
-                              style={{ width: "232px" }}
-                            >
-                              <b>Severidad</b>
-                            </h6>
-                            <h6
-                              className="text-primary header-text"
-                              style={{ width: "232px" }}
-                            >
-                              <b>Casos</b>
-                            </h6>
-                            <h6
-                              className="text-primary header-text"
-                              style={{ width: "122px" }}
-                            >
-                              <b>Nivel Riesgo</b>
-                            </h6>
-                            <div style={{ width: "42px" }}></div>
-                          </div>
-                        }
-                        listItems={[
-                          {
-                            key: "1",
-                            content: (
-                              <div className="lista-riesgos">
-                                <div className="lista-riesgos-item1">
-                                  <p className="text-primary header-text">
-                                    <b>1</b>
-                                  </p>
-                                </div>
-                                <div className="lista-riesgos-item2">
-                                  <p className="text-primary header-text">
-                                    PRTR001
-                                  </p>
-                                </div>
-                                <div className="lista-riesgos-item3 header-text">
-                                  <p className="text-primary">
-                                    Servidor de Producción - Degradación en
-                                    desempeño del sistema
-                                  </p>
-                                </div>
-                                <div className="lista-riesgos-item4 header-text">
-                                  <p className="text-primary">
-                                    <b>Tratamiento:</b> Transferencia
-                                  </p>
-                                  <p className="text-primary">
-                                    <b>Indicador de Riesgo:</b> SH16
-                                  </p>
-                                </div>
-                                <div className="lista-riesgos-item5 header-text">
-                                  <p className="text-primary">
-                                    <b>Probabilidad:</b> Medio
-                                  </p>
-                                  <p className="text-primary">
-                                    <b>Impacto:</b> Alto
-                                  </p>
-                                  <hr style={{ margin: "0" }} />
-                                  <p className="text-danger">
-                                    <b>Severo</b>
-                                  </p>
-                                </div>
-                                <div className="lista-riesgos-item6 header-text">
-                                  <p className="text-primary">
-                                    <b>Irregularidades:</b> 0
-                                  </p>
-                                  <p className="text-primary">
-                                    <b>Factores:</b> 0
-                                  </p>
-                                </div>
-                                <div
-                                  className={`lista-riesgos-item7 header-text ${"bg-warning"}`}
-                                >
-                                  <h5 className="text-white text-center">
-                                    50.00
-                                  </h5>
-                                </div>
-                                <div className="lista-riesgos-item1">
-                                  <Button
-                                    onClick={() => setOpenRiskDetail(true)}
-                                    variant="outline-secondary"
-                                  >
-                                    <FontAwesomeIcon
-                                      icon={faArrowRightFromBracket}
-                                      style={{
-                                        fontSize: "1rem",
-                                      }}
-                                    />
-                                  </Button>
-                                </div>
-                              </div>
-                            ),
-                          },
-                          {
-                            key: "2",
-                            content: (
-                              <div className="lista-riesgos">
-                                <div className="lista-riesgos-item1">
-                                  <p className="text-primary header-text">
-                                    <b>2</b>
-                                  </p>
-                                </div>
-                                <div className="lista-riesgos-item2">
-                                  <p className="text-primary header-text">
-                                    PRTR002
-                                  </p>
-                                </div>
-                                <div className="lista-riesgos-item3 header-text">
-                                  <p className="text-primary">
-                                    Servidor de Producción - Mal funcionamiento
-                                    del equipamiento
-                                  </p>
-                                </div>
-                                <div className="lista-riesgos-item4 header-text">
-                                  <p className="text-primary">
-                                    <b>Tratamiento:</b> Aceptación
-                                  </p>
-                                  <p className="text-primary">
-                                    <b>Indicador de Riesgo:</b> SH16
-                                  </p>
-                                </div>
-                                <div className="lista-riesgos-item5 header-text">
-                                  <p className="text-primary">
-                                    <b>Probabilidad:</b> Bajo
-                                  </p>
-                                  <p className="text-primary">
-                                    <b>Impacto:</b> Medio
-                                  </p>
-                                  <hr style={{ margin: "0" }} />
-                                  <p className="text-warning">
-                                    <b>Medio</b>
-                                  </p>
-                                </div>
-                                <div className="lista-riesgos-item6 header-text">
-                                  <p className="text-primary">
-                                    <b>Irregularidades:</b> 0
-                                  </p>
-                                  <p className="text-primary">
-                                    <b>Factores:</b> 0
-                                  </p>
-                                </div>
-                                <div
-                                  className={`lista-riesgos-item7 header-text ${"bg-success"}`}
-                                >
-                                  <h5 className="text-white text-center">
-                                    25.00
-                                  </h5>
-                                </div>
-                                <div className="lista-riesgos-item1">
-                                  <Button
-                                    onClick={() => setOpenRiskDetail(true)}
-                                    variant="outline-secondary"
-                                  >
-                                    <FontAwesomeIcon
-                                      icon={faArrowRightFromBracket}
-                                      style={{
-                                        fontSize: "1rem",
-                                      }}
-                                    />
-                                  </Button>
-                                </div>
-                              </div>
-                            ),
-                          },
-                          {
-                            key: "3",
-                            content: (
-                              <div className="lista-riesgos">
-                                <div className="lista-riesgos-item1">
-                                  <p className="text-primary header-text">
-                                    <b>3</b>
-                                  </p>
-                                </div>
-                                <div className="lista-riesgos-item2">
-                                  <p className="text-primary header-text">
-                                    PRTR003
-                                  </p>
-                                </div>
-                                <div className="lista-riesgos-item3 header-text">
-                                  <p className="text-primary">
-                                    Datos de contratistas - Disponibilidad de
-                                    backups
-                                  </p>
-                                </div>
-                                <div className="lista-riesgos-item4 header-text">
-                                  <p className="text-primary">
-                                    <b>Tratamiento:</b> Transferencia
-                                  </p>
-                                  <p className="text-primary">
-                                    <b>Indicador de Riesgo:</b> SH16
-                                  </p>
-                                </div>
-                                <div className="lista-riesgos-item5 header-text">
-                                  <p className="text-primary">
-                                    <b>Probabilidad:</b> Medio
-                                  </p>
-                                  <p className="text-primary">
-                                    <b>Impacto:</b> Alto
-                                  </p>
-                                  <hr style={{ margin: "0" }} />
-                                  <p className="text-danger">
-                                    <b>Severo</b>
-                                  </p>
-                                </div>
-                                <div className="lista-riesgos-item6 header-text">
-                                  <p className="text-primary">
-                                    <b>Irregularidades:</b> 0
-                                  </p>
-                                  <p className="text-primary">
-                                    <b>Factores:</b> 0
-                                  </p>
-                                </div>
-                                <div
-                                  className={`lista-riesgos-item7 header-text ${"bg-warning"}`}
-                                >
-                                  <h5 className="text-white text-center">
-                                    50.00
-                                  </h5>
-                                </div>
-                                <div className="lista-riesgos-item1">
-                                  <Button
-                                    onClick={() => setOpenRiskDetail(true)}
-                                    variant="outline-secondary"
-                                  >
-                                    <FontAwesomeIcon
-                                      icon={faArrowRightFromBracket}
-                                      style={{
-                                        fontSize: "1rem",
-                                      }}
-                                    />
-                                  </Button>
-                                </div>
-                              </div>
-                            ),
-                          },
-                        ]}
-                        overrideColor="override-gray"
-                      />
-                    </div>
-                  ),
-                },
-                {
-                  header: (
-                    <div className="lista-procesos">
-                      <div className="lista-procesos-item1">
-                        <p className="text-primary header-text">
-                          <b>2</b>
-                        </p>
-                      </div>
-                      <div className="lista-procesos-item2">
-                        <p className="text-primary header-text">PRO002</p>
-                      </div>
-                      <div className="lista-procesos-item3 header-text">
-                        <p className="text-primary">
-                          Procedimiento de selección de nuevos colaboradores
-                        </p>
-                        <p className="text-danger">
-                          No tiene controles antisoborno
-                        </p>
-                      </div>
-                      <div className="lista-procesos-item4 header-text">
-                        <p className="text-primary">Total: 0 riesgos</p>
-                      </div>
-                      <div
-                        className={`lista-procesos-item5 header-text ${"bg-dark"}`}
-                      >
-                        <h5 className="text-white text-center">0</h5>
-                      </div>
-                    </div>
-                  ),
-                  hasBody: false,
-                },
-                {
-                  header: (
-                    <div className="lista-procesos">
-                      <div className="lista-procesos-item1">
-                        <p className="text-primary header-text">
-                          <b>3</b>
-                        </p>
-                      </div>
-                      <div className="lista-procesos-item2">
-                        <p className="text-primary header-text">PRO003</p>
-                      </div>
-                      <div className="lista-procesos-item3 header-text">
-                        <p className="text-primary">
-                          Proceso de promoción vertical
-                        </p>
-                        <p className="text-danger ">
-                          No tiene controles antisoborno
-                        </p>
-                      </div>
-                      <div className="lista-procesos-item4 header-text">
-                        <p className="text-primary">Total: 0 riesgos</p>
-                      </div>
-                      <div
-                        className={`lista-procesos-item5 header-text ${"bg-dark"}`}
-                      >
-                        <h5 className="text-white text-center">0</h5>
-                      </div>
-                    </div>
-                  ),
-                  hasBody: false,
-                },
-              ]}
-              overrideBorders={true}
-              overrideColor="override-white"
-            ></AccordionBox>
+            {process != null && (
+              <>
+                <div className="accordion-procesos-header">
+                  <h6
+                    className="text-primary header-text"
+                    style={{ width: "42px", alignSelf: "center" }}
+                  >
+                    <b>#</b>
+                  </h6>
+                  <h6
+                    className="text-primary header-text"
+                    style={{ width: "136px" }}
+                  >
+                    <b>Código</b>
+                  </h6>
+                  <h6
+                    className="text-primary header-text"
+                    style={{ width: "709px" }}
+                  >
+                    <b>Nombre</b>
+                  </h6>
+                  <h6
+                    className="text-primary header-text"
+                    style={{ width: "225px" }}
+                  >
+                    <b>Mediciones</b>
+                  </h6>
+                  <h6
+                    className="text-primary header-text"
+                    style={{ width: "122px" }}
+                  >
+                    <b>Nivel Riesgo</b>
+                  </h6>
+                </div>
+                <AccordionBox
+                  noPadding={true}
+                  accordionItems={fillProcesos(process)}
+                  overrideBorders={true}
+                  overrideColor="override-white"
+                ></AccordionBox>
+              </>
+            )}
           </div>
         </MainContainer>
         <Modals

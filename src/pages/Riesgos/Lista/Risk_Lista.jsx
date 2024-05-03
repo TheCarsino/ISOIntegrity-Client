@@ -1002,7 +1002,7 @@ function Risk_Lista() {
           <div className="lista-riesgos">
             <div className="lista-riesgos-item1">
               <p className="text-primary header-text">
-                <b>1</b>
+                <b>3</b>
               </p>
             </div>
             <div className="lista-riesgos-item2">

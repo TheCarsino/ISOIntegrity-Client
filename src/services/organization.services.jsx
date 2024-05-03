@@ -22,3 +22,13 @@ export const getOrganizationById = async (id) => {
     throw error;
   }
 };
+
+export const getOrganizationStructure = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/structure`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching organization structure:", error);
+    throw error;
+  }
+};

@@ -54,7 +54,7 @@ function modalAlertFactDetail() {
             controlId="formGridRegCodigo"
           >
             <Form.Label>Código de Registro</Form.Label>
-            <Form.Control type="text" placeholder="" readOnly value="IRR021" />
+            <Form.Control type="text" placeholder="" readOnly value="FACT001" />
           </Form.Group>
           <Form.Group
             as={Col}
@@ -66,7 +66,7 @@ function modalAlertFactDetail() {
               type="text"
               placeholder=""
               readOnly
-              value="24/03/2024"
+              value="30/04/2024"
             />
           </Form.Group>
         </div>
@@ -537,15 +537,15 @@ function Risk_Alertas() {
                       </div>
                       <div className="lista-alerts-item2 header-text">
                         <p className="text-primary itemlist-text">
-                          Pedro Jesus Guerrrero Mansilla
+                          Jane Smith Bench
                         </p>
                         <p className="text-secondary itemlist-text">
-                          Oficinista de RR.HH.
+                          Gestor de Proyectos
                         </p>
                       </div>
                       <div className="lista-alerts-item3 header-text">
-                        <p className="text-primary">Fecha: {"24/03/2024"}</p>
-                        <p className="text-primary">Codigo: {"IRR021"}</p>
+                        <p className="text-primary">Fecha: {"30/04/2024"}</p>
+                        <p className="text-primary">Codigo: {"FACT001"}</p>
                       </div>
                       <div className="lista-alerts-item5 header-text">
                         <p className="text-primary itemlist-text">
