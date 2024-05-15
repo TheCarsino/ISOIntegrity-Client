@@ -34,10 +34,14 @@ function Org_Riesgos() {
 
     listUnidades.forEach((unidad) => {
       renderUnidades.push({
-        key: unidad.id,
+        key: unidad.id.toString(),
         content: (
           <div className="lista-unidades">
-            <div className="lista-unidades-item1"></div>
+            <div className="lista-unidades-item1">
+              <p className="text-primary header-text">
+                <b>{unidad.id}</b>
+              </p>
+            </div>
             <div className="lista-unidades-item2">
               <p className="text-primary header-text">{unidad.codigo}</p>
             </div>
@@ -75,34 +79,36 @@ function Org_Riesgos() {
                   : "25.00"}
               </h5>
             </div>
-            <Button
-              onClick={() =>
-                handleUnitAreaDetail({
-                  id: unidad.id,
-                  codigo: unidad.codigo,
-                  nombre: unidad.nombre,
-                  descripcion: unidad.descripcion,
-                  esArea: false,
-                })
-              }
-              variant="outline-secondary"
-            >
-              <div
-                style={{
-                  display: "flex",
-                  gap: "0.5rem",
-                  alignItems: "center",
-                }}
+            {unidad.Processes != null && unidad.Processes.length > 0 && (
+              <Button
+                onClick={() =>
+                  handleUnitAreaDetail({
+                    id: unidad.id,
+                    codigo: unidad.codigo,
+                    nombre: unidad.nombre,
+                    descripcion: unidad.descripcion,
+                    esArea: false,
+                  })
+                }
+                variant="outline-secondary"
               >
-                Ver Detalle
-                <FontAwesomeIcon
-                  icon={faArrowRight}
+                <div
                   style={{
-                    fontSize: "1.25rem",
+                    display: "flex",
+                    gap: "0.5rem",
+                    alignItems: "center",
                   }}
-                />
-              </div>
-            </Button>
+                >
+                  Ver Detalle
+                  <FontAwesomeIcon
+                    icon={faArrowRight}
+                    style={{
+                      fontSize: "1.25rem",
+                    }}
+                  />
+                </div>
+              </Button>
+            )}
           </div>
         ),
       });
@@ -169,34 +175,37 @@ function Org_Riesgos() {
                   : "0.00"}
               </h5>
             </div>
-            <Button
-              onClick={() =>
-                handleUnitAreaDetail({
-                  id: area.Area_Unit[0].id,
-                  codigo: area.Area_Unit[0].codigo,
-                  nombre: area.Area_Unit[0].nombre,
-                  descripcion: area.Area_Unit[0].descripcion,
-                  esArea: true,
-                })
-              }
-              variant="outline-secondary"
-            >
-              <div
-                style={{
-                  display: "flex",
-                  gap: "0.5rem",
-                  alignItems: "center",
-                }}
-              >
-                Ver Detalle
-                <FontAwesomeIcon
-                  icon={faArrowRight}
-                  style={{
-                    fontSize: "1.25rem",
-                  }}
-                />
-              </div>
-            </Button>
+            {area.Area_Unit[0].Processes != null &&
+              area.Area_Unit[0].Processes.length > 0 && (
+                <Button
+                  onClick={() =>
+                    handleUnitAreaDetail({
+                      id: area.Area_Unit[0].id,
+                      codigo: area.Area_Unit[0].codigo,
+                      nombre: area.Area_Unit[0].nombre,
+                      descripcion: area.Area_Unit[0].descripcion,
+                      esArea: true,
+                    })
+                  }
+                  variant="outline-secondary"
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                    }}
+                  >
+                    Ver Detalle
+                    <FontAwesomeIcon
+                      icon={faArrowRight}
+                      style={{
+                        fontSize: "1.25rem",
+                      }}
+                    />
+                  </div>
+                </Button>
+              )}
           </div>
         ),
         hasBody: area.Unit_Unit != null && area.Unit_Unit.length > 0,

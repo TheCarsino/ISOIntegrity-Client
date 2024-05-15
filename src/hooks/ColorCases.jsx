@@ -26,3 +26,21 @@ export function convertToPercentage(number) {
   number = parseFloat(number);
   return (Math.round(number * 100) / 100).toFixed(2);
 }
+
+export function statusImpact(element) {
+  element = parseFloat(element);
+  if (element <= 0) return "Nulo";
+  if (element > 0 && element <= 2.5) return "text-success";
+  if (element > 2.5 && element <= 5) return "text-warning";
+  if (element > 5 && element <= 7.5) return "text-danger";
+  if (element > 7.5 && element <= 10) return "text-danger";
+}
+
+export function statusImpactText(element) {
+  element = parseFloat(element);
+  if (element <= 0) return "Nulo";
+  if (element > 0 && element <= 2.5) return "Bajo";
+  if (element > 2.5 && element <= 5) return "Medio";
+  if (element > 5 && element <= 7.5) return "Alto";
+  if (element > 7.5 && element <= 10) return "Severo";
+}

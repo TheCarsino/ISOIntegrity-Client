@@ -62,3 +62,13 @@ export const getProcessbyUnitAreaId = async (id) => {
     throw error;
   }
 };
+
+export const getProcessRisksbyUnitAreaId = async (id) => {
+  try {
+    const response = await axios.get(`${baseUrl}/process/risks/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching process risks by unit area ID:", error);
+    throw error;
+  }
+};

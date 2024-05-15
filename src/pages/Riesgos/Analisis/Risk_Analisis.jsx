@@ -16,15 +16,92 @@ import Spinner from "react-bootstrap/Spinner";
 import {
   getGeneralRiskinOrg,
   getRiskIndicatorDetail,
+  getRiskIndicatorDetailbyId,
 } from "../../../services/riskindicator.services";
 import {
   colorTextPercentage,
   colorBackgroundPercentage,
   convertToPercentage,
   statusPercentage,
+  statusImpactText,
+  statusImpact,
 } from "../../../hooks/ColorCases";
 
 function modalIndDetail(riskIndicator) {
+  const fillRiskList = (risks) => {
+    let listRisk = [];
+    for (const risk of risks) {
+      listRisk.push({
+        key: risk.id.toString(),
+        content: (
+          <div className="lista-riesgos">
+            <div className="lista-riesgos-item1">
+              <p className="text-primary header-text">
+                <b>{risk.id}</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item2">
+              <p className="text-primary header-text">{risk.codigo}</p>
+            </div>
+            <div className="lista-riesgos-item3 header-text">
+              <p className="text-primary">{risk.nombre}</p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">
+                <b>Tratamiento:</b>{" "}
+                {risk.RiskTreatment != null
+                  ? risk.RiskTreatment.nombre
+                  : "Sin evaluar"}
+              </p>
+              <p className="text-primary">
+                <b>Indicador de Riesgo:</b> {risk.RiskIndicator?.codigo}
+              </p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
+              <p className="text-primary">
+                {risk.Process?.UnitArea.es_area ? "Área " : "Unidad "}
+                {risk.Process?.UnitArea.codigo}
+              </p>
+              <p className="text-primary">
+                <b>Proceso {risk.Process?.codigo}</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item5 header-text">
+              <p className="text-primary">
+                <b>Probabilidad:</b> {statusImpactText(risk.probabilidad)}
+              </p>
+              <p className="text-primary">
+                <b>Impacto:</b> {statusImpactText(risk.impacto)}
+              </p>
+              <hr style={{ margin: "0" }} />
+              <p className={statusImpact(risk.severidad_riesgo)}>
+                <b>{statusImpactText(risk.severidad_riesgo)}</b>
+              </p>
+            </div>
+            <div className="lista-riesgos-item6 header-text">
+              <p className="text-primary">
+                <b>Irregularidades:</b> 0
+              </p>
+              <p className="text-primary">
+                <b>Factores:</b> 0
+              </p>
+            </div>
+            <div
+              className={`lista-riesgos-item7 header-text ${colorBackgroundPercentage(
+                risk.nivel_riesgo
+              )}`}
+            >
+              <h5 className="text-white text-center">
+                {convertToPercentage(risk.nivel_riesgo)}
+              </h5>
+            </div>
+          </div>
+        ),
+      });
+    }
+    return listRisk;
+  };
+
   const fillEscalas = (escalas) => {
     let escalaText = "";
     if (escalas.descripcion_e1 != "")
@@ -49,7 +126,7 @@ function modalIndDetail(riskIndicator) {
             <div className="sub-detail">
               <MetricBox
                 topText="Total de Riesgos"
-                middleText="3"
+                middleText={riskIndicator.total_riesgos}
                 bottomText="Del indicador"
                 status="secondary"
                 width="172px"
@@ -57,7 +134,7 @@ function modalIndDetail(riskIndicator) {
               />
               <MetricBox
                 topText="Casos reportados"
-                middleText={riskIndicator.total_riesgos}
+                middleText={riskIndicator.casos_reportados_irreg}
                 bottomText="Por irregularidades"
                 status="secondary"
                 width="172px"
@@ -65,10 +142,7 @@ function modalIndDetail(riskIndicator) {
               />
               <MetricBox
                 topText="Casos reportados"
-                middleText={
-                  riskIndicator.casos_reportados_irreg +
-                  riskIndicator.casos_reportados_riesgo
-                }
+                middleText={riskIndicator.casos_reportados_riesgo}
                 bottomText="Por factores de riesgo"
                 status="secondary"
                 width="172px"
@@ -108,6 +182,7 @@ function modalIndDetail(riskIndicator) {
                   <Form.Control
                     type="text"
                     placeholder=""
+                    readOnly
                     value={riskIndicator.nombre}
                   />
                 </Form.Group>
@@ -149,6 +224,7 @@ function modalIndDetail(riskIndicator) {
                     style={{ height: "162px" }}
                     as="textarea"
                     placeholder=""
+                    readOnly
                     value={fillEscalas(riskIndicator.Escalas.SurveyScale)}
                   />
                 </Form.Group>
@@ -160,250 +236,66 @@ function modalIndDetail(riskIndicator) {
                       <b>Lista de Riesgos Asociados</b>
                     </h5>
                   </div>
-                  <ListTableBox
-                    noPadding={true}
-                    header={
-                      <div className="accordion-riesgos-header">
-                        <h6
-                          className="text-primary header-text"
-                          style={{ width: "42px", alignSelf: "center" }}
-                        >
-                          <b>#</b>
-                        </h6>
-                        <h6
-                          className="text-primary header-text"
-                          style={{ width: "136px" }}
-                        >
-                          <b>Código</b>
-                        </h6>
-                        <h6
-                          className="text-primary header-text"
-                          style={{ width: "709px" }}
-                        >
-                          <b>Nombre</b>
-                        </h6>
-                        <h6
-                          className="text-primary header-text"
-                          style={{ width: "232px" }}
-                        >
-                          <b>Categoría</b>
-                        </h6>
-                        <h6
-                          className="text-primary header-text"
-                          style={{ width: "232px" }}
-                        >
-                          <b>Relación Unidad</b>
-                        </h6>
-                        <h6
-                          className="text-primary header-text"
-                          style={{ width: "232px" }}
-                        >
-                          <b>Severidad</b>
-                        </h6>
-                        <h6
-                          className="text-primary header-text"
-                          style={{ width: "232px" }}
-                        >
-                          <b>Casos</b>
-                        </h6>
-                        <h6
-                          className="text-primary header-text"
-                          style={{ width: "122px" }}
-                        >
-                          <b>Nivel Riesgo</b>
-                        </h6>
-                      </div>
-                    }
-                    listItems={[
-                      {
-                        key: "1",
-                        content: (
-                          <div className="lista-riesgos">
-                            <div className="lista-riesgos-item1">
-                              <p className="text-primary header-text">
-                                <b>1</b>
-                              </p>
-                            </div>
-                            <div className="lista-riesgos-item2">
-                              <p className="text-primary header-text">
-                                PRTR001
-                              </p>
-                            </div>
-                            <div className="lista-riesgos-item3 header-text">
-                              <p className="text-primary">
-                                Servidor de Producción - Degradación en
-                                desempeño del sistema
-                              </p>
-                            </div>
-                            <div className="lista-riesgos-item4 header-text">
-                              <p className="text-primary">
-                                <b>Tratamiento:</b> Transferencia
-                              </p>
-                              <p className="text-primary">
-                                <b>Indicador de Riesgo:</b> SH16
-                              </p>
-                            </div>
-                            <div className="lista-riesgos-item4 header-text">
-                              <p className="text-primary">{"Área"} LIN001</p>
-                              <p className="text-primary">
-                                <b>Proceso DRS001</b>
-                              </p>
-                            </div>
-                            <div className="lista-riesgos-item5 header-text">
-                              <p className="text-primary">
-                                <b>Probabilidad:</b> Medio
-                              </p>
-                              <p className="text-primary">
-                                <b>Impacto:</b> Alto
-                              </p>
-                              <hr style={{ margin: "0" }} />
-                              <p className="text-danger">
-                                <b>Severo</b>
-                              </p>
-                            </div>
-                            <div className="lista-riesgos-item6 header-text">
-                              <p className="text-primary">
-                                <b>Irregularidades:</b> 0
-                              </p>
-                              <p className="text-primary">
-                                <b>Factores:</b> 0
-                              </p>
-                            </div>
-                            <div
-                              className={`lista-riesgos-item7 header-text ${"bg-warning"}`}
+                  {riskIndicator.Riesgos != null &&
+                    riskIndicator.Riesgos.length > 0 && (
+                      <ListTableBox
+                        noPadding={true}
+                        header={
+                          <div className="accordion-riesgos-header">
+                            <h6
+                              className="text-primary header-text"
+                              style={{ width: "42px", alignSelf: "center" }}
                             >
-                              <h5 className="text-white text-center">50.00</h5>
-                            </div>
-                          </div>
-                        ),
-                      },
-                      {
-                        key: "2",
-                        content: (
-                          <div className="lista-riesgos">
-                            <div className="lista-riesgos-item1">
-                              <p className="text-primary header-text">
-                                <b>2</b>
-                              </p>
-                            </div>
-                            <div className="lista-riesgos-item2">
-                              <p className="text-primary header-text">
-                                PRTR002
-                              </p>
-                            </div>
-                            <div className="lista-riesgos-item3 header-text">
-                              <p className="text-primary">
-                                Servidor de Producción - Mal funcionamiento del
-                                equipamiento
-                              </p>
-                            </div>
-                            <div className="lista-riesgos-item4 header-text">
-                              <p className="text-primary">
-                                <b>Tratamiento:</b> Aceptación
-                              </p>
-                              <p className="text-primary">
-                                <b>Indicador de Riesgo:</b> SH16
-                              </p>
-                            </div>
-                            <div className="lista-riesgos-item4 header-text">
-                              <p className="text-primary">{"Área"} LIN001</p>
-                              <p className="text-primary">
-                                <b>Proceso DRS001</b>
-                              </p>
-                            </div>
-                            <div className="lista-riesgos-item5 header-text">
-                              <p className="text-primary">
-                                <b>Probabilidad:</b> Bajo
-                              </p>
-                              <p className="text-primary">
-                                <b>Impacto:</b> Medio
-                              </p>
-                              <hr style={{ margin: "0" }} />
-                              <p className="text-warning">
-                                <b>Medio</b>
-                              </p>
-                            </div>
-                            <div className="lista-riesgos-item6 header-text">
-                              <p className="text-primary">
-                                <b>Irregularidades:</b> 0
-                              </p>
-                              <p className="text-primary">
-                                <b>Factores:</b> 0
-                              </p>
-                            </div>
-                            <div
-                              className={`lista-riesgos-item7 header-text ${"bg-success"}`}
+                              <b>#</b>
+                            </h6>
+                            <h6
+                              className="text-primary header-text"
+                              style={{ width: "136px" }}
                             >
-                              <h5 className="text-white text-center">25.00</h5>
-                            </div>
-                          </div>
-                        ),
-                      },
-                      {
-                        key: "3",
-                        content: (
-                          <div className="lista-riesgos">
-                            <div className="lista-riesgos-item1">
-                              <p className="text-primary header-text">
-                                <b>3</b>
-                              </p>
-                            </div>
-                            <div className="lista-riesgos-item2">
-                              <p className="text-primary header-text">
-                                PRTR003
-                              </p>
-                            </div>
-                            <div className="lista-riesgos-item3 header-text">
-                              <p className="text-primary">
-                                Datos de contratistas - Disponibilidad de
-                                backups
-                              </p>
-                            </div>
-                            <div className="lista-riesgos-item4 header-text">
-                              <p className="text-primary">
-                                <b>Tratamiento:</b> Transferencia
-                              </p>
-                              <p className="text-primary">
-                                <b>Indicador de Riesgo:</b> SH16
-                              </p>
-                            </div>
-                            <div className="lista-riesgos-item4 header-text">
-                              <p className="text-primary">{"Área"} LIN001</p>
-                              <p className="text-primary">
-                                <b>Proceso DRS001</b>
-                              </p>
-                            </div>
-                            <div className="lista-riesgos-item5 header-text">
-                              <p className="text-primary">
-                                <b>Probabilidad:</b> Medio
-                              </p>
-                              <p className="text-primary">
-                                <b>Impacto:</b> Alto
-                              </p>
-                              <hr style={{ margin: "0" }} />
-                              <p className="text-danger">
-                                <b>Severo</b>
-                              </p>
-                            </div>
-                            <div className="lista-riesgos-item6 header-text">
-                              <p className="text-primary">
-                                <b>Irregularidades:</b> 0
-                              </p>
-                              <p className="text-primary">
-                                <b>Factores:</b> 0
-                              </p>
-                            </div>
-                            <div
-                              className={`lista-riesgos-item7 header-text ${"bg-warning"}`}
+                              <b>Código</b>
+                            </h6>
+                            <h6
+                              className="text-primary header-text"
+                              style={{ width: "709px" }}
                             >
-                              <h5 className="text-white text-center">50.00</h5>
-                            </div>
+                              <b>Nombre</b>
+                            </h6>
+                            <h6
+                              className="text-primary header-text"
+                              style={{ width: "232px" }}
+                            >
+                              <b>Categoría</b>
+                            </h6>
+                            <h6
+                              className="text-primary header-text"
+                              style={{ width: "232px" }}
+                            >
+                              <b>Relación Unidad</b>
+                            </h6>
+                            <h6
+                              className="text-primary header-text"
+                              style={{ width: "232px" }}
+                            >
+                              <b>Severidad</b>
+                            </h6>
+                            <h6
+                              className="text-primary header-text"
+                              style={{ width: "232px" }}
+                            >
+                              <b>Casos</b>
+                            </h6>
+                            <h6
+                              className="text-primary header-text"
+                              style={{ width: "122px" }}
+                            >
+                              <b>Nivel Riesgo</b>
+                            </h6>
                           </div>
-                        ),
-                      },
-                    ]}
-                    overrideColor="override-gray"
-                  />
+                        }
+                        listItems={fillRiskList(riskIndicator.Riesgos)}
+                        overrideColor="override-gray"
+                      />
+                    )}
                 </div>
               </Row>
             </div>
@@ -422,6 +314,11 @@ function Risk_Analisis() {
   }
   async function retrieveRiskDetails() {
     const data = await getRiskIndicatorDetail();
+
+    return data;
+  }
+  async function retrieveRiskDetailsbyId(id) {
+    const data = await getRiskIndicatorDetailbyId(id);
 
     return data;
   }
@@ -499,7 +396,9 @@ function Risk_Analisis() {
               <Button
                 onClick={() => {
                   setOpenIndDetail(true);
-                  setCurrentIndicator(ind);
+                  retrieveRiskDetailsbyId(ind.id).then((riskInd) => {
+                    setIndicatorDetail(riskInd);
+                  });
                 }}
                 variant="outline-secondary"
               >
@@ -522,7 +421,7 @@ function Risk_Analisis() {
   const [listIndicators, setListIndicators] = useState(null);
   const [orgAnalisis, setOrgAnalisis] = useState(null);
   const [openIndDetail, setOpenIndDetail] = useState(false);
-  const [currentIndicator, setCurrentIndicator] = useState(null);
+  const [indicatorDetail, setIndicatorDetail] = useState(null);
 
   useEffect(() => {
     retrieveRiskDetails().then((data) => {
@@ -568,8 +467,7 @@ function Risk_Analisis() {
                 <div className="analisis-medicion">
                   <MetricBox
                     topText="Evaluacion de Riesgos"
-                    // middleText={orgAnalisis.inventario_riesgo}
-                    middleText="12"
+                    middleText={orgAnalisis.inventario_riesgo}
                     bottomText="Inventario Total"
                     order="top-bottom-middle"
                     status="secondary"
@@ -589,14 +487,12 @@ function Risk_Analisis() {
                   />
                   <MetricBox
                     topText="Tolerancia de Riesgo"
-                    //middleText={orgAnalisis.inventario_excedido}
-                    middleText="7"
+                    middleText={orgAnalisis.inventario_excedido}
                     bottomText="Riesgos Excedidos"
                     order="top-bottom-middle"
-                    // status={
-                    //   orgAnalisis.inventario_excedido > 0 ? "danger" : "success"
-                    // }
-                    status="danger"
+                    status={
+                      orgAnalisis.inventario_excedido > 0 ? "danger" : "success"
+                    }
                     width="222px"
                     height="144px"
                     gap="0.5rem"
@@ -728,9 +624,9 @@ function Risk_Analisis() {
         <Modals
           openModal={openIndDetail}
           setOpenModal={setOpenIndDetail}
-          title={`Detalle del Indicador de Riesgo ${currentIndicator?.codigo}`}
+          title={`Detalle del Indicador de Riesgo ${indicatorDetail?.codigo}`}
           size="xl"
-          body={modalIndDetail(currentIndicator)}
+          body={modalIndDetail(indicatorDetail)}
         />
       </div>
     </>

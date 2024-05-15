@@ -3,7 +3,7 @@ import {
   faGear,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
@@ -14,863 +14,1547 @@ import MetricBox from "../../../components/Metrics/MetricBox";
 import Modals from "../../../components/Modals/Modals";
 import "./Risk_Lista.scss";
 import NavBar from "../../../components/NavBar/NavBar";
+import {
+  createRisk,
+  deleteRisk,
+  getRiskDetail,
+  getRiskTreatment,
+  updateRisk,
+} from "../../../services/risk.services";
+import {
+  colorBackgroundPercentage,
+  convertToPercentage,
+  statusImpact,
+  statusImpactText,
+  statusPercentage,
+} from "../../../hooks/ColorCases";
+import { getRiskIndicator } from "../../../services/riskindicator.services";
+import { getArea, getUnitAreabyAreaId } from "../../../services/area.services";
+import { getProcessbyUnitAreaId } from "../../../services/unitarea.services";
 
-function modalRiskDetail() {
+function modalRiskDetail(selectedRisk) {
   return (
     <div className="modal-detailrisk-body">
-      <div className="risk-metrics">
-        <MetricBox
-          topText="Casos de Riesgo"
-          middleText="0"
-          bottomText="Divulgación de irregularidades"
-          status="secondary"
-          width="224px"
-          gap="0rem"
-        />
-        <MetricBox
-          topText="Casos de Riesgo"
-          middleText="0"
-          bottomText="Factores de evaluación riesgos"
-          status="danger"
-          width="224px"
-          gap="0rem"
-        />
-        <MetricBox
-          topText="Nivel de Riesgo"
-          middleText="57.50"
-          bottomText="Relaciona casos reportados y severidad"
-          status="danger"
-          width="274px"
-          gap="0rem"
-        />
-      </div>
-      <Form style={{ width: "100%" }}>
-        <div className="risk-details">
-          <h5 className="text-secondary">
-            <b>Información del Riesgo</b>
-          </h5>
-          <div className="container-form-controls">
-            <Row className="mb-3">
-              <Form.Group
-                as={Col}
-                className="col-md-6"
-                controlId="formGridTratamiento"
-              >
-                <Form.Label>Tratamiento</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder=""
-                  value="Transferencia"
-                />
-              </Form.Group>
-
-              <Form.Group
-                as={Col}
-                className="col-md-6"
-                controlId="formGridindicador"
-              >
-                <Form.Label>Indicador de Riesgo</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder=""
-                  value="SH16 - 10% del total"
-                />
-              </Form.Group>
-            </Row>
-            <Row className="mb-4">
-              <Form.Group
-                as={Col}
-                className="col-md-4"
-                controlId="formGridProbabilidad"
-              >
-                <Form.Label>Probabilidad</Form.Label>
-                <Form.Control type="text" placeholder="de 10" value="6 de 10" />
-              </Form.Group>
-
-              <Form.Group
-                as={Col}
-                className="col-md-4"
-                controlId="formGridImpacto"
-              >
-                <Form.Label>Impacto</Form.Label>
-                <Form.Control type="text" placeholder="de 10" value="8 de 10" />
-              </Form.Group>
-              <Form.Group
-                as={Col}
-                className="col-md-4"
-                controlId="formGridSeveridad"
-              >
-                <Form.Label>Severidad</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="de 10"
-                  value="5.8 de 10"
-                />
-              </Form.Group>
-            </Row>
-            <Row className="mb-3">
-              <Form.Group
-                as={Col}
-                className="col-md-12"
-                controlId="formGridNombre"
-              >
-                <Form.Label>Nombre del Riesgo</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder=""
-                  value="Servidor de Producción - Degradación en desempeño del sistema"
-                />
-              </Form.Group>
-            </Row>
-            <Row className="mb-3">
-              <Form.Group
-                as={Col}
-                className="col-md-12"
-                controlId="formGridDescripcion"
-              >
-                <Form.Label>Descripcion del Riesgo</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  placeholder="Ingrese descripción del riesgo"
-                  value="Órganos destinados al seguimiento del desarrollo social, económico y de infraestructura en las áreas seleccionadas."
-                />
-              </Form.Group>
-            </Row>
+      {selectedRisk != null && (
+        <>
+          <div className="risk-metrics">
+            <MetricBox
+              topText="Casos de Riesgo"
+              middleText={0}
+              bottomText="Divulgación de irregularidades"
+              status="secondary"
+              width="224px"
+              gap="0rem"
+            />
+            <MetricBox
+              topText="Casos de Riesgo"
+              middleText={0}
+              bottomText="Factores de evaluación riesgos"
+              status="danger"
+              width="224px"
+              gap="0rem"
+            />
+            <MetricBox
+              topText="Nivel de Riesgo"
+              middleText={convertToPercentage(selectedRisk.nivel_riesgo)}
+              bottomText="Relaciona casos reportados y severidad"
+              status={statusPercentage(selectedRisk.nivel_riesgo)}
+              width="274px"
+              gap="0rem"
+            />
           </div>
-          <div className="risk-details">
-            <h5 className="text-secondary">
-              <b>Justificación y Detalles del Riesgo</b>
-            </h5>
-            <div className="container-form-controls">
-              <Row className="mb-3">
-                <Form.Group
-                  as={Col}
-                  className="col-md-12"
-                  controlId="formGridSintomas"
-                >
-                  <Form.Label>Síntomas del Riesgo</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Ingrese sintomas del riesgo"
-                    value="La inactividad de los sistemas web impide llevar a cabo las actividades diarias de manera efectiva, lo que resulta en pérdida de tiempo y costos adicionales para la organización. Esta situación conlleva a la insatisfacción de los clientes debido a la falta de respuesta oportuna."
-                  />
-                </Form.Group>
-              </Row>
-              <Row className="mb-3">
-                <Form.Group
-                  as={Col}
-                  className="col-md-12"
-                  controlId="formGridCausas"
-                >
-                  <Form.Label>Causas del Riesgo</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Ingrese causas del riesgo"
-                    value="La falta de mantenimiento adecuado de los sistemas web ocasiona su inactividad, generando interrupciones en las operaciones diarias y provocando pérdida de tiempo y recursos."
-                  />
-                </Form.Group>
-              </Row>
-              <Row className="mb-3">
-                <Form.Group
-                  as={Col}
-                  className="col-md-12"
-                  controlId="formGridPlan"
-                >
-                  <Form.Label>Plan de Acción</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Ingrese plan de acción del riesgo"
-                    value="1. Diagnóstico: Realizar un análisis exhaustivo de los sistemas web afectados para identificar las causas subyacentes de su inactividad.
-2. Priorización: Clasificar las causas identificadas según su impacto"
-                  />
-                </Form.Group>
-              </Row>
-              <Row className="mb-3">
-                <Form.Group
-                  as={Col}
-                  className="col-md-12"
-                  controlId="formGridResponsables"
-                >
-                  <Form.Label>Responsables Encargados</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Ingrese lista de responsables encargados del control del riesgo"
-                    value="Equipo de Tecnología de la Información (TI): Encargado de realizar el diagnóstico de los sistemas web afectados, implementar soluciones técnicas y llevar a cabo el mantenimiento preventivo."
-                  />
-                </Form.Group>
-              </Row>
-              <Row className="mb-3">
-                <Form.Group
-                  as={Col}
-                  className="col-md-12"
-                  controlId="formGridEspecificaciones"
-                >
-                  <Form.Label>Especificaciones de Controles</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Ingrese las especificaciones relacionadas a los controles aplicados"
-                    value="Solicitar al área de sistemas para poder realizar el mantenimiento del equipo en el traslado del servicio.."
-                  />
-                </Form.Group>
-              </Row>
+          <Form style={{ width: "100%" }}>
+            <div className="risk-details">
+              <h5 className="text-secondary">
+                <b>Información del Riesgo</b>
+              </h5>
+              <div className="container-form-controls">
+                <Row className="mb-3">
+                  <Form.Group
+                    as={Col}
+                    className="col-md-6"
+                    controlId="formGridTratamiento"
+                  >
+                    <Form.Label>Tratamiento</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder=""
+                      readOnly
+                      value={
+                        selectedRisk.RiskTreatment != null
+                          ? selectedRisk.RiskTreatment.nombre
+                          : "Sin evaluar"
+                      }
+                    />
+                  </Form.Group>
+
+                  <Form.Group
+                    as={Col}
+                    className="col-md-6"
+                    controlId="formGridindicador"
+                  >
+                    <Form.Label>Indicador de Riesgo</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder=""
+                      readOnly
+                      value={`${selectedRisk.RiskIndicator.codigo} - ${selectedRisk.escala_indicador}% del total`}
+                    />
+                  </Form.Group>
+                </Row>
+                <Row className="mb-4">
+                  <Form.Group
+                    as={Col}
+                    className="col-md-4"
+                    controlId="formGridProbabilidad"
+                  >
+                    <Form.Label>Probabilidad</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="de 10"
+                      readOnly
+                      value={`${selectedRisk.probabilidad} de 10`}
+                    />
+                  </Form.Group>
+
+                  <Form.Group
+                    as={Col}
+                    className="col-md-4"
+                    controlId="formGridImpacto"
+                  >
+                    <Form.Label>Impacto</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="de 10"
+                      readOnly
+                      value={`${selectedRisk.impacto} de 10`}
+                    />
+                  </Form.Group>
+                  <Form.Group
+                    as={Col}
+                    className="col-md-4"
+                    controlId="formGridSeveridad"
+                  >
+                    <Form.Label>Severidad</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="de 10"
+                      readOnly
+                      value={`${selectedRisk.severidad_riesgo} de 10`}
+                    />
+                  </Form.Group>
+                </Row>
+                <Row className="mb-3">
+                  <Form.Group
+                    as={Col}
+                    className="col-md-12"
+                    controlId="formGridNombArea"
+                  >
+                    <Form.Label>Nombre del Área</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder=""
+                      readOnly
+                      value={`${selectedRisk.Process.UnitArea.Area.codigo} - ${selectedRisk.Process.UnitArea.Area.nombre}`}
+                    />
+                  </Form.Group>
+                </Row>
+                {!selectedRisk.Process.UnitArea.es_area && (
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-12"
+                      controlId="formGridNombUnidad"
+                    >
+                      <Form.Label>Nombre de la Unidad</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder=""
+                        readOnly
+                        value={`${selectedRisk.Process.UnitArea.codigo} - ${selectedRisk.Process.UnitArea.nombre}`}
+                      />
+                    </Form.Group>
+                  </Row>
+                )}
+                <Row className="mb-3">
+                  <Form.Group
+                    as={Col}
+                    className="col-md-12"
+                    controlId="formGridNombProceso"
+                  >
+                    <Form.Label>
+                      Nombre del Proceso
+                      {selectedRisk.Process.UnitArea.es_area
+                        ? " asociado al Área"
+                        : " asociado a la Unidad"}
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder=""
+                      readOnly
+                      value={`${selectedRisk.Process.codigo} - ${selectedRisk.Process.nombre}`}
+                    />
+                  </Form.Group>
+                </Row>
+                <Row className="mb-3">
+                  <Form.Group
+                    as={Col}
+                    className="col-md-12"
+                    controlId="formGridNombre"
+                  >
+                    <Form.Label>Nombre del Riesgo</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder=""
+                      readOnly
+                      value={selectedRisk.nombre}
+                    />
+                  </Form.Group>
+                </Row>
+                <Row className="mb-3">
+                  <Form.Group
+                    as={Col}
+                    className="col-md-12"
+                    controlId="formGridDescripcion"
+                  >
+                    <Form.Label>Descripcion del Riesgo</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      placeholder="Ingrese descripción del riesgo"
+                      readOnly
+                      value={selectedRisk.descripcion}
+                    />
+                  </Form.Group>
+                </Row>
+              </div>
+              <div className="risk-details">
+                <h5 className="text-secondary">
+                  <b>Justificación y Detalles del Riesgo</b>
+                </h5>
+                <div className="container-form-controls">
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-12"
+                      controlId="formGridSintomas"
+                    >
+                      <Form.Label>Síntomas del Riesgo</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Ingrese sintomas del riesgo"
+                        readOnly
+                        value={selectedRisk.sintomas}
+                      />
+                    </Form.Group>
+                  </Row>
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-12"
+                      controlId="formGridCausas"
+                    >
+                      <Form.Label>Causas del Riesgo</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Ingrese causas del riesgo"
+                        readOnly
+                        value={selectedRisk.causas}
+                      />
+                    </Form.Group>
+                  </Row>
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-12"
+                      controlId="formGridPlan"
+                    >
+                      <Form.Label>Plan de Acción</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Ingrese plan de acción del riesgo"
+                        readOnly
+                        value={selectedRisk.plan_accion}
+                      />
+                    </Form.Group>
+                  </Row>
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-12"
+                      controlId="formGridResponsables"
+                    >
+                      <Form.Label>Responsables Encargados</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Ingrese lista de responsables encargados del control del riesgo"
+                        readOnly
+                        value={selectedRisk.responsables_encargados}
+                      />
+                    </Form.Group>
+                  </Row>
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-12"
+                      controlId="formGridEspecificaciones"
+                    >
+                      <Form.Label>Especificaciones de Controles</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Ingrese las especificaciones relacionadas a los controles aplicados"
+                        readOnly
+                        value={selectedRisk.especificacion}
+                      />
+                    </Form.Group>
+                  </Row>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </Form>
+          </Form>
+        </>
+      )}
     </div>
   );
 }
-function modalNewRisks() {
+function modalNewRisks(
+  newRisk,
+  setNewRisk,
+  riskTreatments,
+  riskIndicators,
+  riskAreas,
+  riskUnitAreas,
+  riskProcess,
+  selectedArea,
+  setSelectedArea,
+  selectedUnitArea,
+  setSelectedUnitArea
+) {
   return (
     <div className="modal-detailrisk-body">
-      <Form style={{ width: "100%" }}>
-        <div className="risk-details">
-          <h5 className="text-secondary">
-            <b>Relación con Indicador de Riesgo</b>
-          </h5>
-          <div className="container-form-controls">
-            <Row className="mb-3">
-              <Form.Group
-                as={Col}
-                className="col-md-2"
-                controlId="formGridCodIndicador"
-              >
-                <Form.Label>Código</Form.Label>
-                <Form.Select value="3">
-                  <option value="1">SH12</option>
-                  <option value="2">SH13</option>
-                  <option value="3">SH16</option>
-                </Form.Select>
-              </Form.Group>
-              <Form.Group
-                as={Col}
-                className="col-md-8"
-                controlId="formGridNombIndicador"
-              >
-                <Form.Label>Nombre del Indicador de Riesgo</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder=""
-                  readOnly
-                  value="La experiencia de la organización con los socios comerciales"
-                />
-              </Form.Group>
-              <Form.Group
-                as={Col}
-                className="col-md-2"
-                controlId="formGridEscala"
-              >
-                <Form.Label>Escala</Form.Label>
-                <Form.Control type="text" placeholder="0.00" value="" />
+      {newRisk != null &&
+        riskIndicators != null &&
+        riskIndicators.length > 0 &&
+        riskTreatments != null &&
+        riskTreatments.length > 0 &&
+        riskAreas != null &&
+        riskAreas.length > 0 && (
+          <Form style={{ width: "100%" }}>
+            <div className="risk-details">
+              <h5 className="text-secondary">
+                <b>Relación con Indicador de Riesgo</b>
+              </h5>
+              <div className="container-form-controls">
+                <Row className="mb-3">
+                  <Form.Group
+                    as={Col}
+                    className="col-md-3"
+                    controlId="formGridCodIndicador"
+                  >
+                    <Form.Label>Código</Form.Label>
+                    <Form.Select
+                      value={
+                        newRisk.risk_indicator_id != null
+                          ? newRisk.risk_indicator_id
+                          : 1
+                      }
+                      onChange={(e) =>
+                        setNewRisk({
+                          ...newRisk,
+                          risk_indicator_id: parseInt(e.target.value),
+                        })
+                      }
+                    >
+                      {riskIndicators.map((ind) => (
+                        <option key={`ind-${ind.id}`} value={ind.id}>
+                          {ind.codigo}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                  <Form.Group
+                    as={Col}
+                    className="col-md-7"
+                    controlId="formGridNombIndicador"
+                  >
+                    <Form.Label>Nombre del Indicador de Riesgo</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder=""
+                      readOnly
+                      value={
+                        newRisk.risk_indicator_id != null
+                          ? riskIndicators[
+                              riskIndicators.findIndex(
+                                (ind) => ind.id === newRisk.risk_indicator_id
+                              )
+                            ].nombre
+                          : ""
+                      }
+                    />
+                  </Form.Group>
+                  <Form.Group
+                    as={Col}
+                    className="col-md-2"
+                    controlId="formGridEscala"
+                  >
+                    <Form.Label>Escala</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="0.00"
+                      value={newRisk.escala_indicador}
+                      onChange={(e) => {
+                        setNewRisk({
+                          ...newRisk,
+                          escala_indicador: parseInt(e.target.value),
+                        });
+                      }}
+                    />
 
-                <Form.Text>Porcentaje</Form.Text>
-              </Form.Group>
-            </Row>
-          </div>
-          <h5 className="text-secondary">
-            <b>Relación con Procesos de la Organización</b>
-          </h5>
-          <div className="container-form-controls">
-            <Row className="mb-3">
-              <Form.Group
-                as={Col}
-                className="col-md-3"
-                controlId="formGridCodArea"
-              >
-                <Form.Label>Código del Área</Form.Label>
-                <Form.Select value="1">
-                  <option value="1">LIN001</option>
-                  <option value="2">LIN002</option>
-                  <option value="3">LIN003</option>
-                </Form.Select>
-              </Form.Group>
-              <Form.Group
-                as={Col}
-                className="col-md-9"
-                controlId="formGridNombArea"
-              >
-                <Form.Label>Nombre del Área</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder=""
-                  readOnly
-                  value="Gerencia Regional de Desarrollo Social"
-                />
-              </Form.Group>
-            </Row>
-            <Row className="mb-3">
-              <Form.Group
-                as={Col}
-                className="col-md-3"
-                controlId="formGridCodUnidad"
-              >
-                <Form.Label>Código de la Unidad</Form.Label>
-                <Form.Select value="3">
-                  <option value="1">DRS001</option>
-                  <option value="2">DRS002</option>
-                  <option value="3">DRS003</option>
-                </Form.Select>
-              </Form.Group>
-              <Form.Group
-                as={Col}
-                className="col-md-9"
-                controlId="formGridNombUnidad"
-              >
-                <Form.Label>Nombre de la Unidad</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder=""
-                  readOnly
-                  value="Dirección Regional de Trabajo y Promoción del Empleo"
-                />
-              </Form.Group>
-            </Row>
-            <Row className="mb-3">
-              <Form.Group
-                as={Col}
-                className="col-md-3"
-                controlId="formGridCodProceso"
-              >
-                <Form.Label>Código del Proceso</Form.Label>
-                <Form.Select value="1">
-                  <option value="1">PRO001</option>
-                  <option value="2">PRO002</option>
-                  <option value="3">PRO003</option>
-                </Form.Select>
-              </Form.Group>
-              <Form.Group
-                as={Col}
-                className="col-md-9"
-                controlId="formGridNombProceso"
-              >
-                <Form.Label>Nombre del Proceso</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder=""
-                  readOnly
-                  value="Proceso de Gestionamiento de Contrataciones"
-                />
-              </Form.Group>
-            </Row>
-          </div>
-          <h5 className="text-secondary">
-            <b>Información del Riesgo</b>
-          </h5>
-          <div className="container-form-controls">
-            <Row className="mb-3">
-              <Form.Group
-                as={Col}
-                className="col-md-3"
-                controlId="formGridCodRiesgo"
-              >
-                <Form.Label>Código del Riesgo</Form.Label>
-                <Form.Control type="text" placeholder="" value="" />
-              </Form.Group>
-              <Form.Group
-                as={Col}
-                className="col-md-3"
-                controlId="formGridTratamiento"
-              >
-                <Form.Label>Tratamiento</Form.Label>
-                <Form.Select value="1">
-                  <option value="1">Transferencia</option>
-                  <option value="2">Evasión</option>
-                  <option value="3">Aceptación</option>
-                </Form.Select>
-              </Form.Group>
-              <Form.Group
-                as={Col}
-                className="col-md-2"
-                controlId="formGridProbabilidad"
-              >
-                <Form.Label>Probabilidad</Form.Label>
-                <Form.Control type="text" placeholder="de 10" value="" />
-                <Form.Text>Valor Total=10</Form.Text>
-              </Form.Group>
+                    <Form.Text>Porcentaje</Form.Text>
+                  </Form.Group>
+                </Row>
+              </div>
+              <h5 className="text-secondary">
+                <b>Relación con Procesos de la Organización</b>
+              </h5>
+              <div className="container-form-controls">
+                {riskAreas != null && (
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-3"
+                      controlId="formGridCodArea"
+                    >
+                      <Form.Label>Código del Área</Form.Label>
+                      <Form.Select
+                        value={selectedArea != null ? selectedArea : -1}
+                        onChange={(e) =>
+                          setSelectedArea(parseInt(e.target.value))
+                        }
+                      >
+                        <option key={`default`} value={-1}>
+                          -
+                        </option>
+                        {riskAreas.map((area) => (
+                          <option key={`area-${area.id}`} value={area.id}>
+                            {area.codigo}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                    <Form.Group
+                      as={Col}
+                      className="col-md-9"
+                      controlId="formGridNombArea"
+                    >
+                      <Form.Label>Nombre del Área</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder=""
+                        readOnly
+                        value={
+                          selectedArea != -1
+                            ? riskAreas[
+                                riskAreas.findIndex(
+                                  (area) => area.id === selectedArea
+                                )
+                              ].nombre
+                            : ""
+                        }
+                      />
+                    </Form.Group>
+                  </Row>
+                )}
+                {riskUnitAreas != null && riskUnitAreas.length > 0 && (
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-3"
+                      controlId="formGridCodUnidad"
+                    >
+                      <Form.Label>Código de la Unidad</Form.Label>
+                      <Form.Select
+                        value={selectedUnitArea != null ? selectedUnitArea : -1}
+                        onChange={(e) =>
+                          setSelectedUnitArea(parseInt(e.target.value))
+                        }
+                      >
+                        <option key={`default`} value={-1}>
+                          -
+                        </option>
+                        {riskUnitAreas.map((unit) => (
+                          <option key={`unit-${unit.id}`} value={unit.id}>
+                            {unit.codigo}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                    <Form.Group
+                      as={Col}
+                      className="col-md-9"
+                      controlId="formGridNombUnidad"
+                    >
+                      <Form.Label>Nombre de la Unidad</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder=""
+                        readOnly
+                        value={
+                          selectedUnitArea != -1
+                            ? riskUnitAreas[
+                                riskUnitAreas.findIndex(
+                                  (unit) => unit.id === selectedUnitArea
+                                )
+                              ].nombre
+                            : ""
+                        }
+                      />
+                    </Form.Group>
+                    <Form.Text>
+                      En caso el código de la unidad coincida con el del área,
+                      se mostrarán la lista de procesos asociados al área.
+                    </Form.Text>
+                  </Row>
+                )}
+                {riskProcess != null && riskProcess.length > 0 && (
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-3"
+                      controlId="formGridCodProceso"
+                    >
+                      <Form.Label>Código del Proceso</Form.Label>
+                      <Form.Select
+                        value={
+                          newRisk.process_id != null ? newRisk.process_id : -1
+                        }
+                        onChange={(e) =>
+                          setNewRisk({
+                            ...newRisk,
+                            process_id: parseInt(e.target.value),
+                          })
+                        }
+                      >
+                        <option key={`default`} value={-1}>
+                          -
+                        </option>
+                        {riskProcess.map((process) => (
+                          <option
+                            key={`process-${process.id}`}
+                            value={process.id}
+                          >
+                            {process.codigo}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                    <Form.Group
+                      as={Col}
+                      className="col-md-9"
+                      controlId="formGridNombProceso"
+                    >
+                      <Form.Label>
+                        Nombre del Proceso
+                        {riskUnitAreas != null &&
+                          selectedUnitArea != -1 &&
+                          (riskUnitAreas[
+                            riskUnitAreas.findIndex(
+                              (unit) => unit.id === selectedUnitArea
+                            )
+                          ].es_area
+                            ? " asociado al Área"
+                            : " asociado a la Unidad")}
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder=""
+                        readOnly
+                        value={
+                          riskProcess != null &&
+                          riskProcess.length > 0 &&
+                          newRisk.process_id != null &&
+                          newRisk.process_id != -1
+                            ? riskProcess[
+                                riskProcess.findIndex(
+                                  (process) => process.id === newRisk.process_id
+                                )
+                              ] != null
+                              ? riskProcess[
+                                  riskProcess.findIndex(
+                                    (process) =>
+                                      process.id === newRisk.process_id
+                                  )
+                                ].nombre
+                              : ""
+                            : ""
+                        }
+                      />
+                    </Form.Group>
+                  </Row>
+                )}
+              </div>
+              <h5 className="text-secondary">
+                <b>Información del Riesgo</b>
+              </h5>
+              <div className="container-form-controls">
+                <Row className="mb-3">
+                  <Form.Group
+                    as={Col}
+                    className="col-md-3"
+                    controlId="formGridCodRiesgo"
+                  >
+                    <Form.Label>Código del Riesgo</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder=""
+                      value={newRisk.codigo}
+                      onChange={(e) => {
+                        setNewRisk({
+                          ...newRisk,
+                          codigo: e.target.value,
+                        });
+                      }}
+                    />
+                  </Form.Group>
+                  {riskTreatments != null && (
+                    <Form.Group
+                      as={Col}
+                      className="col-md-3"
+                      controlId="formGridTratamiento"
+                    >
+                      <Form.Label>Tratamiento</Form.Label>
+                      <Form.Select
+                        value={
+                          newRisk.risk_treatment_id != null
+                            ? newRisk.risk_treatment_id
+                            : -1
+                        }
+                        onChange={(e) =>
+                          setNewRisk({
+                            ...newRisk,
+                            risk_treatment_id: parseInt(e.target.value),
+                          })
+                        }
+                      >
+                        <option key={`default`} value={-1}>
+                          Sin evaluar
+                        </option>
+                        {riskTreatments.map((treatment) => (
+                          <option
+                            key={`treatment-${treatment.id}`}
+                            value={treatment.id}
+                          >
+                            {treatment.nombre}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  )}
+                  <Form.Group
+                    as={Col}
+                    className="col-md-2"
+                    controlId="formGridProbabilidad"
+                  >
+                    <Form.Label>Probabilidad</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="de 10"
+                      value={newRisk.probabilidad}
+                      onChange={(e) => {
+                        setNewRisk({
+                          ...newRisk,
+                          probabilidad:
+                            e.target.value != ""
+                              ? parseFloat(e.target.value)
+                              : 0,
+                          severidad_riesgo:
+                            e.target.value != ""
+                              ? (parseFloat(e.target.value) * newRisk.impacto) /
+                                10
+                              : 0,
+                        });
+                      }}
+                    />
+                    <Form.Text>Valor Total=10</Form.Text>
+                  </Form.Group>
 
-              <Form.Group
-                as={Col}
-                className="col-md-2"
-                controlId="formGridImpacto"
-              >
-                <Form.Label>Impacto</Form.Label>
-                <Form.Control type="text" placeholder="de 10" value="" />
-                <Form.Text>Valor Total=10</Form.Text>
-              </Form.Group>
-              <Form.Group
-                as={Col}
-                className="col-md-2"
-                controlId="formGridSeveridad"
-              >
-                <Form.Label>Severidad</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="de 10"
-                  readOnly
-                  value=""
-                />
-                <Form.Text>Valor Total=10</Form.Text>
-              </Form.Group>
-            </Row>
-            <Row className="mb-3">
-              <Form.Group
-                as={Col}
-                className="col-md-12"
-                controlId="formGridNombre"
-              >
-                <Form.Label>Nombre del Riesgo</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Ingrese nombre del riesgo"
-                  value=""
-                />
-              </Form.Group>
-            </Row>
-            <Row className="mb-3">
-              <Form.Group
-                as={Col}
-                className="col-md-12"
-                controlId="formGridDescripcion"
-              >
-                <Form.Label>Descripcion del Riesgo</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  placeholder="Ingrese descripción del riesgo"
-                  value=""
-                />
-              </Form.Group>
-            </Row>
-          </div>
-          <div className="risk-details">
-            <h5 className="text-secondary">
-              <b>Justificación y Detalles del Riesgo</b>
-            </h5>
-            <div className="container-form-controls">
-              <Row className="mb-3">
-                <Form.Group
-                  as={Col}
-                  className="col-md-12"
-                  controlId="formGridSintomas"
-                >
-                  <Form.Label>Síntomas del Riesgo</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Ingrese sintomas del riesgo"
-                    value=""
-                  />
-                </Form.Group>
-              </Row>
-              <Row className="mb-3">
-                <Form.Group
-                  as={Col}
-                  className="col-md-12"
-                  controlId="formGridCausas"
-                >
-                  <Form.Label>Causas del Riesgo</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Ingrese causas del riesgo"
-                    value=""
-                  />
-                </Form.Group>
-              </Row>
-              <Row className="mb-3">
-                <Form.Group
-                  as={Col}
-                  className="col-md-12"
-                  controlId="formGridPlan"
-                >
-                  <Form.Label>Plan de Acción</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Ingrese plan de acción del riesgo"
-                    value=""
-                  />
-                </Form.Group>
-              </Row>
-              <Row className="mb-3">
-                <Form.Group
-                  as={Col}
-                  className="col-md-12"
-                  controlId="formGridResponsables"
-                >
-                  <Form.Label>Responsables Encargados</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Ingrese lista de responsables encargados del control del riesgo"
-                    value=""
-                  />
-                </Form.Group>
-              </Row>
-              <Row className="mb-3">
-                <Form.Group
-                  as={Col}
-                  className="col-md-12"
-                  controlId="formGridEspecificaciones"
-                >
-                  <Form.Label>Especificaciones de Controles</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Ingrese las especificaciones relacionadas a los controles aplicados"
-                    value=""
-                  />
-                </Form.Group>
-              </Row>
+                  <Form.Group
+                    as={Col}
+                    className="col-md-2"
+                    controlId="formGridImpacto"
+                  >
+                    <Form.Label>Impacto</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="de 10"
+                      value={newRisk.impacto}
+                      onChange={(e) => {
+                        setNewRisk({
+                          ...newRisk,
+                          impacto:
+                            e.target.value != ""
+                              ? parseFloat(e.target.value)
+                              : 0,
+                          severidad_riesgo:
+                            e.target.value != ""
+                              ? (parseFloat(e.target.value) *
+                                  newRisk.probabilidad) /
+                                10
+                              : 0,
+                        });
+                      }}
+                    />
+                    <Form.Text>Valor Total=10</Form.Text>
+                  </Form.Group>
+                  <Form.Group
+                    as={Col}
+                    className="col-md-2"
+                    controlId="formGridSeveridad"
+                  >
+                    <Form.Label>Severidad</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="de 10"
+                      readOnly
+                      value={(newRisk.impacto * newRisk.probabilidad) / 10}
+                    />
+                    <Form.Text>Valor Total=10</Form.Text>
+                  </Form.Group>
+                </Row>
+                <Row className="mb-3">
+                  <Form.Group
+                    as={Col}
+                    className="col-md-12"
+                    controlId="formGridNombre"
+                  >
+                    <Form.Label>Nombre del Riesgo</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Ingrese nombre del riesgo"
+                      value={newRisk.nombre}
+                      onChange={(e) => {
+                        setNewRisk({
+                          ...newRisk,
+                          nombre: e.target.value,
+                        });
+                      }}
+                    />
+                  </Form.Group>
+                </Row>
+                <Row className="mb-3">
+                  <Form.Group
+                    as={Col}
+                    className="col-md-12"
+                    controlId="formGridDescripcion"
+                  >
+                    <Form.Label>Descripcion del Riesgo</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      placeholder="Ingrese descripción del riesgo"
+                      value={newRisk.descripcion}
+                      onChange={(e) => {
+                        setNewRisk({
+                          ...newRisk,
+                          descripcion: e.target.value,
+                        });
+                      }}
+                    />
+                  </Form.Group>
+                </Row>
+              </div>
+              <div className="risk-details">
+                <h5 className="text-secondary">
+                  <b>Justificación y Detalles del Riesgo</b>
+                </h5>
+                <div className="container-form-controls">
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-12"
+                      controlId="formGridSintomas"
+                    >
+                      <Form.Label>Síntomas del Riesgo</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Ingrese sintomas del riesgo"
+                        value={newRisk.sintomas}
+                        onChange={(e) => {
+                          setNewRisk({
+                            ...newRisk,
+                            sintomas: e.target.value,
+                          });
+                        }}
+                      />
+                    </Form.Group>
+                  </Row>
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-12"
+                      controlId="formGridCausas"
+                    >
+                      <Form.Label>Causas del Riesgo</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Ingrese causas del riesgo"
+                        value={newRisk.causas}
+                        onChange={(e) => {
+                          setNewRisk({
+                            ...newRisk,
+                            causas: e.target.value,
+                          });
+                        }}
+                      />
+                    </Form.Group>
+                  </Row>
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-12"
+                      controlId="formGridPlan"
+                    >
+                      <Form.Label>Plan de Acción</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Ingrese plan de acción del riesgo"
+                        value={newRisk.plan_accion}
+                        onChange={(e) => {
+                          setNewRisk({
+                            ...newRisk,
+                            plan_accion: e.target.value,
+                          });
+                        }}
+                      />
+                    </Form.Group>
+                  </Row>
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-12"
+                      controlId="formGridResponsables"
+                    >
+                      <Form.Label>Responsables Encargados</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Ingrese lista de responsables encargados del control del riesgo"
+                        value={newRisk.responsables_encargados}
+                        onChange={(e) => {
+                          setNewRisk({
+                            ...newRisk,
+                            responsables_encargados: e.target.value,
+                          });
+                        }}
+                      />
+                    </Form.Group>
+                  </Row>
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-12"
+                      controlId="formGridEspecificaciones"
+                    >
+                      <Form.Label>Especificaciones de Controles</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Ingrese las especificaciones relacionadas a los controles aplicados"
+                        value={newRisk.especificacion}
+                        onChange={(e) => {
+                          setNewRisk({
+                            ...newRisk,
+                            especificacion: e.target.value,
+                          });
+                        }}
+                      />
+                    </Form.Group>
+                  </Row>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </Form>
+          </Form>
+        )}
     </div>
   );
 }
-function modalEditRisks() {
+function modalEditRisks(
+  selectedRisk,
+  setSelectedRisk,
+  riskTreatments,
+  riskIndicators,
+  riskAreas,
+  riskUnitAreas,
+  riskProcess,
+  selectedArea,
+  setSelectedArea,
+  selectedUnitArea,
+  setSelectedUnitArea
+) {
   return (
     <div className="modal-detailrisk-body">
-      <Form style={{ width: "100%" }}>
-        <div className="risk-details">
-          <h5 className="text-secondary">
-            <b>Relación con Indicador de Riesgo</b>
-          </h5>
-          <div className="container-form-controls">
-            <Row className="mb-3">
-              <Form.Group
-                as={Col}
-                className="col-md-2"
-                controlId="formGridCodIndicador"
-              >
-                <Form.Label>Código</Form.Label>
-                <Form.Select value="3">
-                  <option value="1">SH12</option>
-                  <option value="2">SH13</option>
-                  <option value="3">SH16</option>
-                </Form.Select>
-              </Form.Group>
-              <Form.Group
-                as={Col}
-                className="col-md-8"
-                controlId="formGridNombIndicador"
-              >
-                <Form.Label>Nombre del Indicador de Riesgo</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder=""
-                  readOnly
-                  value="La experiencia de la organización con los socios comerciales"
-                />
-              </Form.Group>
-              <Form.Group
-                as={Col}
-                className="col-md-2"
-                controlId="formGridEscala"
-              >
-                <Form.Label>Escala</Form.Label>
-                <Form.Control type="text" placeholder="0.00" value="10.00" />
-                <Form.Text>Porcentaje</Form.Text>
-              </Form.Group>
-            </Row>
-          </div>
-          <h5 className="text-secondary">
-            <b>Relación con Procesos de la Organización</b>
-          </h5>
-          <div className="container-form-controls">
-            <Row className="mb-3">
-              <Form.Group
-                as={Col}
-                className="col-md-3"
-                controlId="formGridCodArea"
-              >
-                <Form.Label>Código del Área</Form.Label>
-                <Form.Select value="1">
-                  <option value="1">LIN001</option>
-                  <option value="2">LIN002</option>
-                  <option value="3">LIN003</option>
-                </Form.Select>
-              </Form.Group>
-              <Form.Group
-                as={Col}
-                className="col-md-9"
-                controlId="formGridNombArea"
-              >
-                <Form.Label>Nombre del Área</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder=""
-                  readOnly
-                  value="Gerencia Regional de Desarrollo Social"
-                />
-              </Form.Group>
-            </Row>
-            <Row className="mb-3">
-              <Form.Group
-                as={Col}
-                className="col-md-3"
-                controlId="formGridCodUnidad"
-              >
-                <Form.Label>Código de la Unidad</Form.Label>
-                <Form.Select value="3">
-                  <option value="1">DRS001</option>
-                  <option value="2">DRS002</option>
-                  <option value="3">DRS003</option>
-                </Form.Select>
-              </Form.Group>
-              <Form.Group
-                as={Col}
-                className="col-md-9"
-                controlId="formGridNombUnidad"
-              >
-                <Form.Label>Nombre de la Unidad</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder=""
-                  readOnly
-                  value="Dirección Regional de Trabajo y Promoción del Empleo"
-                />
-              </Form.Group>
-            </Row>
-            <Row className="mb-3">
-              <Form.Group
-                as={Col}
-                className="col-md-3"
-                controlId="formGridCodProceso"
-              >
-                <Form.Label>Código del Proceso</Form.Label>
-                <Form.Select value="1">
-                  <option value="1">PRO001</option>
-                  <option value="2">PRO002</option>
-                  <option value="3">PRO003</option>
-                </Form.Select>
-              </Form.Group>
-              <Form.Group
-                as={Col}
-                className="col-md-9"
-                controlId="formGridNombProceso"
-              >
-                <Form.Label>Nombre del Proceso</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder=""
-                  readOnly
-                  value="Proceso de Gestionamiento de Contrataciones"
-                />
-              </Form.Group>
-            </Row>
-          </div>
-          <h5 className="text-secondary">
-            <b>Información del Riesgo</b>
-          </h5>
-          <div className="container-form-controls">
-            <Row className="mb-3">
-              <Form.Group
-                as={Col}
-                className="col-md-3"
-                controlId="formGridCodRiesgo"
-              >
-                <Form.Label>Código del Riesgo</Form.Label>
-                <Form.Control type="text" placeholder="" value="PRTR001" />
-              </Form.Group>
-              <Form.Group
-                as={Col}
-                className="col-md-3"
-                controlId="formGridTratamiento"
-              >
-                <Form.Label>Tratamiento</Form.Label>
-                <Form.Select value="1">
-                  <option value="1">Transferencia</option>
-                  <option value="2">Evasión</option>
-                  <option value="3">Aceptación</option>
-                </Form.Select>
-              </Form.Group>
-              <Form.Group
-                as={Col}
-                className="col-md-2"
-                controlId="formGridProbabilidad"
-              >
-                <Form.Label>Probabilidad</Form.Label>
-                <Form.Control type="text" placeholder="de 10" value="6" />
-                <Form.Text>Valor Total=10</Form.Text>
-              </Form.Group>
+      {selectedRisk != null &&
+        riskIndicators != null &&
+        riskIndicators.length > 0 &&
+        riskTreatments != null &&
+        riskTreatments.length > 0 &&
+        riskAreas != null &&
+        riskAreas.length > 0 && (
+          <Form style={{ width: "100%" }}>
+            <div className="risk-details">
+              <h5 className="text-secondary">
+                <b>Relación con Indicador de Riesgo</b>
+              </h5>
+              <div className="container-form-controls">
+                <Row className="mb-3">
+                  <Form.Group
+                    as={Col}
+                    className="col-md-3"
+                    controlId="formGridCodIndicador"
+                  >
+                    <Form.Label>Código</Form.Label>
+                    <Form.Select
+                      value={
+                        selectedRisk.risk_indicator_id != null
+                          ? selectedRisk.risk_indicator_id
+                          : 1
+                      }
+                      onChange={(e) =>
+                        setSelectedRisk({
+                          ...selectedRisk,
+                          risk_indicator_id: parseInt(e.target.value),
+                        })
+                      }
+                    >
+                      {riskIndicators.map((ind) => (
+                        <option key={`ind-${ind.id}`} value={ind.id}>
+                          {ind.codigo}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                  <Form.Group
+                    as={Col}
+                    className="col-md-7"
+                    controlId="formGridNombIndicador"
+                  >
+                    <Form.Label>Nombre del Indicador de Riesgo</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder=""
+                      readOnly
+                      value={
+                        selectedRisk.risk_indicator_id != null
+                          ? riskIndicators[
+                              riskIndicators.findIndex(
+                                (ind) =>
+                                  ind.id === selectedRisk.risk_indicator_id
+                              )
+                            ].nombre
+                          : ""
+                      }
+                    />
+                  </Form.Group>
+                  <Form.Group
+                    as={Col}
+                    className="col-md-2"
+                    controlId="formGridEscala"
+                  >
+                    <Form.Label>Escala</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="0.00"
+                      value={selectedRisk.escala_indicador}
+                      onChange={(e) => {
+                        setSelectedRisk({
+                          ...selectedRisk,
+                          escala_indicador: parseInt(e.target.value),
+                        });
+                      }}
+                    />
 
-              <Form.Group
-                as={Col}
-                className="col-md-2"
-                controlId="formGridImpacto"
-              >
-                <Form.Label>Impacto</Form.Label>
-                <Form.Control type="text" placeholder="de 10" value="8" />
-                <Form.Text>Valor Total=10</Form.Text>
-              </Form.Group>
-              <Form.Group
-                as={Col}
-                className="col-md-2"
-                controlId="formGridSeveridad"
-              >
-                <Form.Label>Severidad</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="de 10"
-                  readOnly
-                  value="5.8"
-                />
-                <Form.Text>Valor Total=10</Form.Text>
-              </Form.Group>
-            </Row>
-            <Row className="mb-3">
-              <Form.Group
-                as={Col}
-                className="col-md-12"
-                controlId="formGridNombre"
-              >
-                <Form.Label>Nombre del Riesgo</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Ingrese nombre del riesgo"
-                  value=""
-                />
-              </Form.Group>
-            </Row>
-            <Row className="mb-3">
-              <Form.Group
-                as={Col}
-                className="col-md-12"
-                controlId="formGridDescripcion"
-              >
-                <Form.Label>Descripcion del Riesgo</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  placeholder="Ingrese descripción del riesgo"
-                  value="Órganos destinados al seguimiento del desarrollo social, económico y de infraestructura en las áreas seleccionadas."
-                />
-              </Form.Group>
-            </Row>
-          </div>
-          <div className="risk-details">
-            <h5 className="text-secondary">
-              <b>Justificación y Detalles del Riesgo</b>
-            </h5>
-            <div className="container-form-controls">
-              <Row className="mb-3">
-                <Form.Group
-                  as={Col}
-                  className="col-md-12"
-                  controlId="formGridSintomas"
-                >
-                  <Form.Label>Síntomas del Riesgo</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Ingrese sintomas del riesgo"
-                    value="La inactividad de los sistemas web impide llevar a cabo las actividades diarias de manera efectiva, lo que resulta en pérdida de tiempo y costos adicionales para la organización. Esta situación conlleva a la insatisfacción de los clientes debido a la falta de respuesta oportuna."
-                  />
-                </Form.Group>
-              </Row>
-              <Row className="mb-3">
-                <Form.Group
-                  as={Col}
-                  className="col-md-12"
-                  controlId="formGridCausas"
-                >
-                  <Form.Label>Causas del Riesgo</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Ingrese causas del riesgo"
-                    value="La falta de mantenimiento adecuado de los sistemas web ocasiona su inactividad, generando interrupciones en las operaciones diarias y provocando pérdida de tiempo y recursos."
-                  />
-                </Form.Group>
-              </Row>
-              <Row className="mb-3">
-                <Form.Group
-                  as={Col}
-                  className="col-md-12"
-                  controlId="formGridPlan"
-                >
-                  <Form.Label>Plan de Acción</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Ingrese plan de acción del riesgo"
-                    value="1. Diagnóstico: Realizar un análisis exhaustivo de los sistemas web afectados para identificar las causas subyacentes de su inactividad.
-2. Priorización: Clasificar las causas identificadas según su impacto."
-                  />
-                </Form.Group>
-              </Row>
-              <Row className="mb-3">
-                <Form.Group
-                  as={Col}
-                  className="col-md-12"
-                  controlId="formGridResponsables"
-                >
-                  <Form.Label>Responsables Encargados</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Ingrese lista de responsables encargados del control del riesgo"
-                    value="Equipo de Tecnología de la Información (TI): Encargado de realizar el diagnóstico de los sistemas web afectados, implementar soluciones técnicas y llevar a cabo el mantenimiento preventivo."
-                  />
-                </Form.Group>
-              </Row>
-              <Row className="mb-3">
-                <Form.Group
-                  as={Col}
-                  className="col-md-12"
-                  controlId="formGridEspecificaciones"
-                >
-                  <Form.Label>Especificaciones de Controles</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Ingrese las especificaciones relacionadas a los controles aplicados"
-                    value="Solicitar al área de sistemas para poder realizar el mantenimiento del equipo en el traslado del servicio."
-                  />
-                </Form.Group>
-              </Row>
+                    <Form.Text>Porcentaje</Form.Text>
+                  </Form.Group>
+                </Row>
+              </div>
+              <h5 className="text-secondary">
+                <b>Relación con Procesos de la Organización</b>
+              </h5>
+              <div className="container-form-controls">
+                {riskAreas != null && (
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-3"
+                      controlId="formGridCodArea"
+                    >
+                      <Form.Label>Código del Área</Form.Label>
+                      <Form.Select
+                        value={selectedArea != null ? selectedArea : -1}
+                        onChange={(e) =>
+                          setSelectedArea(parseInt(e.target.value))
+                        }
+                      >
+                        <option key={`default`} value={-1}>
+                          -
+                        </option>
+                        {riskAreas.map((area) => (
+                          <option key={`area-${area.id}`} value={area.id}>
+                            {area.codigo}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                    <Form.Group
+                      as={Col}
+                      className="col-md-9"
+                      controlId="formGridNombArea"
+                    >
+                      <Form.Label>Nombre del Área</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder=""
+                        readOnly
+                        value={
+                          selectedArea != -1
+                            ? riskAreas[
+                                riskAreas.findIndex(
+                                  (area) => area.id === selectedArea
+                                )
+                              ].nombre
+                            : ""
+                        }
+                      />
+                    </Form.Group>
+                  </Row>
+                )}
+                {riskUnitAreas != null && riskUnitAreas.length > 0 && (
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-3"
+                      controlId="formGridCodUnidad"
+                    >
+                      <Form.Label>Código de la Unidad</Form.Label>
+                      <Form.Select
+                        value={selectedUnitArea != null ? selectedUnitArea : -1}
+                        onChange={(e) =>
+                          setSelectedUnitArea(parseInt(e.target.value))
+                        }
+                      >
+                        <option key={`default`} value={-1}>
+                          -
+                        </option>
+                        {riskUnitAreas.map((unit) => (
+                          <option key={`unit-${unit.id}`} value={unit.id}>
+                            {unit.codigo}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                    <Form.Group
+                      as={Col}
+                      className="col-md-9"
+                      controlId="formGridNombUnidad"
+                    >
+                      <Form.Label>Nombre de la Unidad</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder=""
+                        readOnly
+                        value={
+                          selectedUnitArea != -1
+                            ? riskUnitAreas[
+                                riskUnitAreas.findIndex(
+                                  (unit) => unit.id === selectedUnitArea
+                                )
+                              ].nombre
+                            : ""
+                        }
+                      />
+                    </Form.Group>
+                    <Form.Text>
+                      En caso el código de la unidad coincida con el del área,
+                      se mostrarán la lista de procesos asociados al área.
+                    </Form.Text>
+                  </Row>
+                )}
+                {riskProcess != null && riskProcess.length > 0 && (
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-3"
+                      controlId="formGridCodProceso"
+                    >
+                      <Form.Label>Código del Proceso</Form.Label>
+                      <Form.Select
+                        value={
+                          selectedRisk.process_id != null
+                            ? selectedRisk.process_id
+                            : -1
+                        }
+                        onChange={(e) =>
+                          setSelectedRisk({
+                            ...selectedRisk,
+                            process_id: parseInt(e.target.value),
+                          })
+                        }
+                      >
+                        <option key={`default`} value={-1}>
+                          -
+                        </option>
+                        {riskProcess.map((process) => (
+                          <option
+                            key={`process-${process.id}`}
+                            value={process.id}
+                          >
+                            {process.codigo}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                    <Form.Group
+                      as={Col}
+                      className="col-md-9"
+                      controlId="formGridNombProceso"
+                    >
+                      <Form.Label>
+                        Nombre del Proceso
+                        {riskUnitAreas != null &&
+                          selectedUnitArea != -1 &&
+                          (riskUnitAreas[
+                            riskUnitAreas.findIndex(
+                              (unit) => unit.id === selectedUnitArea
+                            )
+                          ].es_area
+                            ? " asociado al Área"
+                            : " asociado a la Unidad")}
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder=""
+                        readOnly
+                        value={
+                          riskProcess != null &&
+                          riskProcess.length > 0 &&
+                          selectedRisk.process_id != null &&
+                          selectedRisk.process_id != -1
+                            ? riskProcess[
+                                riskProcess.findIndex(
+                                  (process) =>
+                                    process.id === selectedRisk.process_id
+                                )
+                              ] != null
+                              ? riskProcess[
+                                  riskProcess.findIndex(
+                                    (process) =>
+                                      process.id === selectedRisk.process_id
+                                  )
+                                ].nombre
+                              : ""
+                            : ""
+                        }
+                      />
+                    </Form.Group>
+                  </Row>
+                )}
+              </div>
+              <h5 className="text-secondary">
+                <b>Información del Riesgo</b>
+              </h5>
+              <div className="container-form-controls">
+                <Row className="mb-3">
+                  <Form.Group
+                    as={Col}
+                    className="col-md-3"
+                    controlId="formGridCodRiesgo"
+                  >
+                    <Form.Label>Código del Riesgo</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder=""
+                      value={selectedRisk.codigo}
+                      onChange={(e) => {
+                        setSelectedRisk({
+                          ...selectedRisk,
+                          codigo: e.target.value,
+                        });
+                      }}
+                    />
+                  </Form.Group>
+                  {riskTreatments != null && (
+                    <Form.Group
+                      as={Col}
+                      className="col-md-3"
+                      controlId="formGridTratamiento"
+                    >
+                      <Form.Label>Tratamiento</Form.Label>
+                      <Form.Select
+                        value={
+                          selectedRisk.risk_treatment_id != null
+                            ? selectedRisk.risk_treatment_id
+                            : -1
+                        }
+                        onChange={(e) =>
+                          setSelectedRisk({
+                            ...selectedRisk,
+                            risk_treatment_id: parseInt(e.target.value),
+                          })
+                        }
+                      >
+                        <option key={`default`} value={-1}>
+                          Sin evaluar
+                        </option>
+                        {riskTreatments.map((treatment) => (
+                          <option
+                            key={`treatment-${treatment.id}`}
+                            value={treatment.id}
+                          >
+                            {treatment.nombre}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  )}
+                  <Form.Group
+                    as={Col}
+                    className="col-md-2"
+                    controlId="formGridProbabilidad"
+                  >
+                    <Form.Label>Probabilidad</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="de 10"
+                      value={selectedRisk.probabilidad}
+                      onChange={(e) => {
+                        setSelectedRisk({
+                          ...selectedRisk,
+                          probabilidad:
+                            e.target.value != ""
+                              ? parseFloat(e.target.value)
+                              : 0,
+                          severidad_riesgo:
+                            e.target.value != ""
+                              ? (parseFloat(e.target.value) *
+                                  selectedRisk.impacto) /
+                                10
+                              : 0,
+                        });
+                      }}
+                    />
+                    <Form.Text>Valor Total=10</Form.Text>
+                  </Form.Group>
+
+                  <Form.Group
+                    as={Col}
+                    className="col-md-2"
+                    controlId="formGridImpacto"
+                  >
+                    <Form.Label>Impacto</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="de 10"
+                      value={selectedRisk.impacto}
+                      onChange={(e) => {
+                        setSelectedRisk({
+                          ...selectedRisk,
+                          impacto:
+                            e.target.value != ""
+                              ? parseFloat(e.target.value)
+                              : 0,
+                          severidad_riesgo:
+                            e.target.value != ""
+                              ? (parseFloat(e.target.value) *
+                                  selectedRisk.probabilidad) /
+                                10
+                              : 0,
+                        });
+                      }}
+                    />
+                    <Form.Text>Valor Total=10</Form.Text>
+                  </Form.Group>
+                  <Form.Group
+                    as={Col}
+                    className="col-md-2"
+                    controlId="formGridSeveridad"
+                  >
+                    <Form.Label>Severidad</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="de 10"
+                      readOnly
+                      value={
+                        (selectedRisk.impacto * selectedRisk.probabilidad) / 10
+                      }
+                    />
+                    <Form.Text>Valor Total=10</Form.Text>
+                  </Form.Group>
+                </Row>
+                <Row className="mb-3">
+                  <Form.Group
+                    as={Col}
+                    className="col-md-12"
+                    controlId="formGridNombre"
+                  >
+                    <Form.Label>Nombre del Riesgo</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Ingrese nombre del riesgo"
+                      value={selectedRisk.nombre}
+                      onChange={(e) => {
+                        setSelectedRisk({
+                          ...selectedRisk,
+                          nombre: e.target.value,
+                        });
+                      }}
+                    />
+                  </Form.Group>
+                </Row>
+                <Row className="mb-3">
+                  <Form.Group
+                    as={Col}
+                    className="col-md-12"
+                    controlId="formGridDescripcion"
+                  >
+                    <Form.Label>Descripcion del Riesgo</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      placeholder="Ingrese descripción del riesgo"
+                      value={selectedRisk.descripcion}
+                      onChange={(e) => {
+                        setSelectedRisk({
+                          ...selectedRisk,
+                          descripcion: e.target.value,
+                        });
+                      }}
+                    />
+                  </Form.Group>
+                </Row>
+              </div>
+              <div className="risk-details">
+                <h5 className="text-secondary">
+                  <b>Justificación y Detalles del Riesgo</b>
+                </h5>
+                <div className="container-form-controls">
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-12"
+                      controlId="formGridSintomas"
+                    >
+                      <Form.Label>Síntomas del Riesgo</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Ingrese sintomas del riesgo"
+                        value={selectedRisk.sintomas}
+                        onChange={(e) => {
+                          setSelectedRisk({
+                            ...selectedRisk,
+                            sintomas: e.target.value,
+                          });
+                        }}
+                      />
+                    </Form.Group>
+                  </Row>
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-12"
+                      controlId="formGridCausas"
+                    >
+                      <Form.Label>Causas del Riesgo</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Ingrese causas del riesgo"
+                        value={selectedRisk.causas}
+                        onChange={(e) => {
+                          setSelectedRisk({
+                            ...selectedRisk,
+                            causas: e.target.value,
+                          });
+                        }}
+                      />
+                    </Form.Group>
+                  </Row>
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-12"
+                      controlId="formGridPlan"
+                    >
+                      <Form.Label>Plan de Acción</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Ingrese plan de acción del riesgo"
+                        value={selectedRisk.plan_accion}
+                        onChange={(e) => {
+                          setSelectedRisk({
+                            ...selectedRisk,
+                            plan_accion: e.target.value,
+                          });
+                        }}
+                      />
+                    </Form.Group>
+                  </Row>
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-12"
+                      controlId="formGridResponsables"
+                    >
+                      <Form.Label>Responsables Encargados</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Ingrese lista de responsables encargados del control del riesgo"
+                        value={selectedRisk.responsables_encargados}
+                        onChange={(e) => {
+                          setSelectedRisk({
+                            ...selectedRisk,
+                            responsables_encargados: e.target.value,
+                          });
+                        }}
+                      />
+                    </Form.Group>
+                  </Row>
+                  <Row className="mb-3">
+                    <Form.Group
+                      as={Col}
+                      className="col-md-12"
+                      controlId="formGridEspecificaciones"
+                    >
+                      <Form.Label>Especificaciones de Controles</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Ingrese las especificaciones relacionadas a los controles aplicados"
+                        value={selectedRisk.especificacion}
+                        onChange={(e) => {
+                          setSelectedRisk({
+                            ...selectedRisk,
+                            especificacion: e.target.value,
+                          });
+                        }}
+                      />
+                    </Form.Group>
+                  </Row>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </Form>
+          </Form>
+        )}
     </div>
   );
 }
 
 function Risk_Lista() {
-  const retrieveListaContent = () => {
-    return [
-      {
-        key: "1",
+  async function retrieveRiskTreatmentList() {
+    const data = await getRiskTreatment();
+
+    return data;
+  }
+
+  async function retrieveRiskIndicatorList() {
+    const data = await getRiskIndicator();
+
+    return data;
+  }
+
+  async function retrieveAreaList() {
+    const data = await getArea();
+
+    return data;
+  }
+  async function retrieveUnitbyAreaList(id) {
+    const data = await getUnitAreabyAreaId(id);
+
+    return data;
+  }
+  async function retrieveProcessbyUnitList(id) {
+    const data = await getProcessbyUnitAreaId(id);
+
+    return data;
+  }
+
+  async function retrieveRiskList() {
+    const data = await getRiskDetail();
+
+    return data;
+  }
+
+  async function retrieveCreateRisk(body) {
+    const data = await createRisk(body);
+
+    return data;
+  }
+
+  async function retrieveEditRisk(id, body) {
+    const data = await updateRisk(id, body);
+
+    return data;
+  }
+
+  async function retrieveDeleteRisk(id) {
+    const data = await deleteRisk(id);
+
+    return data;
+  }
+
+  const [listRisk, setListRisk] = useState(null);
+  const [riskTreatments, setRiskTreatments] = useState(null);
+  const [riskIndicators, setRiskIndicators] = useState(null);
+  const [riskAreas, setRiskAreas] = useState(null);
+  const [riskUnitAreas, setRiskUnitAreas] = useState(null);
+  const [riskProcess, setRiskProcess] = useState(null);
+  const [selectedArea, setSelectedArea] = useState(-1);
+  const [selectedUnitArea, setSelectedUnitArea] = useState(-1);
+  const [newRisk, setNewRisk] = useState(null);
+  const [selectedRisk, setSelectedRisk] = useState(null);
+
+  const fillListaContent = (risks) => {
+    let listRisks = [];
+
+    for (const risk of risks) {
+      listRisks.push({
+        key: risk.id.toString(),
         content: (
           <div className="lista-riesgos">
             <div className="lista-riesgos-item1">
               <p className="text-primary header-text">
-                <b>1</b>
+                <b>{risk.id}</b>
               </p>
             </div>
             <div className="lista-riesgos-item2">
-              <p className="text-primary header-text">PRTR001</p>
+              <p className="text-primary header-text">{risk.codigo}</p>
             </div>
             <div className="lista-riesgos-item3 header-text">
+              <p className="text-primary">{risk.nombre}</p>
+            </div>
+            <div className="lista-riesgos-item4 header-text">
               <p className="text-primary">
-                Servidor de Producción - Degradación en desempeño del sistema
+                <b>Tratamiento:</b>{" "}
+                {risk.RiskTreatment != null
+                  ? risk.RiskTreatment.nombre
+                  : "Sin evaluar"}
+              </p>
+              <p className="text-primary">
+                <b>Indicador de Riesgo:</b> {risk.RiskIndicator?.codigo}
               </p>
             </div>
             <div className="lista-riesgos-item4 header-text">
               <p className="text-primary">
-                <b>Tratamiento:</b> Transferencia
+                {risk.Process?.UnitArea.es_area ? "Área " : "Unidad "}
+                {risk.Process?.UnitArea.codigo}
               </p>
               <p className="text-primary">
-                <b>Indicador de Riesgo:</b> SH16
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">{"Unidad"} DRSO001</p>
-              <p className="text-primary">
-                <b>Proceso PRO001</b>
+                <b>Proceso {risk.Process?.codigo}</b>
               </p>
             </div>
             <div className="lista-riesgos-item5 header-text">
               <p className="text-primary">
-                <b>Probabilidad:</b> Medio
+                <b>Probabilidad:</b> {statusImpactText(risk.probabilidad)}
               </p>
               <p className="text-primary">
-                <b>Impacto:</b> Alto
+                <b>Impacto:</b> {statusImpactText(risk.impacto)}
               </p>
               <hr style={{ margin: "0" }} />
-              <p className="text-danger">
-                <b>Severo</b>
+              <p className={statusImpact(risk.severidad_riesgo)}>
+                <b>{statusImpactText(risk.severidad_riesgo)}</b>
               </p>
             </div>
             <div className="lista-riesgos-item6 header-text">
@@ -881,12 +1565,23 @@ function Risk_Lista() {
                 <b>Factores:</b> 0
               </p>
             </div>
-            <div className={`lista-riesgos-item7 header-text ${"bg-warning"}`}>
-              <h5 className="text-white text-center">50.00</h5>
+            <div
+              className={`lista-riesgos-item7 header-text ${colorBackgroundPercentage(
+                risk.nivel_riesgo
+              )}`}
+            >
+              <h5 className="text-white text-center">
+                {convertToPercentage(risk.nivel_riesgo)}
+              </h5>
             </div>
             <div className="lista-riesgos-item1">
               <Button
-                onClick={() => setOpenEditRisks(true)}
+                onClick={() => {
+                  setSelectedRisk(risk);
+                  setSelectedArea(risk.Process.UnitArea.Area.id);
+                  setSelectedUnitArea(risk.Process.UnitArea.id);
+                  setOpenEditRisks(true);
+                }}
                 variant="outline-secondary"
               >
                 <FontAwesomeIcon
@@ -899,7 +1594,10 @@ function Risk_Lista() {
             </div>
             <div className="lista-riesgos-item1">
               <Button
-                onClick={() => setOpenRiskDetail(true)}
+                onClick={() => {
+                  setSelectedRisk(risk);
+                  setOpenRiskDetail(true);
+                }}
                 variant="outline-secondary"
               >
                 <FontAwesomeIcon
@@ -912,922 +1610,118 @@ function Risk_Lista() {
             </div>
           </div>
         ),
-      },
-      {
-        key: "2",
-        content: (
-          <div className="lista-riesgos">
-            <div className="lista-riesgos-item1">
-              <p className="text-primary header-text">
-                <b>2</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item2">
-              <p className="text-primary header-text">PRTR002</p>
-            </div>
-            <div className="lista-riesgos-item3 header-text">
-              <p className="text-primary">
-                Servidor de Producción - Mal funcionamiento del equipamiento
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">
-                <b>Tratamiento:</b> Aceptación
-              </p>
-              <p className="text-primary">
-                <b>Indicador de Riesgo:</b> SH16
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">{"Unidad"} DRSO001</p>
-              <p className="text-primary">
-                <b>Proceso PRO001</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item5 header-text">
-              <p className="text-primary">
-                <b>Probabilidad:</b> Bajo
-              </p>
-              <p className="text-primary">
-                <b>Impacto:</b> Medio
-              </p>
-              <hr style={{ margin: "0" }} />
-              <p className="text-warning">
-                <b>Medio</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item6 header-text">
-              <p className="text-primary">
-                <b>Irregularidades:</b> 0
-              </p>
-              <p className="text-primary">
-                <b>Factores:</b> 0
-              </p>
-            </div>
-            <div className={`lista-riesgos-item7 header-text ${"bg-success"}`}>
-              <h5 className="text-white text-center">25.00</h5>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenEditRisks(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faGear}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenRiskDetail(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faArrowRightFromBracket}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-          </div>
-        ),
-      },
-      {
-        key: "3",
-        content: (
-          <div className="lista-riesgos">
-            <div className="lista-riesgos-item1">
-              <p className="text-primary header-text">
-                <b>3</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item2">
-              <p className="text-primary header-text">PRTR003</p>
-            </div>
-            <div className="lista-riesgos-item3 header-text">
-              <p className="text-primary">
-                Datos de contratistas - Disponibilidad de backups
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">
-                <b>Tratamiento:</b> Transferencia
-              </p>
-              <p className="text-primary">
-                <b>Indicador de Riesgo:</b> SH16
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">{"Unidad"} DRSO001</p>
-              <p className="text-primary">
-                <b>Proceso PRO001</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item5 header-text">
-              <p className="text-primary">
-                <b>Probabilidad:</b> Medio
-              </p>
-              <p className="text-primary">
-                <b>Impacto:</b> Alto
-              </p>
-              <hr style={{ margin: "0" }} />
-              <p className="text-danger">
-                <b>Severo</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item6 header-text">
-              <p className="text-primary">
-                <b>Irregularidades:</b> 0
-              </p>
-              <p className="text-primary">
-                <b>Factores:</b> 0
-              </p>
-            </div>
-            <div className={`lista-riesgos-item7 header-text ${"bg-warning"}`}>
-              <h5 className="text-white text-center">50.00</h5>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenEditRisks(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faGear}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenRiskDetail(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faArrowRightFromBracket}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-          </div>
-        ),
-      },
-      {
-        key: "4",
-        content: (
-          <div className="lista-riesgos">
-            <div className="lista-riesgos-item1">
-              <p className="text-primary header-text">
-                <b>4</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item2">
-              <p className="text-primary header-text">PRTR004</p>
-            </div>
-            <div className="lista-riesgos-item3 header-text">
-              <p className="text-primary">
-                Servidor de Producción - Degradación en desempeño del sistema
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">
-                <b>Tratamiento:</b> Transferencia
-              </p>
-              <p className="text-primary">
-                <b>Indicador de Riesgo:</b> SH16
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">{"Unidad"} DRS002</p>
-              <p className="text-primary">
-                <b>Proceso PRO004</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item5 header-text">
-              <p className="text-primary">
-                <b>Probabilidad:</b> Medio
-              </p>
-              <p className="text-primary">
-                <b>Impacto:</b> Alto
-              </p>
-              <hr style={{ margin: "0" }} />
-              <p className="text-danger">
-                <b>Severo</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item6 header-text">
-              <p className="text-primary">
-                <b>Irregularidades:</b> 0
-              </p>
-              <p className="text-primary">
-                <b>Factores:</b> 0
-              </p>
-            </div>
-            <div className={`lista-riesgos-item7 header-text ${"bg-warning"}`}>
-              <h5 className="text-white text-center">50.00</h5>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenEditRisks(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faGear}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenRiskDetail(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faArrowRightFromBracket}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-          </div>
-        ),
-      },
-      {
-        key: "5",
-        content: (
-          <div className="lista-riesgos">
-            <div className="lista-riesgos-item1">
-              <p className="text-primary header-text">
-                <b>5</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item2">
-              <p className="text-primary header-text">PRTR005</p>
-            </div>
-            <div className="lista-riesgos-item3 header-text">
-              <p className="text-primary">
-                Servidor de Producción - Mal funcionamiento del equipamiento
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">
-                <b>Tratamiento:</b> Aceptación
-              </p>
-              <p className="text-primary">
-                <b>Indicador de Riesgo:</b> SH16
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">{"Unidad"} DRS002</p>
-              <p className="text-primary">
-                <b>Proceso PRO004</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item5 header-text">
-              <p className="text-primary">
-                <b>Probabilidad:</b> Bajo
-              </p>
-              <p className="text-primary">
-                <b>Impacto:</b> Medio
-              </p>
-              <hr style={{ margin: "0" }} />
-              <p className="text-warning">
-                <b>Medio</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item6 header-text">
-              <p className="text-primary">
-                <b>Irregularidades:</b> 0
-              </p>
-              <p className="text-primary">
-                <b>Factores:</b> 0
-              </p>
-            </div>
-            <div className={`lista-riesgos-item7 header-text ${"bg-success"}`}>
-              <h5 className="text-white text-center">25.00</h5>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenEditRisks(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faGear}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenRiskDetail(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faArrowRightFromBracket}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-          </div>
-        ),
-      },
-      {
-        key: "6",
-        content: (
-          <div className="lista-riesgos">
-            <div className="lista-riesgos-item1">
-              <p className="text-primary header-text">
-                <b>6</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item2">
-              <p className="text-primary header-text">PRTR006</p>
-            </div>
-            <div className="lista-riesgos-item3 header-text">
-              <p className="text-primary">
-                Datos de contratistas - Disponibilidad de backups
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">
-                <b>Tratamiento:</b> Transferencia
-              </p>
-              <p className="text-primary">
-                <b>Indicador de Riesgo:</b> SH16
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">{"Unidad"} DRS002</p>
-              <p className="text-primary">
-                <b>Proceso PRO004</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item5 header-text">
-              <p className="text-primary">
-                <b>Probabilidad:</b> Medio
-              </p>
-              <p className="text-primary">
-                <b>Impacto:</b> Alto
-              </p>
-              <hr style={{ margin: "0" }} />
-              <p className="text-danger">
-                <b>Severo</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item6 header-text">
-              <p className="text-primary">
-                <b>Irregularidades:</b> 0
-              </p>
-              <p className="text-primary">
-                <b>Factores:</b> 0
-              </p>
-            </div>
-            <div className={`lista-riesgos-item7 header-text ${"bg-warning"}`}>
-              <h5 className="text-white text-center">50.00</h5>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenEditRisks(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faGear}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenRiskDetail(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faArrowRightFromBracket}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-          </div>
-        ),
-      },
-      {
-        key: "7",
-        content: (
-          <div className="lista-riesgos">
-            <div className="lista-riesgos-item1">
-              <p className="text-primary header-text">
-                <b>7</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item2">
-              <p className="text-primary header-text">PRTR007</p>
-            </div>
-            <div className="lista-riesgos-item3 header-text">
-              <p className="text-primary">
-                Servidor de Producción - Mal funcionamiento del equipamiento
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">
-                <b>Tratamiento:</b> Aceptación
-              </p>
-              <p className="text-primary">
-                <b>Indicador de Riesgo:</b> SH16
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">{"Unidad"} DRS003</p>
-              <p className="text-primary">
-                <b>Proceso PRO005</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item5 header-text">
-              <p className="text-primary">
-                <b>Probabilidad:</b> Bajo
-              </p>
-              <p className="text-primary">
-                <b>Impacto:</b> Medio
-              </p>
-              <hr style={{ margin: "0" }} />
-              <p className="text-warning">
-                <b>Medio</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item6 header-text">
-              <p className="text-primary">
-                <b>Irregularidades:</b> 0
-              </p>
-              <p className="text-primary">
-                <b>Factores:</b> 0
-              </p>
-            </div>
-            <div className={`lista-riesgos-item7 header-text ${"bg-success"}`}>
-              <h5 className="text-white text-center">25.00</h5>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenEditRisks(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faGear}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenRiskDetail(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faArrowRightFromBracket}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-          </div>
-        ),
-      },
-      {
-        key: "8",
-        content: (
-          <div className="lista-riesgos">
-            <div className="lista-riesgos-item1">
-              <p className="text-primary header-text">
-                <b>8</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item2">
-              <p className="text-primary header-text">PRTR008</p>
-            </div>
-            <div className="lista-riesgos-item3 header-text">
-              <p className="text-primary">
-                Servidor de Producción - Degradación en desempeño del sistema
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">
-                <b>Tratamiento:</b> Transferencia
-              </p>
-              <p className="text-primary">
-                <b>Indicador de Riesgo:</b> SH16
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">{"Área"} LIN001</p>
-              <p className="text-primary">
-                <b>Proceso PRO006</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item5 header-text">
-              <p className="text-primary">
-                <b>Probabilidad:</b> Medio
-              </p>
-              <p className="text-primary">
-                <b>Impacto:</b> Alto
-              </p>
-              <hr style={{ margin: "0" }} />
-              <p className="text-danger">
-                <b>Severo</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item6 header-text">
-              <p className="text-primary">
-                <b>Irregularidades:</b> 0
-              </p>
-              <p className="text-primary">
-                <b>Factores:</b> 0
-              </p>
-            </div>
-            <div className={`lista-riesgos-item7 header-text ${"bg-warning"}`}>
-              <h5 className="text-white text-center">50.00</h5>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenEditRisks(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faGear}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenRiskDetail(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faArrowRightFromBracket}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-          </div>
-        ),
-      },
-      {
-        key: "9",
-        content: (
-          <div className="lista-riesgos">
-            <div className="lista-riesgos-item1">
-              <p className="text-primary header-text">
-                <b>9</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item2">
-              <p className="text-primary header-text">PRTR009</p>
-            </div>
-            <div className="lista-riesgos-item3 header-text">
-              <p className="text-primary">
-                Servidor de Producción - Mal funcionamiento del equipamiento
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">
-                <b>Tratamiento:</b> Aceptación
-              </p>
-              <p className="text-primary">
-                <b>Indicador de Riesgo:</b> SH16
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">{"Área"} LIN001</p>
-              <p className="text-primary">
-                <b>Proceso PRO006</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item5 header-text">
-              <p className="text-primary">
-                <b>Probabilidad:</b> Bajo
-              </p>
-              <p className="text-primary">
-                <b>Impacto:</b> Medio
-              </p>
-              <hr style={{ margin: "0" }} />
-              <p className="text-warning">
-                <b>Medio</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item6 header-text">
-              <p className="text-primary">
-                <b>Irregularidades:</b> 0
-              </p>
-              <p className="text-primary">
-                <b>Factores:</b> 0
-              </p>
-            </div>
-            <div className={`lista-riesgos-item7 header-text ${"bg-success"}`}>
-              <h5 className="text-white text-center">25.00</h5>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenEditRisks(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faGear}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenRiskDetail(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faArrowRightFromBracket}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-          </div>
-        ),
-      },
-      {
-        key: "10",
-        content: (
-          <div className="lista-riesgos">
-            <div className="lista-riesgos-item1">
-              <p className="text-primary header-text">
-                <b>10</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item2">
-              <p className="text-primary header-text">PRTR010</p>
-            </div>
-            <div className="lista-riesgos-item3 header-text">
-              <p className="text-primary">
-                Datos de contratistas - Disponibilidad de backups
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">
-                <b>Tratamiento:</b> Transferencia
-              </p>
-              <p className="text-primary">
-                <b>Indicador de Riesgo:</b> SH16
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">{"Área"} LIN001</p>
-              <p className="text-primary">
-                <b>Proceso PRO006</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item5 header-text">
-              <p className="text-primary">
-                <b>Probabilidad:</b> Medio
-              </p>
-              <p className="text-primary">
-                <b>Impacto:</b> Alto
-              </p>
-              <hr style={{ margin: "0" }} />
-              <p className="text-danger">
-                <b>Severo</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item6 header-text">
-              <p className="text-primary">
-                <b>Irregularidades:</b> 0
-              </p>
-              <p className="text-primary">
-                <b>Factores:</b> 0
-              </p>
-            </div>
-            <div className={`lista-riesgos-item7 header-text ${"bg-warning"}`}>
-              <h5 className="text-white text-center">50.00</h5>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenEditRisks(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faGear}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenRiskDetail(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faArrowRightFromBracket}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-          </div>
-        ),
-      },
-      {
-        key: "11",
-        content: (
-          <div className="lista-riesgos">
-            <div className="lista-riesgos-item1">
-              <p className="text-primary header-text">
-                <b>11</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item2">
-              <p className="text-primary header-text">PRTR011</p>
-            </div>
-            <div className="lista-riesgos-item3 header-text">
-              <p className="text-primary">
-                Servidor de Producción - Degradación en desempeño del sistema
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">
-                <b>Tratamiento:</b> Transferencia
-              </p>
-              <p className="text-primary">
-                <b>Indicador de Riesgo:</b> SH16
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">{"Área"} LIN002</p>
-              <p className="text-primary">
-                <b>Proceso PRO007</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item5 header-text">
-              <p className="text-primary">
-                <b>Probabilidad:</b> Medio
-              </p>
-              <p className="text-primary">
-                <b>Impacto:</b> Alto
-              </p>
-              <hr style={{ margin: "0" }} />
-              <p className="text-danger">
-                <b>Severo</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item6 header-text">
-              <p className="text-primary">
-                <b>Irregularidades:</b> 0
-              </p>
-              <p className="text-primary">
-                <b>Factores:</b> 0
-              </p>
-            </div>
-            <div className={`lista-riesgos-item7 header-text ${"bg-warning"}`}>
-              <h5 className="text-white text-center">50.00</h5>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenEditRisks(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faGear}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenRiskDetail(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faArrowRightFromBracket}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-          </div>
-        ),
-      },
-      {
-        key: "12",
-        content: (
-          <div className="lista-riesgos">
-            <div className="lista-riesgos-item1">
-              <p className="text-primary header-text">
-                <b>12</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item2">
-              <p className="text-primary header-text">PRTR012</p>
-            </div>
-            <div className="lista-riesgos-item3 header-text">
-              <p className="text-primary">
-                Servidor de Producción - Mal funcionamiento del equipamiento
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">
-                <b>Tratamiento:</b> Aceptación
-              </p>
-              <p className="text-primary">
-                <b>Indicador de Riesgo:</b> SH16
-              </p>
-            </div>
-            <div className="lista-riesgos-item4 header-text">
-              <p className="text-primary">{"Área"} LIN003</p>
-              <p className="text-primary">
-                <b>Proceso PRO008</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item5 header-text">
-              <p className="text-primary">
-                <b>Probabilidad:</b> Bajo
-              </p>
-              <p className="text-primary">
-                <b>Impacto:</b> Medio
-              </p>
-              <hr style={{ margin: "0" }} />
-              <p className="text-warning">
-                <b>Medio</b>
-              </p>
-            </div>
-            <div className="lista-riesgos-item6 header-text">
-              <p className="text-primary">
-                <b>Irregularidades:</b> 0
-              </p>
-              <p className="text-primary">
-                <b>Factores:</b> 0
-              </p>
-            </div>
-            <div className={`lista-riesgos-item7 header-text ${"bg-success"}`}>
-              <h5 className="text-white text-center">25.00</h5>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenEditRisks(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faGear}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-            <div className="lista-riesgos-item1">
-              <Button
-                onClick={() => setOpenRiskDetail(true)}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faArrowRightFromBracket}
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                />
-              </Button>
-            </div>
-          </div>
-        ),
-      },
-    ];
+      });
+    }
+
+    return listRisks;
   };
+
+  const handleCreateRisks = (newRisk, setNewRisk, listRisk, setListRisk) => {
+    console.log(newRisk);
+    if (
+      newRisk.risk_indicator_id == null ||
+      newRisk.risk_indicator_id == -1 ||
+      newRisk.process_id == null ||
+      newRisk.process_id == -1
+    )
+      return;
+    if (newRisk.risk_treatment_id == -1) newRisk.risk_treatment_id = null;
+    retrieveCreateRisk(newRisk).then(() => {
+      setNewRisk(null);
+      retrieveRiskList().then((risks) => {
+        setListRisk(risks);
+      });
+    });
+  };
+  const handleEditRisks = (
+    selectedRisk,
+    setSelectedRisk,
+    listRisk,
+    setListRisk
+  ) => {
+    if (
+      selectedRisk.risk_indicator_id == null ||
+      selectedRisk.risk_indicator_id == -1 ||
+      selectedRisk.process_id == null ||
+      selectedRisk.process_id == -1
+    )
+      return;
+    if (selectedRisk.risk_treatment_id == -1)
+      selectedRisk.risk_treatment_id = null;
+    const body = {
+      risk_indicator_id: selectedRisk.risk_indicator_id,
+      process_id: selectedRisk.process_id,
+      risk_treatment_id: selectedRisk.risk_treatment_id,
+      codigo: selectedRisk.codigo,
+      nombre: selectedRisk.nombre,
+      descripcion: selectedRisk.descripcion,
+      probabilidad: selectedRisk.probabilidad,
+      impacto: selectedRisk.impacto,
+      severidad_riesgo: selectedRisk.severidad_riesgo,
+      escala_indicador: selectedRisk.escala_indicador,
+      sintomas: selectedRisk.sintomas,
+      causas: selectedRisk.causas,
+      plan_accion: selectedRisk.plan_accion,
+      responsables_encargados: selectedRisk.responsables_encargados,
+      especificacion: selectedRisk.especificacion,
+    };
+    retrieveEditRisk(selectedRisk.id, body).then(() => {
+      setSelectedRisk(null);
+      retrieveRiskList().then((risks) => {
+        setListRisk(risks);
+      });
+    });
+  };
+  const handleRemoveRisks = (
+    selectedRisk,
+    setSelectedRisk,
+    listRisk,
+    setListRisk
+  ) => {
+    retrieveDeleteRisk(selectedRisk.id).then(() => {
+      setSelectedRisk(null);
+      retrieveRiskList().then((risks) => {
+        setListRisk(risks);
+      });
+    });
+  };
+
+  useEffect(() => {
+    retrieveRiskList().then((risks) => {
+      setListRisk(risks);
+      retrieveRiskTreatmentList().then((treatments) => {
+        setRiskTreatments(treatments);
+        retrieveRiskIndicatorList().then((indicators) => {
+          setRiskIndicators(indicators);
+          retrieveAreaList().then((areas) => {
+            setRiskAreas(areas);
+          });
+        });
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (selectedArea != -1) {
+      retrieveUnitbyAreaList(selectedArea).then((units) => {
+        setRiskUnitAreas(units);
+      });
+    } else {
+      setRiskUnitAreas(null);
+    }
+    setSelectedUnitArea(-1);
+    setRiskProcess(null);
+  }, [selectedArea]);
+
+  useEffect(() => {
+    if (selectedUnitArea != -1) {
+      retrieveProcessbyUnitList(selectedUnitArea).then((process) => {
+        setRiskProcess(process);
+      });
+    } else {
+      setRiskProcess(null);
+    }
+  }, [selectedUnitArea]);
 
   const [openRiskDetail, setOpenRiskDetail] = useState(false);
   const [openNewRisks, setOpenNewRisks] = useState(false);
@@ -1850,7 +1744,26 @@ function Risk_Lista() {
               Cargar Lista de Riesgos
             </Button> */}
               <Button
-                onClick={() => setOpenNewRisks(true)}
+                onClick={() => {
+                  setNewRisk({
+                    risk_indicator_id: 1,
+                    process_id: null,
+                    risk_treatment_id: null,
+                    codigo: "",
+                    nombre: "",
+                    descripcion: "",
+                    probabilidad: 0.0,
+                    impacto: 0.0,
+                    severidad_riesgo: 0.0,
+                    escala_indicador: 0.0,
+                    sintomas: "",
+                    causas: "",
+                    plan_accion: "",
+                    responsables_encargados: "",
+                    especificacion: "",
+                  });
+                  setOpenNewRisks(true);
+                }}
                 size="md"
                 variant="primary"
               >
@@ -1858,74 +1771,76 @@ function Risk_Lista() {
               </Button>
             </div>
           </div>
-          <div className="lista-body-riesgos">
-            <ListTableBox
-              noPadding={true}
-              header={
-                <div className="accordion-riesgos-header">
-                  <h6
-                    className="text-primary header-text"
-                    style={{ width: "42px", alignSelf: "center" }}
-                  >
-                    <b>#</b>
-                  </h6>
-                  <h6
-                    className="text-primary header-text"
-                    style={{ width: "136px" }}
-                  >
-                    <b>Código</b>
-                  </h6>
-                  <h6
-                    className="text-primary header-text"
-                    style={{ width: "709px" }}
-                  >
-                    <b>Nombre</b>
-                  </h6>
-                  <h6
-                    className="text-primary header-text"
-                    style={{ width: "232px" }}
-                  >
-                    <b>Categoría</b>
-                  </h6>
-                  <h6
-                    className="text-primary header-text"
-                    style={{ width: "232px" }}
-                  >
-                    <b>Relación Unidad</b>
-                  </h6>
-                  <h6
-                    className="text-primary header-text"
-                    style={{ width: "232px" }}
-                  >
-                    <b>Severidad</b>
-                  </h6>
-                  <h6
-                    className="text-primary header-text"
-                    style={{ width: "232px" }}
-                  >
-                    <b>Casos</b>
-                  </h6>
-                  <h6
-                    className="text-primary header-text"
-                    style={{ width: "122px" }}
-                  >
-                    <b>Nivel Riesgo</b>
-                  </h6>
-                  <div style={{ width: "84px" }}></div>
-                </div>
-              }
-              listItems={retrieveListaContent()}
-              overrideColor="override-white"
-              maxHeight="632px"
-            />
-          </div>
+          {listRisk != null && (
+            <div className="lista-body-riesgos">
+              <ListTableBox
+                noPadding={true}
+                header={
+                  <div className="accordion-riesgos-header">
+                    <h6
+                      className="text-primary header-text"
+                      style={{ width: "42px", alignSelf: "center" }}
+                    >
+                      <b>#</b>
+                    </h6>
+                    <h6
+                      className="text-primary header-text"
+                      style={{ width: "136px" }}
+                    >
+                      <b>Código</b>
+                    </h6>
+                    <h6
+                      className="text-primary header-text"
+                      style={{ width: "709px" }}
+                    >
+                      <b>Nombre</b>
+                    </h6>
+                    <h6
+                      className="text-primary header-text"
+                      style={{ width: "232px" }}
+                    >
+                      <b>Categoría</b>
+                    </h6>
+                    <h6
+                      className="text-primary header-text"
+                      style={{ width: "232px" }}
+                    >
+                      <b>Relación Unidad</b>
+                    </h6>
+                    <h6
+                      className="text-primary header-text"
+                      style={{ width: "232px" }}
+                    >
+                      <b>Severidad</b>
+                    </h6>
+                    <h6
+                      className="text-primary header-text"
+                      style={{ width: "232px" }}
+                    >
+                      <b>Casos</b>
+                    </h6>
+                    <h6
+                      className="text-primary header-text"
+                      style={{ width: "122px" }}
+                    >
+                      <b>Nivel Riesgo</b>
+                    </h6>
+                    <div style={{ width: "84px" }}></div>
+                  </div>
+                }
+                listItems={fillListaContent(listRisk)}
+                overrideColor="override-white"
+                maxHeight="632px"
+              />
+            </div>
+          )}
         </MainContainer>
         <Modals
           openModal={openRiskDetail}
           setOpenModal={setOpenRiskDetail}
-          title="Detalle del Riesgo - PRTR001"
+          title={`Detalle del Riesgo - ${selectedRisk?.codigo}`}
           size="lg"
-          body={modalRiskDetail()}
+          body={modalRiskDetail(selectedRisk)}
         />
         <Modals
           openModal={openNewRisks}
@@ -1933,15 +1848,73 @@ function Risk_Lista() {
           title="Nuevo Riesgo de Soborno"
           footer={["Guardar", "Cerrar"]}
           size="lg"
-          body={modalNewRisks()}
+          body={modalNewRisks(
+            newRisk,
+            setNewRisk,
+            riskTreatments,
+            riskIndicators,
+            riskAreas,
+            riskUnitAreas,
+            riskProcess,
+            selectedArea,
+            setSelectedArea,
+            selectedUnitArea,
+            setSelectedUnitArea
+          )}
+          handleConfirm={() => {
+            openNewRisks(false);
+            setRiskUnitAreas(null);
+            setRiskProcess(null);
+            setSelectedUnitArea(-1);
+            setSelectedArea(-1);
+            handleCreateRisks(newRisk, setNewRisk, listRisk, setListRisk);
+          }}
         />
         <Modals
           openModal={openEditRisks}
           setOpenModal={setOpenEditRisks}
-          title="Configuración del Riesgo - PRTR001"
+          title={`Configuración del Riesgo - ${selectedRisk?.codigo}`}
           footer={["Guardar", "Eliminar"]}
           size="lg"
-          body={modalEditRisks()}
+          body={modalEditRisks(
+            selectedRisk,
+            setSelectedRisk,
+            riskTreatments,
+            riskIndicators,
+            riskAreas,
+            riskUnitAreas,
+            riskProcess,
+            selectedArea,
+            setSelectedArea,
+            selectedUnitArea,
+            setSelectedUnitArea
+          )}
+          handleConfirm={() => {
+            setOpenEditRisks(false);
+            setRiskUnitAreas(null);
+            setRiskProcess(null);
+            setSelectedUnitArea(-1);
+            setSelectedArea(-1);
+            handleEditRisks(
+              selectedRisk,
+              setSelectedRisk,
+              listRisk,
+              setListRisk
+            );
+          }}
+          handleCancel={() => {
+            setOpenEditRisks(false);
+            setRiskUnitAreas(null);
+            setRiskProcess(null);
+            setSelectedUnitArea(null);
+            setSelectedArea(null);
+            handleRemoveRisks(
+              selectedRisk,
+              setSelectedRisk,
+              listRisk,
+              setListRisk
+            );
+          }}
         />
       </div>
     </>

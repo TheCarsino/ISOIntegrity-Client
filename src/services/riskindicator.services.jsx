@@ -52,3 +52,16 @@ export const getRiskIndicatorDetailbyId = async (id) => {
     throw error;
   }
 };
+
+export const getRiskByIndicator = async (id) => {
+  try {
+    const response = await axios.get(`${baseUrl}/indicator/risk/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching risk indicator detail by Risk Indicator ID:",
+      error
+    );
+    throw error;
+  }
+};

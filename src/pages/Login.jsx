@@ -58,7 +58,7 @@ const Login = () => {
             "activeNavs",
             JSON.stringify({ main: "risk", sub: "alert" })
           );
-          navigate(`${URL_RIESGOS_ALERTAS}`);
+          navigate(`${URL_RIESGOS_ALERTAS_IRREGULARIDADES}`);
         }
       }
     });

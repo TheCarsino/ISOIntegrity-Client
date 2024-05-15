@@ -3,6 +3,16 @@ import { API_URL } from "../config";
 
 const baseUrl = `${API_URL}/risk`;
 
+export const getRiskTreatment = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/treatments`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching risk treatments:", error);
+    throw error;
+  }
+};
+
 export const getRisk = async () => {
   try {
     const response = await axios.get(`${baseUrl}`);
