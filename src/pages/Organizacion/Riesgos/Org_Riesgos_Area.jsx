@@ -21,11 +21,13 @@ import NavBar from "../../../components/NavBar/NavBar";
 import { getProcessRisksbyUnitAreaId } from "../../../services/unitarea.services";
 import {
   colorBackgroundPercentage,
+  colorRiskText,
   convertToPercentage,
   statusImpact,
   statusImpactText,
   statusPercentage,
 } from "../../../hooks/ColorCases";
+import Spinner from "react-bootstrap/esm/Spinner";
 
 function modalRiskDetail(selectedRisk) {
   return (
@@ -35,7 +37,7 @@ function modalRiskDetail(selectedRisk) {
           <div className="risk-metrics">
             <MetricBox
               topText="Casos de Riesgo"
-              middleText="0"
+              middleText={selectedRisk.total_whistlecases}
               bottomText="Divulgación de irregularidades"
               status="secondary"
               width="224px"
@@ -43,7 +45,7 @@ function modalRiskDetail(selectedRisk) {
             />
             <MetricBox
               topText="Casos de Riesgo"
-              middleText="0"
+              middleText={selectedRisk.total_factorcases}
               bottomText="Factores de evaluación riesgos"
               status="secondary"
               width="224px"
@@ -311,10 +313,10 @@ function Org_Riesgos_Area() {
             </div>
             <div className="lista-riesgos-item6 header-text">
               <p className="text-primary">
-                <b>Irregularidades:</b> 0
+                <b>Irregularidades:</b> {risk.total_whistlecases}
               </p>
               <p className="text-primary">
-                <b>Factores:</b> 0
+                <b>Factores:</b> {risk.total_factorcases}
               </p>
             </div>
             <div
@@ -370,31 +372,26 @@ function Org_Riesgos_Area() {
               <p className="text-success ">Tiene controles antisoborno</p>
             </div>
             <div className="lista-procesos-item4 header-text">
-              <p className="text-primary">{`Total: ${
-                proceso.id == 4 || proceso.id == 1 ? "3" : "3"
-              } riesgos`}</p>
+              <p className="text-primary">{`Total: ${proceso.totalRisk} riesgos`}</p>
               <p
-                className={
-                  proceso.id == 4 || proceso.id == 1
-                    ? "text-danger"
-                    : "text-success"
-                }
-              >{`${
-                proceso.id == 4 || proceso.id == 1 ? "2" : "0"
-              } exceden el riesgo de tolerancia`}</p>
+                className={colorRiskText(
+                  proceso.totalExceedRisk,
+                  proceso.totalRisk
+                )}
+              >{`${proceso.totalExceedRisk} exceden el riesgo de tolerancia`}</p>
             </div>
             <div
-              className={`lista-procesos-item5 header-text ${
-                proceso.id == 4 || proceso.id == 1 ? "bg-warning" : "bg-dark"
-              }`}
+              className={`lista-procesos-item5 header-text ${colorBackgroundPercentage(
+                proceso.nivel_riesgo
+              )}`}
             >
               <h5 className="text-white text-center">
-                {proceso.id == 4 || proceso.id == 1 ? "45.00" : "0"}
+                {convertToPercentage(proceso.nivel_riesgo)}
               </h5>
             </div>
           </div>
         ),
-        hasBody: proceso.id == 4 || proceso.id == 1,
+        hasBody: proceso.Risks.length > 0,
         body: (
           <div className="accordion-lista-body">
             <div className="procesos-riesgos-header">
@@ -525,7 +522,7 @@ function Org_Riesgos_Area() {
               </p>
               <MetricBox
                 topText="Evaluacion de Riesgos"
-                middleText="3"
+                middleText={receivedData?.totalRisk}
                 bottomText="Inventario Total"
                 order="top-bottom-middle"
                 status="secondary"
@@ -534,19 +531,25 @@ function Org_Riesgos_Area() {
               />
               <MetricBox
                 topText="Tolerancia de Riesgo"
-                middleText="2"
+                middleText={receivedData?.totalExceedRisk}
                 bottomText="Riesgos Excedidos"
                 order="top-bottom-middle"
-                status="danger"
+                status={
+                  receivedData != null
+                    ? receivedData.totalExceedRisk > 0
+                      ? "danger"
+                      : "success"
+                    : "dark"
+                }
                 width="224px"
                 gap="0.5rem"
               />
               <MetricBox
                 topText="Nivel de Riesgo"
-                middleText="45.00"
+                middleText={convertToPercentage(receivedData?.nivel_riesgo)}
                 bottomText="Crítico"
                 order="top-bottom-middle"
-                status="warning"
+                status={statusPercentage(receivedData?.nivel_riesgo)}
                 width="224px"
                 gap="0.5rem"
               />
@@ -558,7 +561,7 @@ function Org_Riesgos_Area() {
                 <b>Lista de Procesos</b>
               </h5>
             </div>
-            {process != null && (
+            {process != null ? (
               <>
                 <div className="accordion-procesos-header">
                   <h6
@@ -599,6 +602,18 @@ function Org_Riesgos_Area() {
                   overrideColor="override-white"
                 ></AccordionBox>
               </>
+            ) : (
+              <div
+                style={{
+                  width: "100%",
+                  height: "120px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Spinner animation="border" variant="primary" size="lg" />
+              </div>
             )}
           </div>
         </MainContainer>

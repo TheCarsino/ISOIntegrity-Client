@@ -10,13 +10,18 @@ import { URL_ORGANIZACION_RIESGOS } from "../../../config";
 
 import { useEffect, useState } from "react";
 import NavBar from "../../../components/NavBar/NavBar";
-import { getOrganizationStructure } from "../../../services/organization.services";
+import { getOrganizationStructureDetail } from "../../../services/organization.services";
 import "./Org_Riesgos.scss";
 import Spinner from "react-bootstrap/esm/Spinner";
+import {
+  colorBackgroundPercentage,
+  colorRiskText,
+  convertToPercentage,
+} from "../../../hooks/ColorCases";
 
 function Org_Riesgos() {
   async function retrieveOrganizationStructure() {
-    const data = await getOrganizationStructure();
+    const data = await getOrganizationStructureDetail();
 
     return data;
   }
@@ -49,34 +54,21 @@ function Org_Riesgos() {
               <p className="text-primary">{unidad.nombre}</p>
             </div>
             <div className="lista-unidades-item4 header-text">
-              <p className="text-primary">{`Total: ${
-                unidad.codigo === "DRS001" || unidad.codigo === "DRS002"
-                  ? "3"
-                  : "1"
-              } riesgos`}</p>
+              <p className="text-primary">{`Total: ${unidad.totalRisk} riesgos`}</p>
               <p
-                className={
-                  unidad.codigo === "DRS001" || unidad.codigo === "DRS002"
-                    ? "text-danger"
-                    : "text-success"
-                }
-              >{`${
-                unidad.codigo === "DRS001" || unidad.codigo === "DRS002"
-                  ? "2"
-                  : "0"
-              } exceden el nivel de tolerancia`}</p>
+                className={colorRiskText(
+                  unidad.totalExceedRisk,
+                  unidad.totalRisk
+                )}
+              >{`${unidad.totalExceedRisk} exceden el nivel de tolerancia`}</p>
             </div>
             <div
-              className={`lista-unidades-item5 header-text ${
-                unidad.codigo === "DRS001" || unidad.codigo === "DRS002"
-                  ? "bg-warning"
-                  : "bg-success"
-              }`}
+              className={`lista-unidades-item5 header-text ${colorBackgroundPercentage(
+                unidad.nivel_riesgo
+              )}`}
             >
               <h5 className="text-white text-center">
-                {unidad.codigo === "DRS001" || unidad.codigo === "DRS002"
-                  ? "45.00"
-                  : "25.00"}
+                {convertToPercentage(unidad.nivel_riesgo)}
               </h5>
             </div>
             {unidad.Processes != null && unidad.Processes.length > 0 && (
@@ -87,6 +79,9 @@ function Org_Riesgos() {
                     codigo: unidad.codigo,
                     nombre: unidad.nombre,
                     descripcion: unidad.descripcion,
+                    totalRisk: unidad.totalRisk,
+                    totalExceedRisk: unidad.totalExceedRisk,
+                    nivel_riesgo: unidad.nivel_riesgo,
                     esArea: false,
                   })
                 }
@@ -135,44 +130,18 @@ function Org_Riesgos() {
               <p className="text-primary">{area.nombre}</p>
             </div>
             <div className="lista-areas-item4 header-text">
-              <p className="text-primary">{`Total: ${
-                area.codigo === "LIN001"
-                  ? "3"
-                  : area.codigo === "LIN002" || area.codigo === "LIN003"
-                  ? "1"
-                  : "0"
-              } riesgos`}</p>
+              <p className="text-primary">{`Total: ${area.totalRisk} riesgos`}</p>
               <p
-                className={
-                  area.codigo === "LIN001"
-                    ? "text-danger"
-                    : area.codigo === "LIN002" || area.codigo === "LIN003"
-                    ? "text-success"
-                    : "text-dark"
-                }
-              >{`${
-                area.codigo === "LIN001"
-                  ? "2"
-                  : area.codigo === "LIN002" || area.codigo === "LIN003"
-                  ? "0"
-                  : "0"
-              } exceden el nivel de tolerancia`}</p>
+                className={colorRiskText(area.totalExceedRisk, area.totalRisk)}
+              >{`${area.totalExceedRisk} exceden el nivel de tolerancia`}</p>
             </div>
             <div
-              className={`lista-areas-item5 header-text ${
-                area.codigo === "LIN001"
-                  ? "bg-warning"
-                  : area.codigo === "LIN002" || area.codigo === "LIN003"
-                  ? "bg-success"
-                  : "bg-dark"
-              }`}
+              className={`lista-areas-item5 header-text ${colorBackgroundPercentage(
+                area.nivel_riesgo
+              )}`}
             >
               <h5 className="text-white text-center">
-                {area.codigo === "LIN001"
-                  ? "45.00"
-                  : area.codigo === "LIN002" || area.codigo === "LIN003"
-                  ? "25.00"
-                  : "0.00"}
+                {convertToPercentage(area.nivel_riesgo)}
               </h5>
             </div>
             {area.Area_Unit[0].Processes != null &&
@@ -184,6 +153,9 @@ function Org_Riesgos() {
                       codigo: area.Area_Unit[0].codigo,
                       nombre: area.Area_Unit[0].nombre,
                       descripcion: area.Area_Unit[0].descripcion,
+                      totalRisk: area.Area_Unit[0].totalRisk,
+                      totalExceedRisk: area.Area_Unit[0].totalExceedRisk,
+                      nivel_riesgo: area.Area_Unit[0].nivel_riesgo,
                       esArea: true,
                     })
                   }

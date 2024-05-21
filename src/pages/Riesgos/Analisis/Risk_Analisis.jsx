@@ -80,10 +80,10 @@ function modalIndDetail(riskIndicator) {
             </div>
             <div className="lista-riesgos-item6 header-text">
               <p className="text-primary">
-                <b>Irregularidades:</b> 0
+                <b>Irregularidades:</b> {" " + risk.total_whistlecases}
               </p>
               <p className="text-primary">
-                <b>Factores:</b> 0
+                <b>Factores:</b> {" " + risk.total_factorcases}
               </p>
             </div>
             <div

@@ -118,9 +118,11 @@ function NavBar() {
                     icon={faCircleUser}
                     style={{ fontSize: "9.5rem" }}
                   />
-                  <h5>Nombre del Usuario</h5>
-                  <h6 className="text-secondary">Rol de Usuario</h6>
-                  <h6 className="text-light">Correo del usuario</h6>
+                  <h5>{`${userData?.User.nombres} ${
+                    userData?.User.apellidos && userData?.User.apellidos
+                  }`}</h5>
+                  <h6 className="text-secondary">{userData?.Role.nombre}</h6>
+                  <h6 className="text-light">{userData?.User.correo}</h6>
                   <Button
                     size="sm"
                     style={{ marginTop: "0.75rem" }}

@@ -7,6 +7,7 @@ export function colorTextPercentage(element) {
 }
 
 export function statusPercentage(element) {
+  if (element == null) return "dark";
   element = parseFloat(element);
   if (element <= 0) return "dark";
   if (element > 0 && element <= 33.33) return "success";
@@ -43,4 +44,12 @@ export function statusImpactText(element) {
   if (element > 2.5 && element <= 5) return "Medio";
   if (element > 5 && element <= 7.5) return "Alto";
   if (element > 7.5 && element <= 10) return "Severo";
+}
+
+export function colorRiskText(element, anotherCase = 1) {
+  return anotherCase === 0
+    ? "text-dark"
+    : element > 0
+    ? "text-danger"
+    : "text-success";
 }

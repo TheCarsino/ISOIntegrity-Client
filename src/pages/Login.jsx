@@ -46,8 +46,8 @@ const Login = () => {
       contrasena: password,
     }).then((authResp) => {
       if (authResp != null) {
-        login(authResp[0]);
-        if (authResp[0].Role.nombre !== "Colaborador") {
+        login(authResp);
+        if (authResp.Role.nombre !== "Colaborador") {
           localStorage.setItem(
             "activeNavs",
             JSON.stringify({ main: "risk", sub: "anal" })

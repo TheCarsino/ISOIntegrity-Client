@@ -870,7 +870,7 @@ function Org_Estructura() {
                 antisoborno
               </small>
             </div>
-            <div className="button-group">
+            <div className="lista-unidades-procesos-item2">
               <Button
                 onClick={() => {
                   setSelectedStruct({
@@ -909,7 +909,7 @@ function Org_Estructura() {
         key: proceso.id.toString(),
         content: (
           <div className="lista-unidades-procesos-item">
-            <div className="lista-unidades-procesos-item1">
+            <div className="lista-unidades-procesos-item3">
               <p className="text-primary">
                 <b>{`${proceso.codigo} - ${proceso.nombre}`}</b>
               </p>
@@ -923,7 +923,7 @@ function Org_Estructura() {
                 antisoborno
               </small>
             </div>
-            <div className="button-group">
+            <div className="lista-unidades-procesos-item2">
               <Button
                 onClick={() => {
                   setSelectedStruct({
@@ -1091,13 +1091,13 @@ function Org_Estructura() {
             {/* Lista de Procesos del Area*/}
             <div className="accordion-procesosarea-header">
               <h5 className="text-primary">
-                <b>Lista de Procesos del Area</b>
+                <b>Lista de Procesos del Área</b>
               </h5>
               <div className="button-group">
                 <Button
                   onClick={() => {
                     setNewStruct({
-                      unit_area_id: area.id,
+                      unit_area_id: area.Area_Unit[0].id,
                       codigo: "",
                       nombre: "",
                       descripcion: "",
@@ -1428,7 +1428,7 @@ function Org_Estructura() {
         <NavBar />
       </div>
       <div className="app-component bg-white">
-        <MainContainer title="Estructura de la Organizacion">
+        <MainContainer title="Estructura de la Organización">
           {structure.Organization != null ? (
             <div className="header-org">
               <img

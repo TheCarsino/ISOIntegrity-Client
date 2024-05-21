@@ -121,6 +121,24 @@
   justify-content: space-between;
 }
 .lista-unidades-procesos-item1 {
+  width: 1102px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  text-overflow: ellipsis;
+}
+
+.lista-unidades-procesos-item2 {
+  width: 46px;
+  flex-grow: 1;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  text-overflow: ellipsis;
+}
+
+.lista-unidades-procesos-item3 {
+  width: 1152px;
   flex-grow: 1;
   height: fit-content;
   display: flex;

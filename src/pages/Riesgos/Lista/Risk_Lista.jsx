@@ -31,6 +31,7 @@ import {
 import { getRiskIndicator } from "../../../services/riskindicator.services";
 import { getArea, getUnitAreabyAreaId } from "../../../services/area.services";
 import { getProcessbyUnitAreaId } from "../../../services/unitarea.services";
+import Spinner from "react-bootstrap/esm/Spinner";
 
 function modalRiskDetail(selectedRisk) {
   return (
@@ -40,7 +41,7 @@ function modalRiskDetail(selectedRisk) {
           <div className="risk-metrics">
             <MetricBox
               topText="Casos de Riesgo"
-              middleText={0}
+              middleText={selectedRisk.total_whistlecases}
               bottomText="Divulgación de irregularidades"
               status="secondary"
               width="224px"
@@ -48,9 +49,9 @@ function modalRiskDetail(selectedRisk) {
             />
             <MetricBox
               topText="Casos de Riesgo"
-              middleText={0}
+              middleText={selectedRisk.total_factorcases}
               bottomText="Factores de evaluación riesgos"
-              status="danger"
+              status="secondary"
               width="224px"
               gap="0rem"
             />
@@ -1559,10 +1560,10 @@ function Risk_Lista() {
             </div>
             <div className="lista-riesgos-item6 header-text">
               <p className="text-primary">
-                <b>Irregularidades:</b> 0
+                <b>Irregularidades:</b> {" " + risk.total_whistlecases}
               </p>
               <p className="text-primary">
-                <b>Factores:</b> 0
+                <b>Factores:</b> {" " + risk.total_factorcases}
               </p>
             </div>
             <div
@@ -1617,7 +1618,6 @@ function Risk_Lista() {
   };
 
   const handleCreateRisks = (newRisk, setNewRisk, listRisk, setListRisk) => {
-    console.log(newRisk);
     if (
       newRisk.risk_indicator_id == null ||
       newRisk.risk_indicator_id == -1 ||
@@ -1771,7 +1771,7 @@ function Risk_Lista() {
               </Button>
             </div>
           </div>
-          {listRisk != null && (
+          {listRisk != null ? (
             <div className="lista-body-riesgos">
               <ListTableBox
                 noPadding={true}
@@ -1832,6 +1832,18 @@ function Risk_Lista() {
                 overrideColor="override-white"
                 maxHeight="632px"
               />
+            </div>
+          ) : (
+            <div
+              style={{
+                width: "100%",
+                height: "120px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Spinner animation="border" variant="primary" size="lg" />
             </div>
           )}
         </MainContainer>
@@ -1906,8 +1918,8 @@ function Risk_Lista() {
             setOpenEditRisks(false);
             setRiskUnitAreas(null);
             setRiskProcess(null);
-            setSelectedUnitArea(null);
-            setSelectedArea(null);
+            setSelectedUnitArea(-1);
+            setSelectedArea(-1);
             handleRemoveRisks(
               selectedRisk,
               setSelectedRisk,
