@@ -26,6 +26,7 @@ import {
   statusImpactText,
   statusImpact,
 } from "../../../hooks/ColorCases";
+import BarStackedGraph from "../../../components/Graphs/BarStackedGraph";
 
 function modalIndDetail(riskIndicator) {
   const fillRiskList = (risks) => {
@@ -126,7 +127,7 @@ function modalIndDetail(riskIndicator) {
             <div className="sub-detail">
               <MetricBox
                 topText="Total de Riesgos"
-                middleText={riskIndicator.total_riesgos}
+                middleText={riskIndicator.total_riesgos.toString()}
                 bottomText="Del indicador"
                 status="secondary"
                 width="172px"
@@ -134,7 +135,7 @@ function modalIndDetail(riskIndicator) {
               />
               <MetricBox
                 topText="Casos reportados"
-                middleText={riskIndicator.casos_reportados_irreg}
+                middleText={riskIndicator.casos_reportados_irreg.toString()}
                 bottomText="Por irregularidades"
                 status="secondary"
                 width="172px"
@@ -142,7 +143,7 @@ function modalIndDetail(riskIndicator) {
               />
               <MetricBox
                 topText="Casos reportados"
-                middleText={riskIndicator.casos_reportados_riesgo}
+                middleText={riskIndicator.casos_reportados_riesgo.toString()}
                 bottomText="Por factores de riesgo"
                 status="secondary"
                 width="172px"
@@ -309,8 +310,61 @@ function modalIndDetail(riskIndicator) {
 function Risk_Analisis() {
   async function retrieveOrgMetrics() {
     const data = await getGeneralRiskinOrg();
+    //fill Data part one
+    let dataGraph = {
+      labels: [
+        "Tratamiento",
+        "Explotación",
+        "Mitigación",
+        "Transferencia",
+        "Evasión",
+        "Sin evaluar",
+      ],
+      datasets: [
+        {
+          label: "Low level",
+          data: [0, 0, 0, 0, 0, 0],
+          backgroundColor: "#28a745",
+        },
+        {
+          label: "Medium level",
+          data: [0, 0, 0, 0, 0, 0],
+          backgroundColor: "#ffc107",
+        },
+        {
+          label: "High level",
+          data: [0, 0, 0, 0, 0, 0],
+          backgroundColor: "#dc3545",
+        },
+      ],
+    };
+    //fill Data for graph
+    for (const riskTreatment of data.risks_category) {
+      let sumRisks = [0, 0, 0];
+      for (const risk of riskTreatment.Risks) {
+        if (risk.nivel_riesgo > 0 && risk.nivel_riesgo <= 33.33) sumRisks[0]++;
+        if (risk.nivel_riesgo > 33.33 && risk.nivel_riesgo <= 66.66)
+          sumRisks[1]++;
+        if (risk.nivel_riesgo > 66.66 && risk.nivel_riesgo <= 100)
+          sumRisks[2]++;
+      }
+      dataGraph.datasets[0].data[riskTreatment.id - 1] = sumRisks[0];
+      dataGraph.datasets[1].data[riskTreatment.id - 1] = sumRisks[1];
+      dataGraph.datasets[2].data[riskTreatment.id - 1] = sumRisks[2];
+    }
 
-    return data;
+    let sumRisks = [0, 0, 0];
+    for (const risk of data.risks_no_category) {
+      if (risk.nivel_riesgo > 0 && risk.nivel_riesgo <= 33.33) sumRisks[0]++;
+      if (risk.nivel_riesgo > 33.33 && risk.nivel_riesgo <= 66.66)
+        sumRisks[1]++;
+      if (risk.nivel_riesgo > 66.66 && risk.nivel_riesgo <= 100) sumRisks[2]++;
+    }
+    dataGraph.datasets[0].data[5] = sumRisks[0];
+    dataGraph.datasets[1].data[5] = sumRisks[1];
+    dataGraph.datasets[2].data[5] = sumRisks[2];
+
+    return [data.metrics, dataGraph];
   }
   async function retrieveRiskDetails() {
     const data = await getRiskIndicatorDetail();
@@ -420,6 +474,7 @@ function Risk_Analisis() {
 
   const [listIndicators, setListIndicators] = useState(null);
   const [orgAnalisis, setOrgAnalisis] = useState(null);
+  const [riskGraphic, setRiskGraphic] = useState(null);
   const [openIndDetail, setOpenIndDetail] = useState(false);
   const [indicatorDetail, setIndicatorDetail] = useState(null);
 
@@ -427,7 +482,8 @@ function Risk_Analisis() {
     retrieveRiskDetails().then((data) => {
       setListIndicators(data);
       retrieveOrgMetrics().then((data) => {
-        setOrgAnalisis(data);
+        setOrgAnalisis(data[0]);
+        setRiskGraphic(data[1]);
       });
     });
   }, []);
@@ -446,28 +502,27 @@ function Risk_Analisis() {
               </h4>
             </div>
             <div className="analisis-content">
-              <div className="analisis-dashboard">
-                <p className="text-dark">
-                  ISOIntegrity 37001 es una herramienta de software diseñada
-                  para simplificar y fortalecer la gestión antisoborno en
-                  organizaciones públicas y privadas. Basado en la norma ISO
-                  37001, este sistema permite evaluar, controlar y mitigar los
-                  riesgos de soborno, ofreciendo funciones como evaluación de
-                  riesgos con indicadores cuantificables, gestión de casos de
-                  soborno y divulgación de irregularidades, generación de
-                  informes y documentación conforme a estándares ISO.
-                  <br />
-                  Con una interfaz intuitiva y seguridad avanzada, ISOIntegrity
-                  37001 facilita el cumplimiento de los más altos estándares de
-                  integridad y ética empresarial, promoviendo un entorno
-                  transparente y responsable.
-                </p>
-              </div>
+              {orgAnalisis != null ? (
+                <div className="analisis-dashboard">
+                  <BarStackedGraph
+                    data={riskGraphic}
+                    graphTitle="Categoría de Riesgos"
+                  />
+                </div>
+              ) : (
+                <Placeholder
+                  as="p"
+                  animation="glow"
+                  style={{ width: "703px", height: "304px" }}
+                >
+                  <Placeholder style={{ width: "703px", height: "304px" }} />
+                </Placeholder>
+              )}
               {orgAnalisis != null ? (
                 <div className="analisis-medicion">
                   <MetricBox
                     topText="Evaluacion de Riesgos"
-                    middleText={orgAnalisis.inventario_riesgo}
+                    middleText={orgAnalisis.inventario_riesgo.toString()}
                     bottomText="Inventario Total"
                     order="top-bottom-middle"
                     status="secondary"
@@ -487,7 +542,7 @@ function Risk_Analisis() {
                   />
                   <MetricBox
                     topText="Tolerancia de Riesgo"
-                    middleText={orgAnalisis.inventario_excedido}
+                    middleText={orgAnalisis.inventario_excedido.toString()}
                     bottomText="Riesgos Excedidos"
                     order="top-bottom-middle"
                     status={

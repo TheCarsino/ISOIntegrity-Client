@@ -37,7 +37,8 @@ function App() {
       {/*Main components on each page*/}
 
       <Routes>
-        <Route path="/login" home element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="*" element={<Login />} />
         <Route
           path={`${URL_ORGANIZACION_ESTRUCTURA}`}
           exact

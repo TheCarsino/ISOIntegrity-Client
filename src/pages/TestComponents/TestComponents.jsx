@@ -12,6 +12,7 @@ import ListTableBox from "../../components/ListTable/ListTableBox";
 import MainContainer from "../../components/Main/MainContainer";
 import MetricBox from "../../components/Metrics/MetricBox";
 import Modal from "../../components/Modals/Modals";
+import BarStackedGraph from "../../components/Graphs/BarStackedGraph";
 function TestComponents() {
   const [count, setCount] = useState(0);
   const [openModal, setOpenModal] = useState(false);
@@ -19,6 +20,34 @@ function TestComponents() {
   // Function to increment the counter
   const handleIncrement = () => {
     setCount(count + 1);
+  };
+
+  const dataTest = {
+    labels: [
+      "Tratamiento",
+      "Mitigación",
+      "Explotación",
+      "Transferencia",
+      "Sin evaluar",
+      "Evasión",
+    ], //The main labels to sort
+    datasets: [
+      {
+        label: "Low level", //What does this piece of data representes
+        data: [4, 10, 1, 1, 8, 0],
+        backgroundColor: "#28a745",
+      },
+      {
+        label: "Medium level", //What does this piece of data representes
+        data: [1, 4, 1, 0, 0, 2],
+        backgroundColor: "#ffc107",
+      },
+      {
+        label: "High level", //What does this piece of data representes
+        data: [1, 1, 1, 1],
+        backgroundColor: "#dc3545",
+      },
+    ],
   };
 
   return (
@@ -237,7 +266,9 @@ function TestComponents() {
           </Button>
         </div>
       </MainContainer>
-
+      <div style={{ width: "720px" }}>
+        <BarStackedGraph data={dataTest} graphTitle="Categoría de Riesgos" />
+      </div>
       <Modal
         openModal={openModal}
         setOpenModal={setOpenModal}

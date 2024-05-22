@@ -29,6 +29,10 @@
 }
 .analisis-header .analisis-content .analisis-dashboard {
   width: 705px;
+  height: 304px;
+  display: flex;
+  justify-content: center;
+  border: 1px solid $my-gray-400;
 }
 .analisis-header .analisis-content .analisis-medicion {
   height: 304px;
