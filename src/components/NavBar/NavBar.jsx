@@ -88,7 +88,7 @@ function NavBar() {
               >
                 <p className="text-white">Riesgos</p>
               </Nav.Link>
-              {/* {(userData != null && userData.Role.nombre) !== "Colaborador" && (
+              {(userData != null && userData.Role.nombre) !== "Colaborador" && (
                 <Nav.Link
                   className={`${
                     activeNavs != null
@@ -101,7 +101,7 @@ function NavBar() {
                 >
                   <p className="text-white">Documentación</p>
                 </Nav.Link>
-              )} */}
+              )}
             </Nav>
             <Navbar.Collapse className="justify-content-end nav-user">
               <NavDropdown
@@ -255,7 +255,7 @@ function NavBar() {
                   >
                     <p className="text-white">Estándares</p>
                   </Nav.Link>
-                  <Nav.Link
+                  {/* <Nav.Link
                     href={URL_DOCUMENTACION_REPORTES}
                     className={` ${
                       activeNavs.sub === "rep"
@@ -265,7 +265,7 @@ function NavBar() {
                     onClick={() => setActiveNavs({ main: "doc", sub: "rep" })}
                   >
                     <p className="text-white">Reportes</p>
-                  </Nav.Link>
+                  </Nav.Link> */}
                 </Nav>
               </Container>
             </Navbar>

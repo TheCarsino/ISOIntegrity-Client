@@ -165,7 +165,7 @@ function modalIndDetail(riskIndicator) {
                 topText="Nivel de Riesgo Organizacional"
                 middleText={convertToPercentage(riskIndicator.nivel_riesgo)}
                 bottomText="Relacionado con los riesgos actuales"
-                status={statusPercentage(riskIndicator.resultado_cuestionario)}
+                status={statusPercentage(riskIndicator.nivel_riesgo)}
                 width="262px"
                 gap="0rem"
               />
@@ -322,17 +322,17 @@ function Risk_Analisis() {
       ],
       datasets: [
         {
-          label: "Low level",
+          label: "Nivel bajo",
           data: [0, 0, 0, 0, 0, 0],
           backgroundColor: "#28a745",
         },
         {
-          label: "Medium level",
+          label: "Nivel medio",
           data: [0, 0, 0, 0, 0, 0],
           backgroundColor: "#ffc107",
         },
         {
-          label: "High level",
+          label: "Nivel alto",
           data: [0, 0, 0, 0, 0, 0],
           backgroundColor: "#dc3545",
         },
@@ -506,7 +506,7 @@ function Risk_Analisis() {
                 <div className="analisis-dashboard">
                   <BarStackedGraph
                     data={riskGraphic}
-                    graphTitle="Categoría de Riesgos"
+                    graphTitle="Análisis de Nivel de Riesgo por Riesgos según su Tratamiento"
                   />
                 </div>
               ) : (

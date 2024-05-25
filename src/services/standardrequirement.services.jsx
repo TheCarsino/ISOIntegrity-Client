@@ -23,6 +23,35 @@ export const getStandardRequirementbyId = async (id) => {
   }
 };
 
-// export const linkRisktoStandardRequirement = async (data) => {};
+export const getRisksStandardRequirementId = async (id) => {
+  try {
+    const response = await axios.get(`${baseUrl}/risk/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching risks for the corresponding std requirement by ID:",
+      error
+    );
+    throw error;
+  }
+};
 
-// export const unlinkRisktoStandardRequirement = async (id) => {};
+export const linkRisktoStandardRequirement = async (data) => {
+  try {
+    const response = await axios.post(`${baseUrl}/risk`, data);
+    return response.data;
+  } catch (error) {
+    console.error("Error linking risk to standard requirement:", error);
+    throw error;
+  }
+};
+
+export const unlinkRisktoStandardRequirement = async (id) => {
+  try {
+    await axios.delete(`${baseUrl}/risk/${id}`);
+    return;
+  } catch (error) {
+    console.error("Error unlinking risk to standard requirement:", error);
+    throw error;
+  }
+};

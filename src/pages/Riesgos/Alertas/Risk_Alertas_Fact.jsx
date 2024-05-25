@@ -919,7 +919,6 @@ function Risk_Alertas() {
             setSelectedProcess(-1);
             setSelectedUnitArea(-1);
             setSelectedArea(-1);
-            //MISSING THE REST OF THE LIST AND SELECTS
             handleCreateFactor(
               newFactor,
               setNewFactor,

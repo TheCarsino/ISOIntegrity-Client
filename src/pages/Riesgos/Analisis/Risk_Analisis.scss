@@ -8,7 +8,6 @@
   gap: 1rem;
   margin-bottom: 1rem;
   padding: 1rem 0.5rem 1rem 0.5rem;
-  border: 1px solid $my-gray-400;
 }
 
 .analisis-header .header-display {
@@ -33,6 +32,7 @@
   display: flex;
   justify-content: center;
   border: 1px solid $my-gray-400;
+  box-shadow: $my-shadow-sm;
 }
 .analisis-header .analisis-content .analisis-medicion {
   height: 304px;
