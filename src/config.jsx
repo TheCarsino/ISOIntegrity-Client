@@ -1,8 +1,8 @@
 // DEV
-export const API_URL = "http://localhost:3000";
+// export const API_URL = "http://localhost:3000";
 //  TEST
-//export const API_URL =
-//  "http://alb-isointegrity-1830768803.us-east-1.elb.amazonaws.com";
+export const API_URL =
+  "http://alb-isointegrity-1830768803.us-east-1.elb.amazonaws.com";
 export const URL_TEST = "/test";
 export const URL_ORGANIZACION_ESTRUCTURA = "/organizacion/estructura";
 export const URL_ORGANIZACION_RIESGOS = "/organizacion/riesgos";
