@@ -1,33 +1,33 @@
-import { useState, useEffect } from "react";
-import MainContainer from "../../../components/Main/MainContainer";
-import Button from "react-bootstrap/Button";
-import AccordionBox from "../../../components/Accordion/AccordionBox";
-import ListTableBox from "../../../components/ListTable/ListTableBox";
 import {
   faArrowLeft,
   faArrowRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
+import { useLocation, useNavigate } from "react-router-dom";
+import AccordionBox from "../../../components/Accordion/AccordionBox";
+import ListTableBox from "../../../components/ListTable/ListTableBox";
+import MainContainer from "../../../components/Main/MainContainer";
 import "./Org_Riesgos_Area.scss";
 
-import { URL_ORGANIZACION_RIESGOS } from "../../../config";
+import Spinner from "react-bootstrap/esm/Spinner";
 import MetricBox from "../../../components/Metrics/MetricBox";
 import Modals from "../../../components/Modals/Modals";
 import NavBar from "../../../components/NavBar/NavBar";
-import { getProcessRisksbyUnitAreaId } from "../../../services/unitarea.services";
+import Helper from "../../../components/PopOvers/Helper";
+import { URL_ORGANIZACION_RIESGOS } from "../../../config";
 import {
   colorBackgroundPercentage,
   colorRiskText,
   convertToPercentage,
   statusImpact,
-  statusImpactText,
   statusPercentage,
 } from "../../../hooks/ColorCases";
-import Spinner from "react-bootstrap/esm/Spinner";
+import { getProcessRisksbyUnitAreaId } from "../../../services/unitarea.services";
 
 function modalRiskDetail(selectedRisk) {
   return (
@@ -139,6 +139,7 @@ function modalRiskDetail(selectedRisk) {
                       readOnly
                       value={`${selectedRisk.severidad_riesgo} de 10`}
                     />
+                    <Form.Text>Cálculo de Probabilidad x Impacto</Form.Text>
                   </Form.Group>
                 </Row>
                 <Row className="mb-3">
@@ -296,19 +297,21 @@ function Org_Riesgos_Area() {
                   : "Sin evaluar"}
               </p>
               <p className="text-primary">
-                <b>Indicador de Riesgo:</b> {risk.RiskIndicator?.codigo}
+                <b>Indicador de Riesgo:</b> {risk.RiskIndicator?.codigo} -{" "}
+                {risk.impacto}% del total
               </p>
             </div>
             <div className="lista-riesgos-item5 header-text">
               <p className="text-primary">
-                <b>Probabilidad:</b> {statusImpactText(risk.probabilidad)}
+                <b>Probabilidad:</b> {risk.probabilidad} de 10
               </p>
               <p className="text-primary">
-                <b>Impacto:</b> {statusImpactText(risk.impacto)}
+                <b>Impacto:</b> {risk.impacto} de 10
               </p>
               <hr style={{ margin: "0" }} />
-              <p className={statusImpact(risk.severidad_riesgo)}>
-                <b>{statusImpactText(risk.severidad_riesgo)}</b>
+              <p className={statusImpact(risk.probabilidad, risk.impacto)}>
+                <b>Severidad: </b>
+                {risk.severidad_riesgo * 10} de 100
               </p>
             </div>
             <div className="lista-riesgos-item6 header-text">
@@ -378,7 +381,7 @@ function Org_Riesgos_Area() {
                   proceso.totalExceedRisk,
                   proceso.totalRisk
                 )}
-              >{`${proceso.totalExceedRisk} exceden el riesgo de tolerancia`}</p>
+              >{`${proceso.totalExceedRisk} exceden el nivel de riesgo bajo`}</p>
             </div>
             <div
               className={`lista-procesos-item5 header-text ${colorBackgroundPercentage(
@@ -411,7 +414,7 @@ function Org_Riesgos_Area() {
                   </h6>
                   <h6
                     className="text-primary header-text"
-                    style={{ width: "136px" }}
+                    style={{ width: "110px" }}
                   >
                     <b>Código</b>
                   </h6>
@@ -423,7 +426,7 @@ function Org_Riesgos_Area() {
                   </h6>
                   <h6
                     className="text-primary header-text"
-                    style={{ width: "232px" }}
+                    style={{ width: "361px" }}
                   >
                     <b>Categoría</b>
                   </h6>
@@ -431,7 +434,7 @@ function Org_Riesgos_Area() {
                     className="text-primary header-text"
                     style={{ width: "232px" }}
                   >
-                    <b>Severidad</b>
+                    <b>Evaluación Riesgo</b>
                   </h6>
                   <h6
                     className="text-primary header-text"
@@ -439,12 +442,15 @@ function Org_Riesgos_Area() {
                   >
                     <b>Casos</b>
                   </h6>
-                  <h6
-                    className="text-primary header-text"
-                    style={{ width: "122px" }}
+                  <div
+                    style={{ width: "156px", gap: "10px" }}
+                    className="d-flex align-items-center justify-content-center"
                   >
-                    <b>Nivel Riesgo</b>
-                  </h6>
+                    <Helper body="riesgo"></Helper>
+                    <h6 className="text-primary">
+                      <b>Nivel Riesgo</b>
+                    </h6>
+                  </div>
                   <div style={{ width: "42px" }}></div>
                 </div>
               }
@@ -472,9 +478,13 @@ function Org_Riesgos_Area() {
 
   useEffect(() => {
     if (receivedData == null) navigate(`${URL_ORGANIZACION_RIESGOS}`);
-    retrieveDetailedProcessforUnit(receivedData.id).then((retrieveProcess) => {
-      setProcess(retrieveProcess);
-    });
+    else {
+      retrieveDetailedProcessforUnit(receivedData.id).then(
+        (retrieveProcess) => {
+          setProcess(retrieveProcess);
+        }
+      );
+    }
   }, []);
 
   return (
@@ -485,14 +495,14 @@ function Org_Riesgos_Area() {
       <div className="app-component bg-white">
         <MainContainer
           title={`Riesgos por ${
-            receivedData != null && receivedData.esArea ? "Área" : "Unidad"
+            receivedData != null && receivedData?.esArea ? "Área" : "Unidad"
           } Organizacional`}
         >
           <div className="unidad-desc">
             <div className="header-display">
               <Button
                 onClick={() => handleUnitAreaRisk()}
-                variant="outline-secondary"
+                variant="outline-primary"
               >
                 <div
                   style={{
@@ -511,8 +521,8 @@ function Org_Riesgos_Area() {
                 </div>
               </Button>
               <h4 className="text-primary">
-                <b>{`${receivedData != null && receivedData.nombre} - ${
-                  receivedData != null && receivedData.codigo
+                <b>{`${receivedData != null && receivedData?.nombre} - ${
+                  receivedData != null && receivedData?.codigo
                 }`}</b>
               </h4>
             </div>
@@ -521,22 +531,24 @@ function Org_Riesgos_Area() {
                 {receivedData?.descripcion}
               </p>
               <MetricBox
-                topText="Evaluacion de Riesgos"
-                middleText={receivedData?.totalRisk}
-                bottomText="Inventario Total"
+                topText="Total de Riesgos"
+                middleText={receivedData != null ? receivedData.totalRisk : 0}
+                bottomText={"Cantidad total de riesgos \n\0"}
                 order="top-bottom-middle"
                 status="secondary"
                 width="224px"
                 gap="0.5rem"
               />
               <MetricBox
-                topText="Tolerancia de Riesgo"
-                middleText={receivedData?.totalExceedRisk}
-                bottomText="Riesgos Excedidos"
+                topText="Riesgos Excedidos"
+                middleText={
+                  receivedData != null ? receivedData.totalExceedRisk : 0
+                }
+                bottomText="Total de riesgos que presentan un nivel de riesgo mayor al bajo"
                 order="top-bottom-middle"
                 status={
                   receivedData != null
-                    ? receivedData.totalExceedRisk > 0
+                    ? receivedData?.totalExceedRisk > 0
                       ? "danger"
                       : "success"
                     : "dark"
@@ -546,10 +558,14 @@ function Org_Riesgos_Area() {
               />
               <MetricBox
                 topText="Nivel de Riesgo"
-                middleText={convertToPercentage(receivedData?.nivel_riesgo)}
-                bottomText="Crítico"
+                middleText={convertToPercentage(
+                  receivedData != null ? receivedData.nivel_riesgo : 0
+                )}
+                bottomText="Evaluación promedio del nivel de riesgo de los procesos"
                 order="top-bottom-middle"
-                status={statusPercentage(receivedData?.nivel_riesgo)}
+                status={statusPercentage(
+                  receivedData != null ? receivedData.nivel_riesgo : 0
+                )}
                 width="224px"
                 gap="0.5rem"
               />
@@ -578,7 +594,7 @@ function Org_Riesgos_Area() {
                   </h6>
                   <h6
                     className="text-primary header-text"
-                    style={{ width: "709px" }}
+                    style={{ width: "677px" }}
                   >
                     <b>Nombre</b>
                   </h6>
@@ -588,12 +604,15 @@ function Org_Riesgos_Area() {
                   >
                     <b>Mediciones</b>
                   </h6>
-                  <h6
-                    className="text-primary header-text"
-                    style={{ width: "122px" }}
+                  <div
+                    style={{ width: "156px", gap: "10px" }}
+                    className="d-flex align-items-center justify-content-center"
                   >
-                    <b>Nivel Riesgo</b>
-                  </h6>
+                    <Helper body="proceso"></Helper>
+                    <h6 className="text-primary">
+                      <b>Nivel Riesgo</b>
+                    </h6>
+                  </div>
                 </div>
                 <AccordionBox
                   noPadding={true}

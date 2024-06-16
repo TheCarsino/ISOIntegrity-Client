@@ -71,7 +71,7 @@ function modalNewGroupedAreas(newGroupedArea, setNewGroupedArea) {
                 onChange={(e) => {
                   setNewGroupedArea({
                     ...newGroupedArea,
-                    codigo: e.target.value,
+                    nombre: e.target.value,
                   });
                 }}
               />
@@ -1069,7 +1069,7 @@ function Org_Estructura() {
                       codigo: area.codigo,
                       nombre: area.nombre,
                       descripcion: area.descripcion,
-                      tiene_controles: area.tiene_controles,
+                      responsable: area.responsable,
                     });
                     setOpenEditAreas(true);
                   }}

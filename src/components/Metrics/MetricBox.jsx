@@ -13,7 +13,9 @@ function MetricBox({
 }) {
   return (
     <div
-      className="metric-box"
+      className={`metric-box ${
+        bottomText?.includes("\n") && "obeyWhiteSpaceBreak"
+      }`}
       style={{ width: width, gap: gap, height: height }}
     >
       <p className="top-text">{topText}</p>

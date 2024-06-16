@@ -807,20 +807,22 @@ function Risk_Alertas() {
               </p>
             </div>
             <div className="lista-alerts-item1">
-              <Button
-                onClick={() => {
-                  setSelectedWhistle(alert);
-                  setOpenRemoveAlertIrr(true);
-                }}
-                variant="outline-secondary"
-              >
-                <FontAwesomeIcon
-                  icon={faTrash}
-                  style={{
-                    fontSize: "1rem",
+              {alert.Report_WhistleAlert?.user_id === userData.user_id && (
+                <Button
+                  onClick={() => {
+                    setSelectedWhistle(alert);
+                    setOpenRemoveAlertIrr(true);
                   }}
-                />
-              </Button>
+                  variant="outline-secondary"
+                >
+                  <FontAwesomeIcon
+                    icon={faTrash}
+                    style={{
+                      fontSize: "1rem",
+                    }}
+                  />
+                </Button>
+              )}
             </div>
             <div className="lista-alerts-item1">
               <Button
@@ -988,7 +990,7 @@ function Risk_Alertas() {
             <h4 className="text-primary">
               <b>Lista de Registros de Irregularidades</b>
             </h4>
-            {alertList != null ? (
+            {alertList != null && alertList.length > 0 ? (
               <ListTableBox
                 noPadding={true}
                 header={
@@ -1029,6 +1031,13 @@ function Risk_Alertas() {
                 listItems={fillAlertList(alertList)}
                 overrideColor="override-white"
               />
+            ) : alertList != null && alertList.length <= 0 ? (
+              <div className="no-risk">
+                <p className="text-primary text-center">
+                  El usuario no presenta una lista de divulgación de
+                  irregularidades asociados a su perfil.
+                </p>
+              </div>
             ) : (
               <div
                 style={{
@@ -1065,20 +1074,39 @@ function Risk_Alertas() {
             setSelectedProcess
           )}
           handleConfirm={() => {
-            setOpenRemoveAlertIrr(false);
+            setOpenNewAlertIrr(false);
             setAlertUnitAreas(null);
             setAlertProcess(null);
             setAlertRisk(null);
             setSelectedProcess(-1);
             setSelectedUnitArea(-1);
             setSelectedArea(-1);
-            //MISSING THE REST OF THE LIST AND SELECTS
             handleCreateWhistle(
               newWhistle,
               setNewWhistle,
               alertList,
               setAlertList
             );
+          }}
+          handleCancel={() => {
+            setOpenNewAlertIrr(false);
+            setAlertUnitAreas(null);
+            setAlertProcess(null);
+            setAlertRisk(null);
+            setSelectedProcess(-1);
+            setSelectedUnitArea(-1);
+            setSelectedArea(-1);
+            setNewWhistle(null);
+          }}
+          handleClose={() => {
+            setOpenNewAlertIrr(false);
+            setAlertUnitAreas(null);
+            setAlertProcess(null);
+            setAlertRisk(null);
+            setSelectedProcess(-1);
+            setSelectedUnitArea(-1);
+            setSelectedArea(-1);
+            setNewWhistle(null);
           }}
         />
         <Modals

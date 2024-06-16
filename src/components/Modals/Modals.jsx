@@ -18,15 +18,19 @@ function Modals(props) {
     body,
     footer,
     handleCancel = null,
+    handleClose = null,
     handleConfirm = null,
   } = props;
 
-  const handleClose = () => setOpenModal(false);
+  const handleHide = () => {
+    if (handleClose != null) handleClose();
+    setOpenModal(false);
+  };
 
   return (
     <Modal
       show={openModal}
-      onHide={handleClose}
+      onHide={handleHide}
       size={size}
       centered={centered}
       backdrop={bd_static ? "static" : true}
@@ -48,7 +52,7 @@ function Modals(props) {
                         className="btn btn-outline-white text-dark"
                         style={{ marginTop: "-0.75rem" }}
                         onClick={() => {
-                          setOpenModal(false);
+                          handleHide();
                         }}
                       >
                         <FontAwesomeIcon
@@ -136,6 +140,7 @@ function Modals(props) {
                 ['titulo_boton_Aceptar', 'titulo_boton_Cancelar'] -> 1 :: ['titulo_boton_Aceptar'] 
     handleCancel -> funcion Asociada al botón de cancel
     handleConfirm -> funcion Asociada al botón de confirm
+    handleCancel -> funcion Asociada al hide el Modal
   */
 Modals.propTypes = {
   openModal: PropTypes.any.isRequired,
@@ -149,6 +154,7 @@ Modals.propTypes = {
   footer: PropTypes.array,
   handleCancel: PropTypes.any,
   handleConfirm: PropTypes.any,
+  handleClose: PropTypes.any,
 };
 
 export default Modals;

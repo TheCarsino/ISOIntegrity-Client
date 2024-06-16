@@ -12,6 +12,6 @@ export const authenticateUser = async (data) => {
       "Error trying to get response from server for authentication:",
       error
     );
-    throw error;
+    return null;
   }
 };

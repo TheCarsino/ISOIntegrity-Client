@@ -13,12 +13,20 @@
 
 .top-text {
   color: $my-blue-900;
+  line-height: 18px;
 }
 
 .middle-text {
   align-self: center;
+  font-weight: 700;
 }
 
 .bottom-text {
   color: $my-primary-light;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+.obeyWhiteSpaceBreak {
+  white-space: pre;
 }

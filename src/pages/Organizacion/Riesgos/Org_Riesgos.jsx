@@ -18,6 +18,7 @@ import {
   colorRiskText,
   convertToPercentage,
 } from "../../../hooks/ColorCases";
+import Helper from "../../../components/PopOvers/Helper";
 
 function Org_Riesgos() {
   async function retrieveOrganizationStructure() {
@@ -60,7 +61,7 @@ function Org_Riesgos() {
                   unidad.totalExceedRisk,
                   unidad.totalRisk
                 )}
-              >{`${unidad.totalExceedRisk} exceden el nivel de tolerancia`}</p>
+              >{`${unidad.totalExceedRisk} exceden el nivel de riesgo bajo`}</p>
             </div>
             <div
               className={`lista-unidades-item5 header-text ${colorBackgroundPercentage(
@@ -71,39 +72,41 @@ function Org_Riesgos() {
                 {convertToPercentage(unidad.nivel_riesgo)}
               </h5>
             </div>
-            {unidad.Processes != null && unidad.Processes.length > 0 && (
-              <Button
-                onClick={() =>
-                  handleUnitAreaDetail({
-                    id: unidad.id,
-                    codigo: unidad.codigo,
-                    nombre: unidad.nombre,
-                    descripcion: unidad.descripcion,
-                    totalRisk: unidad.totalRisk,
-                    totalExceedRisk: unidad.totalExceedRisk,
-                    nivel_riesgo: unidad.nivel_riesgo,
-                    esArea: false,
-                  })
-                }
-                variant="outline-secondary"
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "0.5rem",
-                    alignItems: "center",
-                  }}
+            {unidad.Processes != null &&
+              unidad.Processes.length > 0 &&
+              unidad.nivel_riesgo && (
+                <Button
+                  onClick={() =>
+                    handleUnitAreaDetail({
+                      id: unidad.id,
+                      codigo: unidad.codigo,
+                      nombre: unidad.nombre,
+                      descripcion: unidad.descripcion,
+                      totalRisk: unidad.totalRisk,
+                      totalExceedRisk: unidad.totalExceedRisk,
+                      nivel_riesgo: unidad.nivel_riesgo,
+                      esArea: false,
+                    })
+                  }
+                  variant="outline-secondary"
                 >
-                  Ver Detalle
-                  <FontAwesomeIcon
-                    icon={faArrowRight}
+                  <div
                     style={{
-                      fontSize: "1.25rem",
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
                     }}
-                  />
-                </div>
-              </Button>
-            )}
+                  >
+                    Ver Detalle
+                    <FontAwesomeIcon
+                      icon={faArrowRight}
+                      style={{
+                        fontSize: "1.25rem",
+                      }}
+                    />
+                  </div>
+                </Button>
+              )}
           </div>
         ),
       });
@@ -133,7 +136,7 @@ function Org_Riesgos() {
               <p className="text-primary">{`Total: ${area.totalRisk} riesgos`}</p>
               <p
                 className={colorRiskText(area.totalExceedRisk, area.totalRisk)}
-              >{`${area.totalExceedRisk} exceden el nivel de tolerancia`}</p>
+              >{`${area.totalExceedRisk} exceden el nivel de riesgo bajo`}</p>
             </div>
             <div
               className={`lista-areas-item5 header-text ${colorBackgroundPercentage(
@@ -145,7 +148,8 @@ function Org_Riesgos() {
               </h5>
             </div>
             {area.Area_Unit[0].Processes != null &&
-              area.Area_Unit[0].Processes.length > 0 && (
+              area.Area_Unit[0].Processes.length > 0 &&
+              area.Area_Unit[0].nivel_riesgo > 0 && (
                 <Button
                   onClick={() =>
                     handleUnitAreaDetail({
@@ -212,7 +216,7 @@ function Org_Riesgos() {
       <div className="app-component bg-white">
         <MainContainer title="Estructura de la Organizacion">
           <div className="accordion-group">
-            {structure != null ? (
+            {structure != null && structure.length > 0 ? (
               <div className="accordion-body">
                 {structure.map((group) => (
                   <>
@@ -239,7 +243,7 @@ function Org_Riesgos() {
                           </h6>
                           <h6
                             className="text-primary header-text"
-                            style={{ width: "574px" }}
+                            style={{ width: "542px" }}
                           >
                             <b>Nombre</b>
                           </h6>
@@ -249,12 +253,16 @@ function Org_Riesgos() {
                           >
                             <b>Mediciones</b>
                           </h6>
-                          <h6
-                            className="text-primary header-text"
-                            style={{ width: "122px" }}
+                          <div
+                            style={{ width: "156px", gap: "10px" }}
+                            className="d-flex align-items-center justify-content-center"
                           >
-                            <b>Nivel Riesgo</b>
-                          </h6>
+                            <Helper body="unidad"></Helper>
+                            <h6 className="text-primary">
+                              <b>Nivel Riesgo</b>
+                            </h6>
+                          </div>
+                          <div style={{ width: "84px" }}></div>
                         </div>
                         <AccordionBox
                           noPadding={true}
@@ -266,6 +274,13 @@ function Org_Riesgos() {
                     )}
                   </>
                 ))}
+              </div>
+            ) : structure != null && structure.length <= 0 ? (
+              <div className="no-risk">
+                <p className="text-primary text-center">
+                  No existen áreas ni unidades dentro de la estructura
+                  organizativa que hayan sido creados.
+                </p>
               </div>
             ) : (
               <div

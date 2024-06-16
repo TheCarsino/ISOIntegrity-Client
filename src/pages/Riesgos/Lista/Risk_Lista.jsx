@@ -1,19 +1,29 @@
 import {
   faArrowRightFromBracket,
+  faChevronDown,
+  faChevronUp,
   faGear,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/esm/Button";
+import Spinner from "react-bootstrap/esm/Spinner";
 import ListTableBox from "../../../components/ListTable/ListTableBox";
 import MainContainer from "../../../components/Main/MainContainer";
 import MetricBox from "../../../components/Metrics/MetricBox";
 import Modals from "../../../components/Modals/Modals";
-import "./Risk_Lista.scss";
 import NavBar from "../../../components/NavBar/NavBar";
+import Helper from "../../../components/PopOvers/Helper";
+import {
+  colorBackgroundPercentage,
+  convertToPercentage,
+  statusImpact,
+  statusPercentage,
+} from "../../../hooks/ColorCases";
+import { getArea, getUnitAreabyAreaId } from "../../../services/area.services";
 import {
   createRisk,
   deleteRisk,
@@ -21,17 +31,9 @@ import {
   getRiskTreatment,
   updateRisk,
 } from "../../../services/risk.services";
-import {
-  colorBackgroundPercentage,
-  convertToPercentage,
-  statusImpact,
-  statusImpactText,
-  statusPercentage,
-} from "../../../hooks/ColorCases";
 import { getRiskIndicator } from "../../../services/riskindicator.services";
-import { getArea, getUnitAreabyAreaId } from "../../../services/area.services";
 import { getProcessbyUnitAreaId } from "../../../services/unitarea.services";
-import Spinner from "react-bootstrap/esm/Spinner";
+import "./Risk_Lista.scss";
 
 function modalRiskDetail(selectedRisk) {
   return (
@@ -139,10 +141,11 @@ function modalRiskDetail(selectedRisk) {
                     <Form.Label>Severidad</Form.Label>
                     <Form.Control
                       type="text"
-                      placeholder="de 10"
+                      placeholder="de 100"
                       readOnly
-                      value={`${selectedRisk.severidad_riesgo} de 10`}
+                      value={`${selectedRisk.severidad_riesgo * 10} de 100`}
                     />
+                    <Form.Text>Cálculo de Probabilidad x Impacto</Form.Text>
                   </Form.Group>
                 </Row>
                 <Row className="mb-3">
@@ -406,13 +409,18 @@ function modalNewRisks(
                       onChange={(e) => {
                         setNewRisk({
                           ...newRisk,
-                          escala_indicador: parseInt(e.target.value),
+                          escala_indicador: isNaN(parseInt(e.target.value))
+                            ? 0
+                            : parseInt(e.target.value),
                         });
                       }}
                     />
-
-                    <Form.Text>Porcentaje</Form.Text>
                   </Form.Group>
+                  <Form.Text>
+                    La escala del riesgo sobre el indicador establece el nivel
+                    de impacto que tendrá este en la medición del nivel de
+                    riesgo del indicador
+                  </Form.Text>
                 </Row>
               </div>
               <h5 className="text-secondary">
@@ -676,7 +684,6 @@ function modalNewRisks(
                         });
                       }}
                     />
-                    <Form.Text>Valor Total=10</Form.Text>
                   </Form.Group>
 
                   <Form.Group
@@ -705,7 +712,6 @@ function modalNewRisks(
                         });
                       }}
                     />
-                    <Form.Text>Valor Total=10</Form.Text>
                   </Form.Group>
                   <Form.Group
                     as={Col}
@@ -715,11 +721,17 @@ function modalNewRisks(
                     <Form.Label>Severidad</Form.Label>
                     <Form.Control
                       type="text"
-                      placeholder="de 10"
+                      placeholder="de 100"
                       readOnly
-                      value={(newRisk.impacto * newRisk.probabilidad) / 10}
+                      value={newRisk.impacto * newRisk.probabilidad}
                     />
-                    <Form.Text>Valor Total=10</Form.Text>
+                  </Form.Group>
+                  <Form.Group as={Col} className="col-md-6"></Form.Group>
+                  <Form.Group as={Col} className="col-md-6">
+                    <Form.Text>
+                      Severidad = Cálculo de Probabilidad [1-10] x Impacto
+                      [1-10]
+                    </Form.Text>
                   </Form.Group>
                 </Row>
                 <Row className="mb-3">
@@ -966,13 +978,18 @@ function modalEditRisks(
                       onChange={(e) => {
                         setSelectedRisk({
                           ...selectedRisk,
-                          escala_indicador: parseInt(e.target.value),
+                          escala_indicador: isNaN(parseInt(e.target.value))
+                            ? 0
+                            : parseInt(e.target.value),
                         });
                       }}
                     />
-
-                    <Form.Text>Porcentaje</Form.Text>
                   </Form.Group>
+                  <Form.Text>
+                    La escala del riesgo sobre el indicador establece el nivel
+                    de impacto que tendrá este en la medición del nivel de
+                    riesgo del indicador
+                  </Form.Text>
                 </Row>
               </div>
               <h5 className="text-secondary">
@@ -1240,7 +1257,6 @@ function modalEditRisks(
                         });
                       }}
                     />
-                    <Form.Text>Valor Total=10</Form.Text>
                   </Form.Group>
 
                   <Form.Group
@@ -1269,7 +1285,6 @@ function modalEditRisks(
                         });
                       }}
                     />
-                    <Form.Text>Valor Total=10</Form.Text>
                   </Form.Group>
                   <Form.Group
                     as={Col}
@@ -1279,13 +1294,17 @@ function modalEditRisks(
                     <Form.Label>Severidad</Form.Label>
                     <Form.Control
                       type="text"
-                      placeholder="de 10"
+                      placeholder="de 100"
                       readOnly
-                      value={
-                        (selectedRisk.impacto * selectedRisk.probabilidad) / 10
-                      }
+                      value={selectedRisk.impacto * selectedRisk.probabilidad}
                     />
-                    <Form.Text>Valor Total=10</Form.Text>
+                  </Form.Group>
+                  <Form.Group as={Col} className="col-md-6"></Form.Group>
+                  <Form.Group as={Col} className="col-md-6">
+                    <Form.Text>
+                      Severidad = Cálculo de Probabilidad [1-10] x Impacto
+                      [1-10]
+                    </Form.Text>
                   </Form.Group>
                 </Row>
                 <Row className="mb-3">
@@ -1534,10 +1553,11 @@ function Risk_Lista() {
                   : "Sin evaluar"}
               </p>
               <p className="text-primary">
-                <b>Indicador de Riesgo:</b> {risk.RiskIndicator?.codigo}
+                <b>Indicador de Riesgo:</b> {risk.RiskIndicator?.codigo} -{" "}
+                {risk.impacto}% del total
               </p>
             </div>
-            <div className="lista-riesgos-item4 header-text">
+            <div className="lista-riesgos-item4-2 header-text">
               <p className="text-primary">
                 {risk.Process?.UnitArea.es_area ? "Área " : "Unidad "}
                 {risk.Process?.UnitArea.codigo}
@@ -1548,14 +1568,15 @@ function Risk_Lista() {
             </div>
             <div className="lista-riesgos-item5 header-text">
               <p className="text-primary">
-                <b>Probabilidad:</b> {statusImpactText(risk.probabilidad)}
+                <b>Probabilidad:</b> {risk.probabilidad} de 10
               </p>
               <p className="text-primary">
-                <b>Impacto:</b> {statusImpactText(risk.impacto)}
+                <b>Impacto:</b> {risk.impacto} de 10
               </p>
               <hr style={{ margin: "0" }} />
-              <p className={statusImpact(risk.severidad_riesgo)}>
-                <b>{statusImpactText(risk.severidad_riesgo)}</b>
+              <p className={statusImpact(risk.probabilidad, risk.impacto)}>
+                <b>Severidad: </b>
+                {risk.severidad_riesgo * 10} de 100
               </p>
             </div>
             <div className="lista-riesgos-item6 header-text">
@@ -1579,8 +1600,8 @@ function Risk_Lista() {
               <Button
                 onClick={() => {
                   setSelectedRisk(risk);
+                  setSelectedUnitArea(1000 + risk.Process.UnitArea.id);
                   setSelectedArea(risk.Process.UnitArea.Area.id);
-                  setSelectedUnitArea(risk.Process.UnitArea.id);
                   setOpenEditRisks(true);
                 }}
                 variant="outline-secondary"
@@ -1709,7 +1730,8 @@ function Risk_Lista() {
     } else {
       setRiskUnitAreas(null);
     }
-    setSelectedUnitArea(-1);
+    if (selectedUnitArea <= 1000) setSelectedUnitArea(-1);
+    else setSelectedUnitArea(selectedUnitArea - 1000);
     setRiskProcess(null);
   }, [selectedArea]);
 
@@ -1726,6 +1748,7 @@ function Risk_Lista() {
   const [openRiskDetail, setOpenRiskDetail] = useState(false);
   const [openNewRisks, setOpenNewRisks] = useState(false);
   const [openEditRisks, setOpenEditRisks] = useState(false);
+  const [isDetailRiskOpen, setIsDetailRiskOpen] = useState(false);
 
   return (
     <>
@@ -1735,6 +1758,84 @@ function Risk_Lista() {
       <div className="app-component bg-white">
         <MainContainer title="Lista de Riesgos">
           <div className="header-risk">
+            <p>
+              La lista de riesgos permite gestionar eficazmente los riesgos
+              identificados en el sistema ISOIntegrity 37001. Estos riesgos se
+              manejan conforme a la metodología de gestión de riesgos definida
+              en la <b>norma ISO 31000:2018</b>. Cada riesgo está vinculado a
+              los procesos organizacionales y a los indicadores de riesgo del
+              Bribery Risk Index (BRI), asegurando una evaluación integral y
+              precisa.
+            </p>
+            <div className="header-risk-detail">
+              <h5
+                className="text-secondary"
+                onClick={() => {
+                  setIsDetailRiskOpen(!isDetailRiskOpen);
+                }}
+              >
+                Detalle de la Definición de Riesgos{" "}
+                <FontAwesomeIcon
+                  icon={isDetailRiskOpen ? faChevronUp : faChevronDown}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                />
+              </h5>
+              {isDetailRiskOpen && (
+                <section className="header-risk-detail dropdown">
+                  <p>
+                    Mediante la evaluación de riesgos, se determina la{" "}
+                    <b>severidad de cada riesgo</b>. La evaluación se representa
+                    como un número que va del 1 al 100 y se calcula aplicando el
+                    producto de la probabilidad y el impacto.
+                  </p>
+                  <ul>
+                    <li>
+                      La <b>probabilidad</b> se describe como la frecuencia en
+                      la que un riesgo puede ocurrir. Se calcula del 1 al 10.
+                    </li>
+                    <li>
+                      El <b>impacto</b> se describe como un grado de afectación
+                      en caso ocurra el riesgo. Se calcula del 1 al 10.
+                    </li>
+                  </ul>
+                  <p>
+                    El cálculo resultante demuestra la severidad que presenta el
+                    riesgo y esta puede categorizarse en 3 estados distintos:
+                    Nivel de tolerancia bajo, medio y alto.
+                  </p>
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <h6>Matriz de Severidad de los Riesgos</h6>
+                  </div>
+                  <img
+                    src="/assets/Matriz-Riesgos.png"
+                    className="d-inline-block align-text-top"
+                    style={{
+                      height: "396px",
+                      width: "100%",
+                      objectFit: "scale-down",
+                    }}
+                    alt="Matriz de Riesgos de Evaluación de Riesgos"
+                  />
+                  <p>
+                    Mediante el reporte de divulgación de irregularidades o
+                    factores de riesgo de soborno se establece la generación de{" "}
+                    <b>casos reportados asociados a los riesgos</b>. Ambos
+                    factores definirán el{" "}
+                    <b>
+                      <u>nivel de riesgo</u>
+                    </b>
+                  </p>
+                </section>
+              )}
+            </div>
             <div className="button-group">
               {/* <Button
               onClick={() => setOpenNewRisks(true)}
@@ -1771,7 +1872,7 @@ function Risk_Lista() {
               </Button>
             </div>
           </div>
-          {listRisk != null ? (
+          {listRisk != null && listRisk.length > 0 ? (
             <div className="lista-body-riesgos">
               <ListTableBox
                 noPadding={true}
@@ -1785,7 +1886,7 @@ function Risk_Lista() {
                     </h6>
                     <h6
                       className="text-primary header-text"
-                      style={{ width: "136px" }}
+                      style={{ width: "110px" }}
                     >
                       <b>Código</b>
                     </h6>
@@ -1797,7 +1898,7 @@ function Risk_Lista() {
                     </h6>
                     <h6
                       className="text-primary header-text"
-                      style={{ width: "232px" }}
+                      style={{ width: "361px" }}
                     >
                       <b>Categoría</b>
                     </h6>
@@ -1811,7 +1912,7 @@ function Risk_Lista() {
                       className="text-primary header-text"
                       style={{ width: "232px" }}
                     >
-                      <b>Severidad</b>
+                      <b>Evaluación Riesgo</b>
                     </h6>
                     <h6
                       className="text-primary header-text"
@@ -1819,12 +1920,15 @@ function Risk_Lista() {
                     >
                       <b>Casos</b>
                     </h6>
-                    <h6
-                      className="text-primary header-text"
-                      style={{ width: "122px" }}
+                    <div
+                      style={{ width: "156px", gap: "10px" }}
+                      className="d-flex align-items-center justify-content-center"
                     >
-                      <b>Nivel Riesgo</b>
-                    </h6>
+                      <Helper body="riesgo"></Helper>
+                      <h6 className="text-primary">
+                        <b>Nivel Riesgo</b>
+                      </h6>
+                    </div>
                     <div style={{ width: "84px" }}></div>
                   </div>
                 }
@@ -1832,6 +1936,14 @@ function Risk_Lista() {
                 overrideColor="override-white"
                 maxHeight="632px"
               />
+            </div>
+          ) : listRisk != null && listRisk.length <= 0 ? (
+            <div className="no-risk">
+              <p className="text-primary text-center">
+                No existen riesgos existentes hasta el momento. Para crear un
+                nuevo riesgo se debe establecer la estructura organizativa
+                dentro del sistema.
+              </p>
             </div>
           ) : (
             <div
@@ -1874,12 +1986,28 @@ function Risk_Lista() {
             setSelectedUnitArea
           )}
           handleConfirm={() => {
-            openNewRisks(false);
+            setOpenNewRisks(false);
             setRiskUnitAreas(null);
             setRiskProcess(null);
             setSelectedUnitArea(-1);
             setSelectedArea(-1);
             handleCreateRisks(newRisk, setNewRisk, listRisk, setListRisk);
+          }}
+          handleCancel={() => {
+            setOpenNewRisks(false);
+            setRiskUnitAreas(null);
+            setRiskProcess(null);
+            setSelectedUnitArea(-1);
+            setSelectedArea(-1);
+            setNewRisk(null);
+          }}
+          handleClose={() => {
+            setOpenNewRisks(false);
+            setRiskUnitAreas(null);
+            setRiskProcess(null);
+            setSelectedUnitArea(-1);
+            setSelectedArea(-1);
+            setNewRisk(null);
           }}
         />
         <Modals
@@ -1926,6 +2054,14 @@ function Risk_Lista() {
               listRisk,
               setListRisk
             );
+          }}
+          handleClose={() => {
+            setOpenEditRisks(false);
+            setRiskUnitAreas(null);
+            setRiskProcess(null);
+            setSelectedUnitArea(-1);
+            setSelectedArea(-1);
+            setSelectedRisk(null);
           }}
         />
       </div>

@@ -18,11 +18,12 @@ const Login = () => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isValid, setIsValid] = useState(true);
 
   const { isLoggedIn, userData, login } = useAuth();
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (isLoggedIn && userData) {
       if (userData.Role.nombre !== "Colaborador") {
         localStorage.setItem(
           "activeNavs",
@@ -37,7 +38,7 @@ const Login = () => {
         navigate(`${URL_RIESGOS_ALERTAS_IRREGULARIDADES}`);
       }
     }
-  }, []);
+  }, [isLoggedIn, navigate, userData]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -45,7 +46,9 @@ const Login = () => {
       usuario: username,
       contrasena: password,
     }).then((authResp) => {
+      console.log(authResp);
       if (authResp != null) {
+        setIsValid(true);
         login(authResp);
         if (authResp.Role.nombre !== "Colaborador") {
           localStorage.setItem(
@@ -60,7 +63,7 @@ const Login = () => {
           );
           navigate(`${URL_RIESGOS_ALERTAS_IRREGULARIDADES}`);
         }
-      }
+      } else setIsValid(false);
     });
   };
 
@@ -80,7 +83,7 @@ const Login = () => {
         </h4>
         <br />
         <h5 className="text-primary text-center">
-          Software diseñada para simplificar y fortalecer la gestión antisoborno
+          Software diseñado para simplificar y fortalecer la gestión antisoborno
           en organizaciones públicas y privadas.
         </h5>
         <hr />
@@ -116,6 +119,20 @@ const Login = () => {
               />
             </Form.Group>
           </Row>
+          {!isValid && (
+            <section>
+              <p
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "end",
+                }}
+                className="text-danger"
+              >
+                Usuario y/o contraseña inválidos.
+              </p>
+            </section>
+          )}
           <div className="login-footer">
             <Button
               style={{

@@ -33,6 +33,7 @@ import Modals from "../../../components/Modals/Modals";
 import { getArea, getUnitAreabyAreaId } from "../../../services/area.services";
 import { getProcessbyUnitAreaId } from "../../../services/unitarea.services";
 import { getRiskbyProcessId } from "../../../services/process.services";
+import Helper from "../../../components/PopOvers/Helper";
 
 function modalLinkDetail(selectedRisk) {
   return (
@@ -146,6 +147,7 @@ function modalLinkDetail(selectedRisk) {
                       readOnly
                       value={`${selectedRisk.severidad_riesgo} de 10`}
                     />
+                    <Form.Text>Cálculo de Probabilidad x Impacto</Form.Text>
                   </Form.Group>
                 </Row>
                 <Row className="mb-3">
@@ -734,10 +736,11 @@ function Doc_Estandares() {
                   : "Sin evaluar"}
               </p>
               <p className="text-primary">
-                <b>Indicador de Riesgo:</b> {risk.RiskIndicator?.codigo}
+                <b>Indicador de Riesgo:</b> {risk.RiskIndicator?.codigo} -{" "}
+                {risk.impacto}% del total
               </p>
             </div>
-            <div className="lista-riesgos-item4 header-text">
+            <div className="lista-riesgos-item4-2 header-text">
               <p className="text-primary">
                 {risk.Process?.UnitArea.es_area ? "Área " : "Unidad "}
                 {risk.Process?.UnitArea.codigo}
@@ -748,14 +751,15 @@ function Doc_Estandares() {
             </div>
             <div className="lista-riesgos-item5 header-text">
               <p className="text-primary">
-                <b>Probabilidad:</b> {statusImpactText(risk.probabilidad)}
+                <b>Probabilidad:</b> {risk.probabilidad} de 10
               </p>
               <p className="text-primary">
-                <b>Impacto:</b> {statusImpactText(risk.impacto)}
+                <b>Impacto:</b> {risk.impacto} de 10
               </p>
               <hr style={{ margin: "0" }} />
-              <p className={statusImpact(risk.severidad_riesgo)}>
-                <b>{statusImpactText(risk.severidad_riesgo)}</b>
+              <p className={statusImpact(risk.probabilidad, risk.impacto)}>
+                <b>Severidad: </b>
+                {risk.severidad_riesgo * 10} de 100
               </p>
             </div>
             <div className="lista-riesgos-item6 header-text">
@@ -970,9 +974,9 @@ function Doc_Estandares() {
                 <div className="req-risk-body">
                   <div className="analisis-medicion">
                     <MetricBox
-                      topText="Evaluacion de Riesgos"
+                      topText="Total de Riesgos"
                       middleText={analisisMetrics.reqInventory.toString()}
-                      bottomText="Inventario Total"
+                      bottomText={"Cantidad total de riesgos\n\0"}
                       order="top-bottom-middle"
                       status="secondary"
                       width="224px"
@@ -980,21 +984,25 @@ function Doc_Estandares() {
                       gap="0.5rem"
                     />
                     <MetricBox
-                      topText="Tolerancia de Riesgos"
+                      topText="Riesgos Excedidos"
                       middleText={analisisMetrics.reqInventoryExc.toString()}
-                      bottomText="Riesgos Excedidos"
+                      bottomText="Total de riesgos que presentan un nivel de riesgo mayor al bajo"
                       order="top-bottom-middle"
-                      status="secondary"
+                      status={
+                        analisisMetrics.reqInventoryExc > 0
+                          ? "danger"
+                          : "success"
+                      }
                       width="224px"
                       height="144px"
                       gap="0.5rem"
                     />
                     <MetricBox
-                      topText="Nivel de Riesgo General"
+                      topText="Nivel de Riesgo Requisito"
                       middleText={convertToPercentage(
                         analisisMetrics.reqTotalRiskLevel
                       ).toString()}
-                      bottomText="Del Requisito"
+                      bottomText="Evaluación promedio del nivel de riesgos para el requisito"
                       order="top-bottom-middle"
                       status={statusPercentage(
                         analisisMetrics.reqTotalRiskLevel
@@ -1033,7 +1041,7 @@ function Doc_Estandares() {
                           </h6>
                           <h6
                             className="text-primary header-text"
-                            style={{ width: "136px" }}
+                            style={{ width: "110px" }}
                           >
                             <b>Código</b>
                           </h6>
@@ -1045,7 +1053,7 @@ function Doc_Estandares() {
                           </h6>
                           <h6
                             className="text-primary header-text"
-                            style={{ width: "232px" }}
+                            style={{ width: "361px" }}
                           >
                             <b>Categoría</b>
                           </h6>
@@ -1059,7 +1067,7 @@ function Doc_Estandares() {
                             className="text-primary header-text"
                             style={{ width: "232px" }}
                           >
-                            <b>Severidad</b>
+                            <b>Evaluación Riesgo</b>
                           </h6>
                           <h6
                             className="text-primary header-text"
@@ -1067,12 +1075,15 @@ function Doc_Estandares() {
                           >
                             <b>Casos</b>
                           </h6>
-                          <h6
-                            className="text-primary header-text"
-                            style={{ width: "122px" }}
+                          <div
+                            style={{ width: "156px", gap: "10px" }}
+                            className="d-flex align-items-center justify-content-center"
                           >
-                            <b>Nivel Riesgo</b>
-                          </h6>
+                            <Helper body="riesgo"></Helper>
+                            <h6 className="text-primary">
+                              <b>Nivel Riesgo</b>
+                            </h6>
+                          </div>
                           <div style={{ width: "84px" }}></div>
                         </div>
                       }
@@ -1148,6 +1159,26 @@ function Doc_Estandares() {
               analisisMetrics,
               setAnalisisMetrics
             );
+          }}
+          handleCancel={() => {
+            setOpenLinkRisk(false);
+            setAlertUnitAreas(null);
+            setAlertProcess(null);
+            setAlertRisk(null);
+            setSelectedProcess(-1);
+            setSelectedUnitArea(-1);
+            setSelectedArea(-1);
+            setNewLink(false);
+          }}
+          handleClose={() => {
+            setOpenLinkRisk(false);
+            setAlertUnitAreas(null);
+            setAlertProcess(null);
+            setAlertRisk(null);
+            setSelectedProcess(-1);
+            setSelectedUnitArea(-1);
+            setSelectedArea(-1);
+            setNewLink(false);
           }}
         />
         <Modals

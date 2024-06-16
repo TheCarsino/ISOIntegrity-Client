@@ -25,25 +25,25 @@ export function colorBackgroundPercentage(element) {
 
 export function convertToPercentage(number) {
   number = parseFloat(number);
-  return (Math.round(number * 100) / 100).toFixed(2);
+  return (Math.round(number * 100) / 100).toFixed(2) + "%";
 }
 
-export function statusImpact(element) {
-  element = parseFloat(element);
-  if (element <= 0) return "Nulo";
-  if (element > 0 && element <= 2.5) return "text-success";
-  if (element > 2.5 && element <= 5) return "text-warning";
-  if (element > 5 && element <= 7.5) return "text-danger";
-  if (element > 7.5 && element <= 10) return "text-danger";
+export function statusImpact(prob, impact) {
+  if (prob >= 1 && prob <= 6) {
+    if (impact >= 1 && impact + prob <= 7) {
+      return "text-success";
+    }
+  }
+  if (prob >= 5 && prob <= 10) {
+    if (impact + prob >= 15 && impact <= 10) {
+      return "text-danger";
+    }
+  }
+  return "text-warning";
 }
 
 export function statusImpactText(element) {
-  element = parseFloat(element);
-  if (element <= 0) return "Nulo";
-  if (element > 0 && element <= 2.5) return "Bajo";
-  if (element > 2.5 && element <= 5) return "Medio";
-  if (element > 5 && element <= 7.5) return "Alto";
-  if (element > 7.5 && element <= 10) return "Severo";
+  return "text-warning";
 }
 
 export function colorRiskText(element, anotherCase = 1) {

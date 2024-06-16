@@ -835,7 +835,7 @@ function Risk_Alertas() {
             <h4 className="text-primary">
               <b>Lista de Registros de Factores de Riesgos</b>
             </h4>
-            {alertList != null ? (
+            {alertList != null && alertList.length > 0 ? (
               <ListTableBox
                 noPadding={true}
                 header={
@@ -876,6 +876,13 @@ function Risk_Alertas() {
                 listItems={fillAlertList(alertList)}
                 overrideColor="override-white"
               />
+            ) : alertList != null && alertList.length <= 0 ? (
+              <div className="no-risk">
+                <p className="text-primary text-center">
+                  El usuario no presenta una lista de reportes de factores de
+                  riesgo de soborno asociados a su perfil.
+                </p>
+              </div>
             ) : (
               <div
                 style={{
@@ -894,7 +901,7 @@ function Risk_Alertas() {
         <Modals
           openModal={openNewAlertFact}
           setOpenModal={setOpenNewAlertFact}
-          title="Formulario de Registro de Inquietudes"
+          title="Formulario de Registro de Factores de Riesgo"
           size="lg"
           footer={["Guardar", "Cerrar"]}
           body={modalNewAlertFact(
@@ -912,7 +919,7 @@ function Risk_Alertas() {
             setSelectedProcess
           )}
           handleConfirm={() => {
-            setOpenRemoveAlertFact(false);
+            setOpenNewAlertFact(false);
             setAlertUnitAreas(null);
             setAlertProcess(null);
             setAlertRisk(null);
@@ -926,11 +933,31 @@ function Risk_Alertas() {
               setAlertList
             );
           }}
+          handleCancel={() => {
+            setOpenNewAlertFact(false);
+            setAlertUnitAreas(null);
+            setAlertProcess(null);
+            setAlertRisk(null);
+            setSelectedProcess(-1);
+            setSelectedUnitArea(-1);
+            setSelectedArea(-1);
+            setNewFactor(null);
+          }}
+          handleClose={() => {
+            setOpenNewAlertFact(false);
+            setAlertUnitAreas(null);
+            setAlertProcess(null);
+            setAlertRisk(null);
+            setSelectedProcess(-1);
+            setSelectedUnitArea(-1);
+            setSelectedArea(-1);
+            setNewFactor(null);
+          }}
         />
         <Modals
           openModal={openAlertFactDetail}
           setOpenModal={setOpenAlertFactDetail}
-          title="Detalle del Formulario de Registro de Inquietudes"
+          title="Detalle del Formulario de Registro de Factores de Riesgo"
           size="lg"
           body={modalAlertFactDetail(selectedFactor)}
         />

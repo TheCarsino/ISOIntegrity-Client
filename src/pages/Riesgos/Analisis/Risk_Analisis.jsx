@@ -1,32 +1,33 @@
-import { useState, useEffect } from "react";
-import MainContainer from "../../../components/Main/MainContainer";
-import "./Risk_Analisis.scss";
-import MetricBox from "../../../components/Metrics/MetricBox";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-import ListTableBox from "../../../components/ListTable/ListTableBox";
-import Button from "react-bootstrap/esm/Button";
-import Modals from "../../../components/Modals/Modals";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import NavBar from "../../../components/NavBar/NavBar";
 import Placeholder from "react-bootstrap/Placeholder";
+import Row from "react-bootstrap/Row";
 import Spinner from "react-bootstrap/Spinner";
+import Button from "react-bootstrap/esm/Button";
+import BarStackedGraph from "../../../components/Graphs/BarStackedGraph";
+import ListTableBox from "../../../components/ListTable/ListTableBox";
+import MainContainer from "../../../components/Main/MainContainer";
+import MetricBox from "../../../components/Metrics/MetricBox";
+import Modals from "../../../components/Modals/Modals";
+import NavBar from "../../../components/NavBar/NavBar";
+import Helper from "../../../components/PopOvers/Helper";
+import {
+  colorBackgroundPercentage,
+  colorTextPercentage,
+  convertToPercentage,
+  statusImpact,
+  statusPercentage,
+} from "../../../hooks/ColorCases";
 import {
   getGeneralRiskinOrg,
   getRiskIndicatorDetail,
   getRiskIndicatorDetailbyId,
 } from "../../../services/riskindicator.services";
-import {
-  colorTextPercentage,
-  colorBackgroundPercentage,
-  convertToPercentage,
-  statusPercentage,
-  statusImpactText,
-  statusImpact,
-} from "../../../hooks/ColorCases";
-import BarStackedGraph from "../../../components/Graphs/BarStackedGraph";
+import "./Risk_Analisis.scss";
 
 function modalIndDetail(riskIndicator) {
   const fillRiskList = (risks) => {
@@ -55,10 +56,11 @@ function modalIndDetail(riskIndicator) {
                   : "Sin evaluar"}
               </p>
               <p className="text-primary">
-                <b>Indicador de Riesgo:</b> {risk.RiskIndicator?.codigo}
+                <b>Indicador de Riesgo:</b> {risk.RiskIndicator?.codigo} -{" "}
+                {risk.impacto}% del total
               </p>
             </div>
-            <div className="lista-riesgos-item4 header-text">
+            <div className="lista-riesgos-item4-2 header-text">
               <p className="text-primary">
                 {risk.Process?.UnitArea.es_area ? "Área " : "Unidad "}
                 {risk.Process?.UnitArea.codigo}
@@ -69,14 +71,15 @@ function modalIndDetail(riskIndicator) {
             </div>
             <div className="lista-riesgos-item5 header-text">
               <p className="text-primary">
-                <b>Probabilidad:</b> {statusImpactText(risk.probabilidad)}
+                <b>Probabilidad:</b> {risk.probabilidad} de 10
               </p>
               <p className="text-primary">
-                <b>Impacto:</b> {statusImpactText(risk.impacto)}
+                <b>Impacto:</b> {risk.impacto} de 10
               </p>
               <hr style={{ margin: "0" }} />
-              <p className={statusImpact(risk.severidad_riesgo)}>
-                <b>{statusImpactText(risk.severidad_riesgo)}</b>
+              <p className={statusImpact(risk.probabilidad, risk.impacto)}>
+                <b>Severidad: </b>
+                {risk.severidad_riesgo * 10} de 100
               </p>
             </div>
             <div className="lista-riesgos-item6 header-text">
@@ -103,21 +106,83 @@ function modalIndDetail(riskIndicator) {
     return listRisk;
   };
 
-  const fillEscalas = (escalas) => {
-    let escalaText = "";
-    if (escalas.descripcion_e1 != "")
-      escalaText += "1. " + escalas.descripcion_e1 + "\n";
-    if (escalas.descripcion_e2 != "")
-      escalaText += "2. " + escalas.descripcion_e2 + "\n";
-    if (escalas.descripcion_e3 != "")
-      escalaText += "3. " + escalas.descripcion_e3 + "\n";
-    if (escalas.descripcion_e4 != "")
-      escalaText += "4. " + escalas.descripcion_e4 + "\n";
-    if (escalas.descripcion_e5 != "")
-      escalaText += "5. " + escalas.descripcion_e5 + "\n";
-    if (escalas.descripcion_e6 != "")
-      escalaText += "6. " + escalas.descripcion_e6 + "\n";
-    return escalaText;
+  const fillEscalas = (escalas, resultado, fechaResultado) => {
+    return (
+      <div className="text-primary form-text-alike">
+        {escalas.descripcion_e1 != "" && (
+          <p>
+            {`1. ${escalas.descripcion_e1}`}
+            {resultado == 1 && (
+              <small className="text-secondary">
+                {" ("}Resultado del último cuestionario. Fecha:{" "}
+                {format(fechaResultado, "dd/MM/yyyy")}
+                {")"}
+              </small>
+            )}
+          </p>
+        )}
+        {escalas.descripcion_e2 != "" && (
+          <p>
+            {`2. ${escalas.descripcion_e2}`}
+            {resultado == 2 && (
+              <small className="text-secondary">
+                {" ("}Resultado del último cuestionario. Fecha:{" "}
+                {format(fechaResultado, "dd/MM/yyyy")}
+                {")"}
+              </small>
+            )}
+          </p>
+        )}
+        {escalas.descripcion_e3 != "" && (
+          <p>
+            {`3. ${escalas.descripcion_e3}`}
+            {resultado == 3 && (
+              <small className="text-secondary">
+                {" ("}Resultado del último cuestionario. Fecha:{" "}
+                {format(fechaResultado, "dd/MM/yyyy")}
+                {")"}
+              </small>
+            )}
+          </p>
+        )}
+        {escalas.descripcion_e4 != "" && (
+          <p>
+            {`4. ${escalas.descripcion_e4}`}
+            {resultado == 4 && (
+              <small className="text-secondary">
+                {" ("}Resultado del último cuestionario. Fecha:{" "}
+                {format(fechaResultado, "dd/MM/yyyy")}
+                {")"}
+              </small>
+            )}
+          </p>
+        )}
+        {escalas.descripcion_e5 != "" && (
+          <p>
+            {`5. ${escalas.descripcion_e5}`}
+            {resultado == 5 && (
+              <small className="text-secondary">
+                {" ("}Resultado del último cuestionario. Fecha:{" "}
+                {format(fechaResultado, "dd/MM/yyyy")}
+                {")"}
+              </small>
+            )}
+          </p>
+        )}
+        {escalas.descripcion_e6 != "" && (
+          <p>
+            {`6. ${escalas.descripcion_e6}`}
+            {resultado == 6 && (
+              <small className="text-secondary">
+                {" ("}Resultado del último cuestionario. Fecha:{" "}
+                {format(fechaResultado, "dd/MM/yyyy")}
+                {")"}
+              </small>
+            )}
+          </p>
+        )}
+      </div>
+    );
   };
   return (
     <div className="modal-detailind-body">
@@ -134,7 +199,7 @@ function modalIndDetail(riskIndicator) {
                 gap="0rem"
               />
               <MetricBox
-                topText="Casos reportados"
+                topText="Casos Reportados"
                 middleText={riskIndicator.casos_reportados_irreg.toString()}
                 bottomText="Por irregularidades"
                 status="secondary"
@@ -142,7 +207,7 @@ function modalIndDetail(riskIndicator) {
                 gap="0rem"
               />
               <MetricBox
-                topText="Casos reportados"
+                topText="Casos Reportados"
                 middleText={riskIndicator.casos_reportados_riesgo.toString()}
                 bottomText="Por factores de riesgo"
                 status="secondary"
@@ -156,7 +221,11 @@ function modalIndDetail(riskIndicator) {
                 middleText={convertToPercentage(
                   riskIndicator.resultado_cuestionario
                 )}
-                bottomText="Escala: 2 de 4"
+                bottomText={`Resultado: ${
+                  riskIndicator.Escalas.SurveyResult != null
+                    ? riskIndicator.Escalas.SurveyResult.escala_seleccion
+                    : 0
+                } de ${riskIndicator.escala} escalas`}
                 status={statusPercentage(riskIndicator.resultado_cuestionario)}
                 width="262px"
                 gap="0rem"
@@ -221,13 +290,12 @@ function modalIndDetail(riskIndicator) {
                   controlId="formGridEscalas"
                 >
                   <Form.Label>Especificación de Escalas de Medición</Form.Label>
-                  <Form.Control
-                    style={{ height: "162px" }}
-                    as="textarea"
-                    placeholder=""
-                    readOnly
-                    value={fillEscalas(riskIndicator.Escalas.SurveyScale)}
-                  />
+
+                  {fillEscalas(
+                    riskIndicator.Escalas.SurveyScale,
+                    riskIndicator.Escalas.SurveyResult.escala_seleccion,
+                    riskIndicator.Escalas.SurveyResult.fecha_creacion
+                  )}
                 </Form.Group>
               </Row>
               <Row className="mb-3">
@@ -238,65 +306,81 @@ function modalIndDetail(riskIndicator) {
                     </h5>
                   </div>
                   {riskIndicator.Riesgos != null &&
-                    riskIndicator.Riesgos.length > 0 && (
-                      <ListTableBox
-                        noPadding={true}
-                        header={
-                          <div className="accordion-riesgos-header">
-                            <h6
-                              className="text-primary header-text"
-                              style={{ width: "42px", alignSelf: "center" }}
-                            >
-                              <b>#</b>
-                            </h6>
-                            <h6
-                              className="text-primary header-text"
-                              style={{ width: "136px" }}
-                            >
-                              <b>Código</b>
-                            </h6>
-                            <h6
-                              className="text-primary header-text"
-                              style={{ width: "709px" }}
-                            >
-                              <b>Nombre</b>
-                            </h6>
-                            <h6
-                              className="text-primary header-text"
-                              style={{ width: "232px" }}
-                            >
-                              <b>Categoría</b>
-                            </h6>
-                            <h6
-                              className="text-primary header-text"
-                              style={{ width: "232px" }}
-                            >
-                              <b>Relación Unidad</b>
-                            </h6>
-                            <h6
-                              className="text-primary header-text"
-                              style={{ width: "232px" }}
-                            >
-                              <b>Severidad</b>
-                            </h6>
-                            <h6
-                              className="text-primary header-text"
-                              style={{ width: "232px" }}
-                            >
-                              <b>Casos</b>
-                            </h6>
-                            <h6
-                              className="text-primary header-text"
-                              style={{ width: "122px" }}
-                            >
+                  riskIndicator.Riesgos.length > 0 ? (
+                    <ListTableBox
+                      noPadding={true}
+                      header={
+                        <div className="accordion-riesgos-header">
+                          <h6
+                            className="text-primary header-text"
+                            style={{ width: "42px", alignSelf: "center" }}
+                          >
+                            <b>#</b>
+                          </h6>
+                          <h6
+                            className="text-primary header-text"
+                            style={{ width: "110px" }}
+                          >
+                            <b>Código</b>
+                          </h6>
+                          <h6
+                            className="text-primary header-text"
+                            style={{ width: "709px" }}
+                          >
+                            <b>Nombre</b>
+                          </h6>
+                          <h6
+                            className="text-primary header-text"
+                            style={{ width: "361px" }}
+                          >
+                            <b>Categoría</b>
+                          </h6>
+                          <h6
+                            className="text-primary header-text"
+                            style={{ width: "232px" }}
+                          >
+                            <b>Relación Unidad</b>
+                          </h6>
+                          <h6
+                            className="text-primary header-text"
+                            style={{ width: "232px" }}
+                          >
+                            <b>Evaluación Riesgo</b>
+                          </h6>
+                          <h6
+                            className="text-primary header-text"
+                            style={{ width: "232px" }}
+                          >
+                            <b>Casos</b>
+                          </h6>
+                          <div
+                            style={{ width: "156px", gap: "10px" }}
+                            className="d-flex align-items-center justify-content-center"
+                          >
+                            <Helper body="riesgo"></Helper>
+                            <h6 className="text-primary">
                               <b>Nivel Riesgo</b>
                             </h6>
                           </div>
-                        }
-                        listItems={fillRiskList(riskIndicator.Riesgos)}
-                        overrideColor="override-gray"
-                      />
-                    )}
+                        </div>
+                      }
+                      listItems={fillRiskList(riskIndicator.Riesgos)}
+                      overrideColor="override-gray"
+                    />
+                  ) : (
+                    riskIndicator.Riesgos.length <= 0 && (
+                      <div className="no-risk">
+                        <p className="text-primary text-center">
+                          El indicador de riesgo seleccionado no presenta
+                          riesgos que hayan sido previamente relacionados. Para
+                          modificar los niveles de riesgo organizacional se
+                          recomienda asociar nuevos riesgos con los distintos
+                          factores presentados por el índice Bribery Risk Index
+                          (BRI).
+                        </p>
+                      </div>
+                    )
+                  )}
                 </div>
               </Row>
             </div>
@@ -322,17 +406,17 @@ function Risk_Analisis() {
       ],
       datasets: [
         {
-          label: "Nivel bajo",
+          label: "Nivel bajo %[1° tercio]",
           data: [0, 0, 0, 0, 0, 0],
           backgroundColor: "#28a745",
         },
         {
-          label: "Nivel medio",
+          label: "Nivel medio % [2° tercio]",
           data: [0, 0, 0, 0, 0, 0],
           backgroundColor: "#ffc107",
         },
         {
-          label: "Nivel alto",
+          label: "Nivel alto % [3° tercio]",
           data: [0, 0, 0, 0, 0, 0],
           backgroundColor: "#dc3545",
         },
@@ -422,18 +506,18 @@ function Risk_Analisis() {
               <h5 className={colorTextPercentage(ind.resultado_cuestionario)}>
                 <b>{convertToPercentage(ind.resultado_cuestionario)}</b>
               </h5>
-              <p className="text-primary">{`Escala: ${
+              <p className="text-primary">{`Resultado: ${
                 ind.Escalas.SurveyResult
                   ? ind.Escalas.SurveyResult.escala_seleccion
                   : 0
-              } de ${ind.escala}`}</p>
+              } de ${ind.escala} escalas`}</p>
             </div>
             <div className="lista-indicadores-item6 header-text">
               <p className="text-primary">
                 <b>Riesgos asociados:</b> {ind.total_riesgos}
               </p>
               <p className="text-primary">
-                <b>Casos reportados:</b>{" "}
+                <b>Total casos reportados:</b>{" "}
                 {ind.casos_reportados_irreg + ind.casos_reportados_riesgo}
               </p>
             </div>
@@ -498,7 +582,7 @@ function Risk_Analisis() {
           <div className="analisis-header">
             <div className="header-display">
               <h4 className="text-primary">
-                <b>Análisis de la Organización</b>
+                <b>Análisis del Nivel de Riesgo de la Organización</b>
               </h4>
             </div>
             <div className="analisis-content">
@@ -506,7 +590,7 @@ function Risk_Analisis() {
                 <div className="analisis-dashboard">
                   <BarStackedGraph
                     data={riskGraphic}
-                    graphTitle="Análisis de Nivel de Riesgo por Riesgos según su Tratamiento"
+                    graphTitle="Análisis de Nivel de Riesgo Según el Tratamiento de los Riesgos"
                   />
                 </div>
               ) : (
@@ -523,7 +607,7 @@ function Risk_Analisis() {
                   <MetricBox
                     topText="Evaluacion de Riesgos"
                     middleText={orgAnalisis.inventario_riesgo.toString()}
-                    bottomText="Inventario Total"
+                    bottomText={"Cantidad total de riesgos \n\0"}
                     order="top-bottom-middle"
                     status="secondary"
                     width="222px"
@@ -531,9 +615,9 @@ function Risk_Analisis() {
                     gap="0.5rem"
                   />
                   <MetricBox
-                    topText="Nivel de Riesgo de la Organización"
+                    topText="Nivel de Riesgo del Índice BRI"
                     middleText={convertToPercentage(orgAnalisis.evaluacion_org)}
-                    bottomText="En la evaluación original"
+                    bottomText="Evaluación resultante de de los últimos resultados del cuestionario asociados a los indicadores "
                     order="top-bottom-middle"
                     status={statusPercentage(orgAnalisis.evaluacion_org)}
                     width="320px"
@@ -541,9 +625,9 @@ function Risk_Analisis() {
                     gap="0.5rem"
                   />
                   <MetricBox
-                    topText="Tolerancia de Riesgo"
+                    topText="Riesgos Excedidos"
                     middleText={orgAnalisis.inventario_excedido.toString()}
-                    bottomText="Riesgos Excedidos"
+                    bottomText="Total de riesgos que presentan un nivel de riesgo mayor al bajo"
                     order="top-bottom-middle"
                     status={
                       orgAnalisis.inventario_excedido > 0 ? "danger" : "success"
@@ -557,7 +641,7 @@ function Risk_Analisis() {
                     middleText={convertToPercentage(
                       orgAnalisis.nivel_riesgo_org
                     )}
-                    bottomText="En la actualidad"
+                    bottomText="Evaluación que considera los resultados y riesgos asociados de los indicadores"
                     order="top-bottom-middle"
                     status={statusPercentage(orgAnalisis.nivel_riesgo_org)}
                     width="320px"
@@ -601,12 +685,24 @@ function Risk_Analisis() {
           </div>
           <div className="lista-body-indicadores">
             <div className="procesos-indicadores-header">
-              <h5 className="text-primary">
-                <b>
-                  Lista de Indicadores de Riesgos Generales de la Organización
-                </b>
-              </h5>
+              <h4 className="text-primary">
+                <b>Lista de Indicadores de Riesgos</b>
+              </h4>
             </div>
+            <p>
+              Los indicadores de riesgo permiten cuantificar y evaluar el riesgo
+              de soborno en la organización. El <b>Bribery Risk Index (BRI)</b>{" "}
+              incluye una serie de 44 indicadores diseñados para evaluar
+              aspectos clave en relación a la <b>norma ISO 37001:2016</b> como
+              la naturaleza de la organización, la debida diligencia y la
+              relación con las partes interesadas. Junto con la gestión de
+              riesgos, que se evalúa conforme a la metodología establecida de la{" "}
+              <b>norma ISO 31000:2018</b>, se manejarán de manera eficiente los{" "}
+              <b>
+                <u>niveles de riesgo</u>
+              </b>{" "}
+              dentro de la organización.
+            </p>
             {listIndicators != null ? (
               <ListTableBox
                 noPadding={true}
@@ -638,7 +734,7 @@ function Risk_Analisis() {
                     </h6>
                     <h6
                       className="text-primary header-text"
-                      style={{ width: "212px" }}
+                      style={{ width: "224px" }}
                     >
                       <b>Resultados Cuestionario</b>
                     </h6>
@@ -648,12 +744,15 @@ function Risk_Analisis() {
                     >
                       <b>Resumen de Riesgos</b>
                     </h6>
-                    <h6
-                      className="text-primary header-text"
-                      style={{ width: "122px" }}
+                    <div
+                      style={{ width: "156px", gap: "10px" }}
+                      className="d-flex align-items-center justify-content-center"
                     >
-                      <b>Nivel Riesgo</b>
-                    </h6>
+                      <Helper body="indicador"></Helper>
+                      <h6 className="text-primary">
+                        <b>Nivel Riesgo</b>
+                      </h6>
+                    </div>
                     <div style={{ width: "42px" }}></div>
                   </div>
                 }
