@@ -930,7 +930,11 @@ function Risk_Alertas() {
           setOpenModal={setOpenNewAlertFact}
           title="Formulario de Registro de Factores de Riesgo"
           size="lg"
-          footer={["Guardar", "Cerrar"]}
+          footer={
+            newFactor != null &&
+            alertAreas != null &&
+            alertAreas.length > 0 && ["Guardar", "Cerrar"]
+          }
           body={modalNewAlertFact(
             newFactor,
             setNewFactor,

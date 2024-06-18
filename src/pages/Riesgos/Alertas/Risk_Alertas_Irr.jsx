@@ -1084,7 +1084,11 @@ function Risk_Alertas() {
           setOpenModal={setOpenNewAlertIrr}
           title="Formulario de Registro de Inquietudes"
           size="lg"
-          footer={["Guardar", "Cerrar"]}
+          footer={
+            newWhistle != null &&
+            alertAreas != null &&
+            alertAreas.length > 0 && ["Guardar", "Cerrar"]
+          }
           body={modalNewAlertIrr(
             newWhistle,
             setNewWhistle,

@@ -1984,7 +1984,11 @@ function Risk_Lista() {
           openModal={openNewRisks}
           setOpenModal={setOpenNewRisks}
           title="Nuevo Riesgo de Soborno"
-          footer={["Guardar", "Cerrar"]}
+          footer={
+            newRisk != null &&
+            riskAreas != null &&
+            riskAreas.length > 0 && [("Guardar", "Cerrar")]
+          }
           size="lg"
           body={modalNewRisks(
             newRisk,

@@ -1,40 +1,39 @@
-import { useState, useEffect } from "react";
-import MainContainer from "../../../components/Main/MainContainer";
-import "./Doc_Estandares.scss";
-import NavBar from "../../../components/NavBar/NavBar";
-import ListTableBox from "../../../components/ListTable/ListTableBox";
-import Placeholder from "react-bootstrap/Placeholder";
-import {
-  getStandardRequirement,
-  getRisksStandardRequirementId,
-  linkRisktoStandardRequirement,
-  unlinkRisktoStandardRequirement,
-} from "../../../services/standardrequirement.services";
-import Button from "react-bootstrap/esm/Button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeft,
   faArrowRight,
   faArrowRightFromBracket,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import MetricBox from "../../../components/Metrics/MetricBox";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
+import Placeholder from "react-bootstrap/Placeholder";
 import Row from "react-bootstrap/Row";
+import Button from "react-bootstrap/esm/Button";
+import Spinner from "react-bootstrap/esm/Spinner";
+import ListTableBox from "../../../components/ListTable/ListTableBox";
+import MainContainer from "../../../components/Main/MainContainer";
+import MetricBox from "../../../components/Metrics/MetricBox";
+import Modals from "../../../components/Modals/Modals";
+import NavBar from "../../../components/NavBar/NavBar";
+import Helper from "../../../components/PopOvers/Helper";
 import {
   colorBackgroundPercentage,
   convertToPercentage,
   statusImpact,
-  statusImpactText,
   statusPercentage,
 } from "../../../hooks/ColorCases";
-import Modals from "../../../components/Modals/Modals";
 import { getArea, getUnitAreabyAreaId } from "../../../services/area.services";
-import { getProcessbyUnitAreaId } from "../../../services/unitarea.services";
 import { getRiskbyProcessId } from "../../../services/process.services";
-import Helper from "../../../components/PopOvers/Helper";
-import Spinner from "react-bootstrap/esm/Spinner";
+import {
+  getRisksStandardRequirementId,
+  getStandardRequirement,
+  linkRisktoStandardRequirement,
+  unlinkRisktoStandardRequirement,
+} from "../../../services/standardrequirement.services";
+import { getProcessbyUnitAreaId } from "../../../services/unitarea.services";
+import "./Doc_Estandares.scss";
 
 function modalLinkDetail(selectedRisk) {
   return (
@@ -326,10 +325,10 @@ function modalLinkDetail(selectedRisk) {
 function modalNewLink(
   newLink,
   setNewLink,
-  alertAreas,
-  alertUnitAreas,
-  alertProcess,
-  alertRisk,
+  reqAreas,
+  reqUnitAreas,
+  reqProcess,
+  reqRisk,
   selectedArea,
   setSelectedArea,
   selectedUnitArea,
@@ -338,11 +337,11 @@ function modalNewLink(
   setSelectedProcess
 ) {
   return (
-    <div className="modal-alert-body">
-      {newLink != null && alertAreas != null && alertAreas.length > 0 ? (
+    <div className="modal-req-body">
+      {newLink != null && reqAreas != null && reqAreas.length > 0 ? (
         <Form style={{ width: "100%" }}>
           <div className="container-form-controls">
-            {alertAreas != null && (
+            {reqAreas != null && (
               <Row className="mb-3">
                 <Form.Group
                   as={Col}
@@ -357,7 +356,7 @@ function modalNewLink(
                     <option key={`default`} value={-1}>
                       -
                     </option>
-                    {alertAreas.map((area) => (
+                    {reqAreas.map((area) => (
                       <option key={`area-${area.id}`} value={area.id}>
                         {area.codigo}
                       </option>
@@ -376,8 +375,8 @@ function modalNewLink(
                     readOnly
                     value={
                       selectedArea != -1
-                        ? alertAreas[
-                            alertAreas.findIndex(
+                        ? reqAreas[
+                            reqAreas.findIndex(
                               (area) => area.id === selectedArea
                             )
                           ].nombre
@@ -387,7 +386,7 @@ function modalNewLink(
                 </Form.Group>
               </Row>
             )}
-            {alertUnitAreas != null && alertUnitAreas.length > 0 && (
+            {reqUnitAreas != null && reqUnitAreas.length > 0 && (
               <Row className="mb-3">
                 <Form.Group
                   as={Col}
@@ -404,7 +403,7 @@ function modalNewLink(
                     <option key={`default`} value={-1}>
                       -
                     </option>
-                    {alertUnitAreas.map((unit) => (
+                    {reqUnitAreas.map((unit) => (
                       <option key={`unit-${unit.id}`} value={unit.id}>
                         {unit.codigo}
                       </option>
@@ -423,8 +422,8 @@ function modalNewLink(
                     readOnly
                     value={
                       selectedUnitArea != -1
-                        ? alertUnitAreas[
-                            alertUnitAreas.findIndex(
+                        ? reqUnitAreas[
+                            reqUnitAreas.findIndex(
                               (unit) => unit.id === selectedUnitArea
                             )
                           ].nombre
@@ -438,7 +437,7 @@ function modalNewLink(
                 </Form.Text>
               </Row>
             )}
-            {alertProcess != null && alertProcess.length > 0 && (
+            {reqProcess != null && reqProcess.length > 0 && (
               <Row className="mb-3">
                 <Form.Group
                   as={Col}
@@ -455,7 +454,7 @@ function modalNewLink(
                     <option key={`default`} value={-1}>
                       -
                     </option>
-                    {alertProcess.map((process) => (
+                    {reqProcess.map((process) => (
                       <option key={`process-${process.id}`} value={process.id}>
                         {process.codigo}
                       </option>
@@ -469,10 +468,10 @@ function modalNewLink(
                 >
                   <Form.Label>
                     Nombre del Proceso
-                    {alertProcess != null &&
+                    {reqProcess != null &&
                       selectedProcess != -1 &&
-                      (alertProcess[
-                        alertProcess.findIndex(
+                      (reqProcess[
+                        reqProcess.findIndex(
                           (process) => process.id === selectedProcess
                         )
                       ].es_area
@@ -485,8 +484,8 @@ function modalNewLink(
                     readOnly
                     value={
                       selectedProcess != -1
-                        ? alertProcess[
-                            alertProcess.findIndex(
+                        ? reqProcess[
+                            reqProcess.findIndex(
                               (process) => process.id === selectedProcess
                             )
                           ].nombre
@@ -496,7 +495,7 @@ function modalNewLink(
                 </Form.Group>
               </Row>
             )}
-            {alertRisk != null && alertRisk.length > 0 && (
+            {reqRisk != null && reqRisk.length > 0 && (
               <div>
                 <Row className="mb-3">
                   <Form.Group
@@ -517,7 +516,7 @@ function modalNewLink(
                       <option key={`default`} value={-1}>
                         -
                       </option>
-                      {alertRisk.map((risk) => (
+                      {reqRisk.map((risk) => (
                         <option key={`risk-${risk.id}`} value={risk.id}>
                           {risk.codigo}
                         </option>
@@ -535,17 +534,17 @@ function modalNewLink(
                       placeholder=""
                       readOnly
                       value={
-                        alertRisk != null &&
-                        alertRisk.length > 0 &&
+                        reqRisk != null &&
+                        reqRisk.length > 0 &&
                         newLink.risk_id != null &&
                         newLink.risk_id != -1
-                          ? alertRisk[
-                              alertRisk.findIndex(
+                          ? reqRisk[
+                              reqRisk.findIndex(
                                 (risk) => risk.id === newLink.risk_id
                               )
                             ] != null
-                            ? alertRisk[
-                                alertRisk.findIndex(
+                            ? reqRisk[
+                                reqRisk.findIndex(
                                   (risk) => risk.id === newLink.risk_id
                                 )
                               ].nombre
@@ -567,17 +566,17 @@ function modalNewLink(
                       placeholder=""
                       readOnly
                       value={
-                        alertRisk != null &&
-                        alertRisk.length > 0 &&
+                        reqRisk != null &&
+                        reqRisk.length > 0 &&
                         newLink.risk_id != null &&
                         newLink.risk_id != -1
-                          ? alertRisk[
-                              alertRisk.findIndex(
+                          ? reqRisk[
+                              reqRisk.findIndex(
                                 (risk) => risk.id === newLink.risk_id
                               )
                             ] != null
-                            ? alertRisk[
-                                alertRisk.findIndex(
+                            ? reqRisk[
+                                reqRisk.findIndex(
                                   (risk) => risk.id === newLink.risk_id
                                 )
                               ].descripcion
@@ -591,7 +590,7 @@ function modalNewLink(
             )}
           </div>
         </Form>
-      ) : newLink != null && alertAreas != null && alertAreas.length <= 0 ? (
+      ) : newLink != null && reqAreas != null && reqAreas.length <= 0 ? (
         <div className="no-risk">
           <p className="text-primary text-center">
             No es posible asociar un riesgo si previamente no se ha actualizado
@@ -617,7 +616,7 @@ function modalNewLink(
 }
 function modalRemoveLink() {
   return (
-    <div className="modal-alert-body">
+    <div className="modal-req-body">
       <h5 className="text-primary">
         <b>
           ¿Seguro de eliminar la asociación entre el riesgo y el requisito del
@@ -682,10 +681,10 @@ function Doc_Estandares() {
   const [newLink, setNewLink] = useState(null);
   const [selectedLink, setSelectedLink] = useState(null);
 
-  const [alertAreas, setAlertAreas] = useState(null);
-  const [alertUnitAreas, setAlertUnitAreas] = useState(null);
-  const [alertProcess, setAlertProcess] = useState(null);
-  const [alertRisk, setAlertRisk] = useState(null);
+  const [reqAreas, setReqAreas] = useState(null);
+  const [reqUnitAreas, setReqUnitAreas] = useState(null);
+  const [reqProcess, setReqProcess] = useState(null);
+  const [reqRisk, setReqRisk] = useState(null);
   const [selectedArea, setSelectedArea] = useState(-1);
   const [selectedUnitArea, setSelectedUnitArea] = useState(-1);
   const [selectedProcess, setSelectedProcess] = useState(-1);
@@ -885,7 +884,7 @@ function Doc_Estandares() {
     retrieveStdReqs().then((reqs) => {
       setListStandardsReqs(reqs);
       retrieveAreaList().then((areas) => {
-        setAlertAreas(areas);
+        setReqAreas(areas);
       });
     });
   }, []);
@@ -901,36 +900,36 @@ function Doc_Estandares() {
   useEffect(() => {
     if (selectedArea != -1) {
       retrieveUnitbyAreaList(selectedArea).then((units) => {
-        setAlertUnitAreas(units);
+        setReqUnitAreas(units);
       });
     } else {
-      setAlertUnitAreas(null);
+      setReqUnitAreas(null);
     }
     setSelectedProcess(-1);
     setSelectedUnitArea(-1);
-    setAlertProcess(null);
-    setAlertRisk(null);
+    setReqProcess(null);
+    setReqRisk(null);
   }, [selectedArea]);
 
   useEffect(() => {
     if (selectedUnitArea != -1) {
       retrieveProcessbyUnitList(selectedUnitArea).then((process) => {
-        setAlertProcess(process);
+        setReqProcess(process);
       });
     } else {
-      setAlertProcess(null);
+      setReqProcess(null);
     }
     setSelectedProcess(-1);
-    setAlertRisk(null);
+    setReqRisk(null);
   }, [selectedUnitArea]);
 
   useEffect(() => {
     if (selectedProcess != -1) {
       retrieveRiskbyProcessList(selectedProcess).then((risk) => {
-        setAlertRisk(risk);
+        setReqRisk(risk);
       });
     } else {
-      setAlertRisk(null);
+      setReqRisk(null);
     }
   }, [selectedProcess]);
 
@@ -1149,14 +1148,18 @@ function Doc_Estandares() {
           setOpenModal={setOpenLinkRisk}
           title={`Asociar Nuevo Riesgo al Requisito`}
           size="lg"
-          footer={["Guardar", "Cerrar"]}
+          footer={
+            newLink != null &&
+            reqAreas != null &&
+            reqAreas.length > 0 && ["Guardar", "Cerrar"]
+          }
           body={modalNewLink(
             newLink,
             setNewLink,
-            alertAreas,
-            alertUnitAreas,
-            alertProcess,
-            alertRisk,
+            reqAreas,
+            reqUnitAreas,
+            reqProcess,
+            reqRisk,
             selectedArea,
             setSelectedArea,
             selectedUnitArea,
@@ -1166,9 +1169,9 @@ function Doc_Estandares() {
           )}
           handleConfirm={() => {
             setOpenLinkRisk(false);
-            setAlertUnitAreas(null);
-            setAlertProcess(null);
-            setAlertRisk(null);
+            setReqUnitAreas(null);
+            setReqProcess(null);
+            setReqRisk(null);
             setSelectedProcess(-1);
             setSelectedUnitArea(-1);
             setSelectedArea(-1);
@@ -1183,9 +1186,9 @@ function Doc_Estandares() {
           }}
           handleCancel={() => {
             setOpenLinkRisk(false);
-            setAlertUnitAreas(null);
-            setAlertProcess(null);
-            setAlertRisk(null);
+            setReqUnitAreas(null);
+            setReqProcess(null);
+            setReqRisk(null);
             setSelectedProcess(-1);
             setSelectedUnitArea(-1);
             setSelectedArea(-1);
@@ -1193,9 +1196,9 @@ function Doc_Estandares() {
           }}
           handleClose={() => {
             setOpenLinkRisk(false);
-            setAlertUnitAreas(null);
-            setAlertProcess(null);
-            setAlertRisk(null);
+            setReqUnitAreas(null);
+            setReqProcess(null);
+            setReqRisk(null);
             setSelectedProcess(-1);
             setSelectedUnitArea(-1);
             setSelectedArea(-1);
