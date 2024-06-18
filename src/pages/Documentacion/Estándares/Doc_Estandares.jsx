@@ -223,7 +223,7 @@ function modalLinkDetail(selectedRisk) {
                     className="col-md-12"
                     controlId="formGridDescripcion"
                   >
-                    <Form.Label>Descripcion del Riesgo</Form.Label>
+                    <Form.Label>Descripción del Riesgo</Form.Label>
                     <Form.Control
                       as="textarea"
                       placeholder="Ingrese descripción del riesgo"

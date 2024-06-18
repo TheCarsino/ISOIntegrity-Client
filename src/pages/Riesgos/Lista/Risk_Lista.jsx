@@ -221,7 +221,7 @@ function modalRiskDetail(selectedRisk) {
                     className="col-md-12"
                     controlId="formGridDescripcion"
                   >
-                    <Form.Label>Descripcion del Riesgo</Form.Label>
+                    <Form.Label>Descripción del Riesgo</Form.Label>
                     <Form.Control
                       as="textarea"
                       placeholder="Ingrese descripción del riesgo"
@@ -760,7 +760,7 @@ function modalNewRisks(
                     className="col-md-12"
                     controlId="formGridDescripcion"
                   >
-                    <Form.Label>Descripcion del Riesgo</Form.Label>
+                    <Form.Label>Descripción del Riesgo</Form.Label>
                     <Form.Control
                       as="textarea"
                       placeholder="Ingrese descripción del riesgo"
@@ -1333,7 +1333,7 @@ function modalEditRisks(
                     className="col-md-12"
                     controlId="formGridDescripcion"
                   >
-                    <Form.Label>Descripcion del Riesgo</Form.Label>
+                    <Form.Label>Descripción del Riesgo</Form.Label>
                     <Form.Control
                       as="textarea"
                       placeholder="Ingrese descripción del riesgo"
@@ -1763,9 +1763,9 @@ function Risk_Lista() {
               identificados en el sistema ISOIntegrity 37001. Estos riesgos se
               manejan conforme a la metodología de gestión de riesgos definida
               en la <b>norma ISO 31000:2018</b>. Cada riesgo está vinculado a
-              los procesos organizacionales y a los indicadores de riesgo del
-              Bribery Risk Index (BRI), asegurando una evaluación integral y
-              precisa.
+              los procesos organizacionales y a los indicadores de riesgo del{" "}
+              <b>Bribery Risk Index (BRI)</b>, asegurando una evaluación
+              integral y precisa.
             </p>
             <div className="header-risk-detail">
               <h5

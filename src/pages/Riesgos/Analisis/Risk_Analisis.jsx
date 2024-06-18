@@ -263,7 +263,7 @@ function modalIndDetail(riskIndicator) {
                   className="col-md-12"
                   controlId="formGridRequisitos"
                 >
-                  <Form.Label>Requisitos de la ISO 37001 asociados</Form.Label>
+                  <Form.Label>Requisitos de la ISO 37001 Asociados</Form.Label>
                   <div className="lista-requisitos">
                     {riskIndicator.Requisitos.map((req) => (
                       <>
@@ -605,7 +605,7 @@ function Risk_Analisis() {
               {orgAnalisis != null ? (
                 <div className="analisis-medicion">
                   <MetricBox
-                    topText="Evaluacion de Riesgos"
+                    topText="Evaluación de Riesgos"
                     middleText={orgAnalisis.inventario_riesgo.toString()}
                     bottomText={"Cantidad total de riesgos \n\0"}
                     order="top-bottom-middle"
@@ -617,7 +617,7 @@ function Risk_Analisis() {
                   <MetricBox
                     topText="Nivel de Riesgo del Índice BRI"
                     middleText={convertToPercentage(orgAnalisis.evaluacion_org)}
-                    bottomText="Evaluación resultante de de los últimos resultados del cuestionario asociados a los indicadores "
+                    bottomText="Evaluación resultante de los últimos resultados del cuestionario asociados a los indicadores "
                     order="top-bottom-middle"
                     status={statusPercentage(orgAnalisis.evaluacion_org)}
                     width="320px"
@@ -693,7 +693,7 @@ function Risk_Analisis() {
               Los indicadores de riesgo permiten cuantificar y evaluar el riesgo
               de soborno en la organización. El <b>Bribery Risk Index (BRI)</b>{" "}
               incluye una serie de 44 indicadores diseñados para evaluar
-              aspectos clave en relación a la <b>norma ISO 37001:2016</b> como
+              aspectos claves en relación a la <b>norma ISO 37001:2016</b> como
               la naturaleza de la organización, la debida diligencia y la
               relación con las partes interesadas. Junto con la gestión de
               riesgos, que se evalúa conforme a la metodología establecida de la{" "}

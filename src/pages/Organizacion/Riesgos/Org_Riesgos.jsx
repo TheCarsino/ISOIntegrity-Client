@@ -214,7 +214,7 @@ function Org_Riesgos() {
         <NavBar />
       </div>
       <div className="app-component bg-white">
-        <MainContainer title="Estructura de la Organizacion">
+        <MainContainer title="Riesgos por Estructura Organizacional">
           <div className="accordion-group">
             {structure != null && structure.length > 0 ? (
               <div className="accordion-body">

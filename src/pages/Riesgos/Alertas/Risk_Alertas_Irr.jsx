@@ -183,7 +183,7 @@ function modalAlertIrrDetail(selectedAlert) {
                     className="col-md-12"
                     controlId="formGridPosicion"
                   >
-                    <Form.Label>Posicion o Cargo</Form.Label>
+                    <Form.Label>Posición o Cargo</Form.Label>
                     <Form.Control
                       type="text"
                       placeholder="Ingrese su posición o cargo"
@@ -491,7 +491,7 @@ function modalNewAlertIrr(
                   className="col-md-12"
                   controlId="formGridPosicion"
                 >
-                  <Form.Label>Posicion o Cargo</Form.Label>
+                  <Form.Label>Posición o Cargo</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Ingrese su posición o cargo"

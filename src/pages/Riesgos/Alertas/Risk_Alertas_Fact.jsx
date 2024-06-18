@@ -95,7 +95,7 @@ function modalAlertFactDetail(selectedAlert) {
               El formulario para registrar un nuevo factor de soborno será
               visualizado por todos los gestores de riesgos asociados al
               sistema. Este presentará relevancia en el cálculo de los niveles
-              de riesgo de sobornos organizacional. Bajo esto, se establece el
+              de riesgo de sobornos organizacionales. Bajo esto, se establece el
               compromiso del llenado adecuado de los nuevos riesgos generados.
             </p>
           </div>
@@ -257,7 +257,7 @@ function modalNewAlertFact(
           El formulario para registrar un nuevo factor de soborno será
           visualizado por todos los gestores de riesgos asociados al sistema.
           Este presentará relevancia en el cálculo de los niveles de riesgo de
-          sobornos organizacional. Bajo esto, se establece el compromiso del
+          sobornos organizacionales. Bajo esto, se establece el compromiso del
           llenado adecuado de los nuevos riesgos generados.
         </p>
       </div>
@@ -812,7 +812,7 @@ function Risk_Alertas() {
               críticos que pueden corresponder en situaciones de sobornos a
               nivel estructural. Si se identifica algún problema o situación
               preocupante, se puede informar mediante el siguiente formulario
-              para que se tomen las medidas necesarias
+              para que se tomen las medidas necesarias.
             </p>
             <Button
               onClick={() => {

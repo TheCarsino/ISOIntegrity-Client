@@ -268,7 +268,7 @@ function Risk_Cuestionario_Categoria() {
                       className="text-primary header-text"
                       style={{ width: "85px" }}
                     >
-                      <b>Codigo</b>
+                      <b>Código</b>
                     </h6>
                     <h6
                       className="text-primary header-text"

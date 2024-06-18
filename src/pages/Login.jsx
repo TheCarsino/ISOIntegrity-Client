@@ -89,10 +89,10 @@ const Login = () => {
         <hr />
         <p className="text-dark text-center" style={{ fontSize: "0.825rem" }}>
           Basado en la norma ISO 37001, este sistema permite evaluar, controlar
-          y mitigar los riesgos de soborno, ofreciendo funciones como evaluación
-          de riesgos con indicadores cuantificables, gestión de casos de soborno
-          y divulgación de irregularidades, generación de informes y
-          documentación conforme a estándares ISO.
+          y mitigar los riesgos de soborno. ISOIntegrity 37001 ofrece funciones
+          como evaluación de riesgos con indicadores cuantificables, gestión de
+          casos de soborno y divulgación de irregularidades, generación de
+          informes y documentación conforme a estándares ISO.
         </p>
       </div>
       <div className="login-body">
