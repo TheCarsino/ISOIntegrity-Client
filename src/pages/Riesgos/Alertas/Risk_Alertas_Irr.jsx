@@ -322,7 +322,7 @@ function modalNewAlertIrr(
           denuncias presentadas.
         </p>
       </div>
-      {newWhistle != null && (
+      {newWhistle != null && alertAreas != null && alertAreas.length > 0 ? (
         <Form style={{ width: "100%" }}>
           <div className="alert-details">
             <h5 className="text-secondary">
@@ -701,6 +701,26 @@ function modalNewAlertIrr(
             </div>
           </div>
         </Form>
+      ) : newWhistle != null && alertAreas != null && alertAreas.length <= 0 ? (
+        <div className="no-risk">
+          <p className="text-primary text-center">
+            No es posible registrar un nuevo reporte de inquietudes si
+            previamente el sistema no presenta la estructura de la organización
+            registrada. Esto se debe a que no será posible vincular el riesgo.
+          </p>
+        </div>
+      ) : (
+        <div
+          style={{
+            width: "100%",
+            height: "120px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Spinner animation="border" variant="primary" size="lg" />
+        </div>
       )}
     </div>
   );
@@ -965,26 +985,32 @@ function Risk_Alertas() {
               problema o situación preocupante, se puede informar mediante el
               siguiente formulario para que se tomen las medidas necesarias
             </p>
-            <Button
-              onClick={() => {
-                setNewWhistle({
-                  risk_id: null,
-                  user_id: userData?.user_id,
-                  nombre_contacto: "",
-                  numero_contacto: "",
-                  correo_contacto: "",
-                  posicion_contacto: "",
-                  detalles_cargo: "",
-                  divulgacion: "",
-                  informacion_adicional: "",
-                });
-                setOpenNewAlertIrr(true);
-              }}
-              size="md"
-              variant="primary"
-            >
-              Registrar Nueva Irregularidad
-            </Button>
+            {alertAreas != null && alertAreas.length > 0 ? (
+              <Button
+                onClick={() => {
+                  setNewWhistle({
+                    risk_id: null,
+                    user_id: userData?.user_id,
+                    nombre_contacto: "",
+                    numero_contacto: "",
+                    correo_contacto: "",
+                    posicion_contacto: "",
+                    detalles_cargo: "",
+                    divulgacion: "",
+                    informacion_adicional: "",
+                  });
+                  setOpenNewAlertIrr(true);
+                }}
+                size="md"
+                variant="primary"
+              >
+                Registrar Nueva Irregularidad
+              </Button>
+            ) : (
+              <p className="text-secondary">
+                No es posible registrar una nueva irregularidad actualmente.
+              </p>
+            )}
           </div>
           <div className="lista-body-alert">
             <h4 className="text-primary">

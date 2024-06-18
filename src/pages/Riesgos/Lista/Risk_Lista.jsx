@@ -336,555 +336,569 @@ function modalNewRisks(
   return (
     <div className="modal-detailrisk-body">
       {newRisk != null &&
-        riskIndicators != null &&
-        riskIndicators.length > 0 &&
-        riskTreatments != null &&
-        riskTreatments.length > 0 &&
-        riskAreas != null &&
-        riskAreas.length > 0 && (
-          <Form style={{ width: "100%" }}>
-            <div className="risk-details">
-              <h5 className="text-secondary">
-                <b>Relación con Indicador de Riesgo</b>
-              </h5>
-              <div className="container-form-controls">
+      riskIndicators != null &&
+      riskIndicators.length > 0 &&
+      riskTreatments != null &&
+      riskTreatments.length > 0 &&
+      riskAreas != null &&
+      riskAreas.length > 0 ? (
+        <Form style={{ width: "100%" }}>
+          <div className="risk-details">
+            <h5 className="text-secondary">
+              <b>Relación con Indicador de Riesgo</b>
+            </h5>
+            <div className="container-form-controls">
+              <Row className="mb-3">
+                <Form.Group
+                  as={Col}
+                  className="col-md-3"
+                  controlId="formGridCodIndicador"
+                >
+                  <Form.Label>Código</Form.Label>
+                  <Form.Select
+                    value={
+                      newRisk.risk_indicator_id != null
+                        ? newRisk.risk_indicator_id
+                        : 1
+                    }
+                    onChange={(e) =>
+                      setNewRisk({
+                        ...newRisk,
+                        risk_indicator_id: parseInt(e.target.value),
+                      })
+                    }
+                  >
+                    {riskIndicators.map((ind) => (
+                      <option key={`ind-${ind.id}`} value={ind.id}>
+                        {ind.codigo}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+                <Form.Group
+                  as={Col}
+                  className="col-md-7"
+                  controlId="formGridNombIndicador"
+                >
+                  <Form.Label>Nombre del Indicador de Riesgo</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder=""
+                    readOnly
+                    value={
+                      newRisk.risk_indicator_id != null
+                        ? riskIndicators[
+                            riskIndicators.findIndex(
+                              (ind) => ind.id === newRisk.risk_indicator_id
+                            )
+                          ].nombre
+                        : ""
+                    }
+                  />
+                </Form.Group>
+                <Form.Group
+                  as={Col}
+                  className="col-md-2"
+                  controlId="formGridEscala"
+                >
+                  <Form.Label>Escala</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="0.00"
+                    value={newRisk.escala_indicador}
+                    onChange={(e) => {
+                      setNewRisk({
+                        ...newRisk,
+                        escala_indicador: isNaN(parseInt(e.target.value))
+                          ? 0
+                          : parseInt(e.target.value),
+                      });
+                    }}
+                  />
+                </Form.Group>
+                <Form.Text>
+                  La escala del riesgo sobre el indicador establece el nivel de
+                  impacto que tendrá este en la medición del nivel de riesgo del
+                  indicador
+                </Form.Text>
+              </Row>
+            </div>
+            <h5 className="text-secondary">
+              <b>Relación con Procesos de la Organización</b>
+            </h5>
+            <div className="container-form-controls">
+              {riskAreas != null && (
                 <Row className="mb-3">
                   <Form.Group
                     as={Col}
                     className="col-md-3"
-                    controlId="formGridCodIndicador"
+                    controlId="formGridCodArea"
                   >
-                    <Form.Label>Código</Form.Label>
+                    <Form.Label>Código del Área</Form.Label>
                     <Form.Select
-                      value={
-                        newRisk.risk_indicator_id != null
-                          ? newRisk.risk_indicator_id
-                          : 1
-                      }
+                      value={selectedArea != null ? selectedArea : -1}
                       onChange={(e) =>
-                        setNewRisk({
-                          ...newRisk,
-                          risk_indicator_id: parseInt(e.target.value),
-                        })
+                        setSelectedArea(parseInt(e.target.value))
                       }
                     >
-                      {riskIndicators.map((ind) => (
-                        <option key={`ind-${ind.id}`} value={ind.id}>
-                          {ind.codigo}
+                      <option key={`default`} value={-1}>
+                        -
+                      </option>
+                      {riskAreas.map((area) => (
+                        <option key={`area-${area.id}`} value={area.id}>
+                          {area.codigo}
                         </option>
                       ))}
                     </Form.Select>
                   </Form.Group>
                   <Form.Group
                     as={Col}
-                    className="col-md-7"
-                    controlId="formGridNombIndicador"
+                    className="col-md-9"
+                    controlId="formGridNombArea"
                   >
-                    <Form.Label>Nombre del Indicador de Riesgo</Form.Label>
+                    <Form.Label>Nombre del Área</Form.Label>
                     <Form.Control
                       type="text"
                       placeholder=""
                       readOnly
                       value={
-                        newRisk.risk_indicator_id != null
-                          ? riskIndicators[
-                              riskIndicators.findIndex(
-                                (ind) => ind.id === newRisk.risk_indicator_id
+                        selectedArea != -1
+                          ? riskAreas[
+                              riskAreas.findIndex(
+                                (area) => area.id === selectedArea
                               )
                             ].nombre
                           : ""
                       }
                     />
                   </Form.Group>
-                  <Form.Group
-                    as={Col}
-                    className="col-md-2"
-                    controlId="formGridEscala"
-                  >
-                    <Form.Label>Escala</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="0.00"
-                      value={newRisk.escala_indicador}
-                      onChange={(e) => {
-                        setNewRisk({
-                          ...newRisk,
-                          escala_indicador: isNaN(parseInt(e.target.value))
-                            ? 0
-                            : parseInt(e.target.value),
-                        });
-                      }}
-                    />
-                  </Form.Group>
-                  <Form.Text>
-                    La escala del riesgo sobre el indicador establece el nivel
-                    de impacto que tendrá este en la medición del nivel de
-                    riesgo del indicador
-                  </Form.Text>
                 </Row>
-              </div>
-              <h5 className="text-secondary">
-                <b>Relación con Procesos de la Organización</b>
-              </h5>
-              <div className="container-form-controls">
-                {riskAreas != null && (
-                  <Row className="mb-3">
-                    <Form.Group
-                      as={Col}
-                      className="col-md-3"
-                      controlId="formGridCodArea"
-                    >
-                      <Form.Label>Código del Área</Form.Label>
-                      <Form.Select
-                        value={selectedArea != null ? selectedArea : -1}
-                        onChange={(e) =>
-                          setSelectedArea(parseInt(e.target.value))
-                        }
-                      >
-                        <option key={`default`} value={-1}>
-                          -
-                        </option>
-                        {riskAreas.map((area) => (
-                          <option key={`area-${area.id}`} value={area.id}>
-                            {area.codigo}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
-                    <Form.Group
-                      as={Col}
-                      className="col-md-9"
-                      controlId="formGridNombArea"
-                    >
-                      <Form.Label>Nombre del Área</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder=""
-                        readOnly
-                        value={
-                          selectedArea != -1
-                            ? riskAreas[
-                                riskAreas.findIndex(
-                                  (area) => area.id === selectedArea
-                                )
-                              ].nombre
-                            : ""
-                        }
-                      />
-                    </Form.Group>
-                  </Row>
-                )}
-                {riskUnitAreas != null && riskUnitAreas.length > 0 && (
-                  <Row className="mb-3">
-                    <Form.Group
-                      as={Col}
-                      className="col-md-3"
-                      controlId="formGridCodUnidad"
-                    >
-                      <Form.Label>Código de la Unidad</Form.Label>
-                      <Form.Select
-                        value={selectedUnitArea != null ? selectedUnitArea : -1}
-                        onChange={(e) =>
-                          setSelectedUnitArea(parseInt(e.target.value))
-                        }
-                      >
-                        <option key={`default`} value={-1}>
-                          -
-                        </option>
-                        {riskUnitAreas.map((unit) => (
-                          <option key={`unit-${unit.id}`} value={unit.id}>
-                            {unit.codigo}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
-                    <Form.Group
-                      as={Col}
-                      className="col-md-9"
-                      controlId="formGridNombUnidad"
-                    >
-                      <Form.Label>Nombre de la Unidad</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder=""
-                        readOnly
-                        value={
-                          selectedUnitArea != -1
-                            ? riskUnitAreas[
-                                riskUnitAreas.findIndex(
-                                  (unit) => unit.id === selectedUnitArea
-                                )
-                              ].nombre
-                            : ""
-                        }
-                      />
-                    </Form.Group>
-                    <Form.Text>
-                      En caso el código de la unidad coincida con el del área,
-                      se mostrarán la lista de procesos asociados al área.
-                    </Form.Text>
-                  </Row>
-                )}
-                {riskProcess != null && riskProcess.length > 0 && (
-                  <Row className="mb-3">
-                    <Form.Group
-                      as={Col}
-                      className="col-md-3"
-                      controlId="formGridCodProceso"
-                    >
-                      <Form.Label>Código del Proceso</Form.Label>
-                      <Form.Select
-                        value={
-                          newRisk.process_id != null ? newRisk.process_id : -1
-                        }
-                        onChange={(e) =>
-                          setNewRisk({
-                            ...newRisk,
-                            process_id: parseInt(e.target.value),
-                          })
-                        }
-                      >
-                        <option key={`default`} value={-1}>
-                          -
-                        </option>
-                        {riskProcess.map((process) => (
-                          <option
-                            key={`process-${process.id}`}
-                            value={process.id}
-                          >
-                            {process.codigo}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
-                    <Form.Group
-                      as={Col}
-                      className="col-md-9"
-                      controlId="formGridNombProceso"
-                    >
-                      <Form.Label>
-                        Nombre del Proceso
-                        {riskUnitAreas != null &&
-                          selectedUnitArea != -1 &&
-                          (riskUnitAreas[
-                            riskUnitAreas.findIndex(
-                              (unit) => unit.id === selectedUnitArea
-                            )
-                          ].es_area
-                            ? " asociado al Área"
-                            : " asociado a la Unidad")}
-                      </Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder=""
-                        readOnly
-                        value={
-                          riskProcess != null &&
-                          riskProcess.length > 0 &&
-                          newRisk.process_id != null &&
-                          newRisk.process_id != -1
-                            ? riskProcess[
-                                riskProcess.findIndex(
-                                  (process) => process.id === newRisk.process_id
-                                )
-                              ] != null
-                              ? riskProcess[
-                                  riskProcess.findIndex(
-                                    (process) =>
-                                      process.id === newRisk.process_id
-                                  )
-                                ].nombre
-                              : ""
-                            : ""
-                        }
-                      />
-                    </Form.Group>
-                  </Row>
-                )}
-              </div>
-              <h5 className="text-secondary">
-                <b>Información del Riesgo</b>
-              </h5>
-              <div className="container-form-controls">
+              )}
+              {riskUnitAreas != null && riskUnitAreas.length > 0 && (
                 <Row className="mb-3">
                   <Form.Group
                     as={Col}
                     className="col-md-3"
-                    controlId="formGridCodRiesgo"
+                    controlId="formGridCodUnidad"
                   >
-                    <Form.Label>Código del Riesgo</Form.Label>
+                    <Form.Label>Código de la Unidad</Form.Label>
+                    <Form.Select
+                      value={selectedUnitArea != null ? selectedUnitArea : -1}
+                      onChange={(e) =>
+                        setSelectedUnitArea(parseInt(e.target.value))
+                      }
+                    >
+                      <option key={`default`} value={-1}>
+                        -
+                      </option>
+                      {riskUnitAreas.map((unit) => (
+                        <option key={`unit-${unit.id}`} value={unit.id}>
+                          {unit.codigo}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                  <Form.Group
+                    as={Col}
+                    className="col-md-9"
+                    controlId="formGridNombUnidad"
+                  >
+                    <Form.Label>Nombre de la Unidad</Form.Label>
                     <Form.Control
                       type="text"
                       placeholder=""
-                      value={newRisk.codigo}
-                      onChange={(e) => {
-                        setNewRisk({
-                          ...newRisk,
-                          codigo: e.target.value,
-                        });
-                      }}
-                    />
-                  </Form.Group>
-                  {riskTreatments != null && (
-                    <Form.Group
-                      as={Col}
-                      className="col-md-3"
-                      controlId="formGridTratamiento"
-                    >
-                      <Form.Label>Tratamiento</Form.Label>
-                      <Form.Select
-                        value={
-                          newRisk.risk_treatment_id != null
-                            ? newRisk.risk_treatment_id
-                            : -1
-                        }
-                        onChange={(e) =>
-                          setNewRisk({
-                            ...newRisk,
-                            risk_treatment_id: parseInt(e.target.value),
-                          })
-                        }
-                      >
-                        <option key={`default`} value={-1}>
-                          Sin evaluar
-                        </option>
-                        {riskTreatments.map((treatment) => (
-                          <option
-                            key={`treatment-${treatment.id}`}
-                            value={treatment.id}
-                          >
-                            {treatment.nombre}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
-                  )}
-                  <Form.Group
-                    as={Col}
-                    className="col-md-2"
-                    controlId="formGridProbabilidad"
-                  >
-                    <Form.Label>Probabilidad</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="de 10"
-                      value={newRisk.probabilidad}
-                      onChange={(e) => {
-                        setNewRisk({
-                          ...newRisk,
-                          probabilidad:
-                            e.target.value != ""
-                              ? parseFloat(e.target.value)
-                              : 0,
-                          severidad_riesgo:
-                            e.target.value != ""
-                              ? (parseFloat(e.target.value) * newRisk.impacto) /
-                                10
-                              : 0,
-                        });
-                      }}
-                    />
-                  </Form.Group>
-
-                  <Form.Group
-                    as={Col}
-                    className="col-md-2"
-                    controlId="formGridImpacto"
-                  >
-                    <Form.Label>Impacto</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="de 10"
-                      value={newRisk.impacto}
-                      onChange={(e) => {
-                        setNewRisk({
-                          ...newRisk,
-                          impacto:
-                            e.target.value != ""
-                              ? parseFloat(e.target.value)
-                              : 0,
-                          severidad_riesgo:
-                            e.target.value != ""
-                              ? (parseFloat(e.target.value) *
-                                  newRisk.probabilidad) /
-                                10
-                              : 0,
-                        });
-                      }}
-                    />
-                  </Form.Group>
-                  <Form.Group
-                    as={Col}
-                    className="col-md-2"
-                    controlId="formGridSeveridad"
-                  >
-                    <Form.Label>Severidad</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="de 100"
                       readOnly
-                      value={newRisk.impacto * newRisk.probabilidad}
+                      value={
+                        selectedUnitArea != -1
+                          ? riskUnitAreas[
+                              riskUnitAreas.findIndex(
+                                (unit) => unit.id === selectedUnitArea
+                              )
+                            ].nombre
+                          : ""
+                      }
                     />
                   </Form.Group>
-                  <Form.Group as={Col} className="col-md-6"></Form.Group>
-                  <Form.Group as={Col} className="col-md-6">
-                    <Form.Text>
-                      Severidad = Cálculo de Probabilidad [1-10] x Impacto
-                      [1-10]
-                    </Form.Text>
-                  </Form.Group>
+                  <Form.Text>
+                    En caso el código de la unidad coincida con el del área, se
+                    mostrarán la lista de procesos asociados al área.
+                  </Form.Text>
                 </Row>
+              )}
+              {riskProcess != null && riskProcess.length > 0 && (
                 <Row className="mb-3">
                   <Form.Group
                     as={Col}
-                    className="col-md-12"
-                    controlId="formGridNombre"
+                    className="col-md-3"
+                    controlId="formGridCodProceso"
                   >
-                    <Form.Label>Nombre del Riesgo</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Ingrese nombre del riesgo"
-                      value={newRisk.nombre}
-                      onChange={(e) => {
+                    <Form.Label>Código del Proceso</Form.Label>
+                    <Form.Select
+                      value={
+                        newRisk.process_id != null ? newRisk.process_id : -1
+                      }
+                      onChange={(e) =>
                         setNewRisk({
                           ...newRisk,
-                          nombre: e.target.value,
-                        });
-                      }}
+                          process_id: parseInt(e.target.value),
+                        })
+                      }
+                    >
+                      <option key={`default`} value={-1}>
+                        -
+                      </option>
+                      {riskProcess.map((process) => (
+                        <option
+                          key={`process-${process.id}`}
+                          value={process.id}
+                        >
+                          {process.codigo}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                  <Form.Group
+                    as={Col}
+                    className="col-md-9"
+                    controlId="formGridNombProceso"
+                  >
+                    <Form.Label>
+                      Nombre del Proceso
+                      {riskUnitAreas != null &&
+                        selectedUnitArea != -1 &&
+                        (riskUnitAreas[
+                          riskUnitAreas.findIndex(
+                            (unit) => unit.id === selectedUnitArea
+                          )
+                        ].es_area
+                          ? " asociado al Área"
+                          : " asociado a la Unidad")}
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder=""
+                      readOnly
+                      value={
+                        riskProcess != null &&
+                        riskProcess.length > 0 &&
+                        newRisk.process_id != null &&
+                        newRisk.process_id != -1
+                          ? riskProcess[
+                              riskProcess.findIndex(
+                                (process) => process.id === newRisk.process_id
+                              )
+                            ] != null
+                            ? riskProcess[
+                                riskProcess.findIndex(
+                                  (process) => process.id === newRisk.process_id
+                                )
+                              ].nombre
+                            : ""
+                          : ""
+                      }
                     />
                   </Form.Group>
                 </Row>
+              )}
+            </div>
+            <h5 className="text-secondary">
+              <b>Información del Riesgo</b>
+            </h5>
+            <div className="container-form-controls">
+              <Row className="mb-3">
+                <Form.Group
+                  as={Col}
+                  className="col-md-3"
+                  controlId="formGridCodRiesgo"
+                >
+                  <Form.Label>Código del Riesgo</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder=""
+                    value={newRisk.codigo}
+                    onChange={(e) => {
+                      setNewRisk({
+                        ...newRisk,
+                        codigo: e.target.value,
+                      });
+                    }}
+                  />
+                </Form.Group>
+                {riskTreatments != null && (
+                  <Form.Group
+                    as={Col}
+                    className="col-md-3"
+                    controlId="formGridTratamiento"
+                  >
+                    <Form.Label>Tratamiento</Form.Label>
+                    <Form.Select
+                      value={
+                        newRisk.risk_treatment_id != null
+                          ? newRisk.risk_treatment_id
+                          : -1
+                      }
+                      onChange={(e) =>
+                        setNewRisk({
+                          ...newRisk,
+                          risk_treatment_id: parseInt(e.target.value),
+                        })
+                      }
+                    >
+                      <option key={`default`} value={-1}>
+                        Sin evaluar
+                      </option>
+                      {riskTreatments.map((treatment) => (
+                        <option
+                          key={`treatment-${treatment.id}`}
+                          value={treatment.id}
+                        >
+                          {treatment.nombre}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                )}
+                <Form.Group
+                  as={Col}
+                  className="col-md-2"
+                  controlId="formGridProbabilidad"
+                >
+                  <Form.Label>Probabilidad</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="de 10"
+                    value={newRisk.probabilidad}
+                    onChange={(e) => {
+                      setNewRisk({
+                        ...newRisk,
+                        probabilidad:
+                          e.target.value != "" ? parseFloat(e.target.value) : 0,
+                        severidad_riesgo:
+                          e.target.value != ""
+                            ? (parseFloat(e.target.value) * newRisk.impacto) /
+                              10
+                            : 0,
+                      });
+                    }}
+                  />
+                </Form.Group>
+
+                <Form.Group
+                  as={Col}
+                  className="col-md-2"
+                  controlId="formGridImpacto"
+                >
+                  <Form.Label>Impacto</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="de 10"
+                    value={newRisk.impacto}
+                    onChange={(e) => {
+                      setNewRisk({
+                        ...newRisk,
+                        impacto:
+                          e.target.value != "" ? parseFloat(e.target.value) : 0,
+                        severidad_riesgo:
+                          e.target.value != ""
+                            ? (parseFloat(e.target.value) *
+                                newRisk.probabilidad) /
+                              10
+                            : 0,
+                      });
+                    }}
+                  />
+                </Form.Group>
+                <Form.Group
+                  as={Col}
+                  className="col-md-2"
+                  controlId="formGridSeveridad"
+                >
+                  <Form.Label>Severidad</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="de 100"
+                    readOnly
+                    value={newRisk.impacto * newRisk.probabilidad}
+                  />
+                </Form.Group>
+                <Form.Group as={Col} className="col-md-6"></Form.Group>
+                <Form.Group as={Col} className="col-md-6">
+                  <Form.Text>
+                    Severidad = Cálculo de Probabilidad [1-10] x Impacto [1-10]
+                  </Form.Text>
+                </Form.Group>
+              </Row>
+              <Row className="mb-3">
+                <Form.Group
+                  as={Col}
+                  className="col-md-12"
+                  controlId="formGridNombre"
+                >
+                  <Form.Label>Nombre del Riesgo</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Ingrese nombre del riesgo"
+                    value={newRisk.nombre}
+                    onChange={(e) => {
+                      setNewRisk({
+                        ...newRisk,
+                        nombre: e.target.value,
+                      });
+                    }}
+                  />
+                </Form.Group>
+              </Row>
+              <Row className="mb-3">
+                <Form.Group
+                  as={Col}
+                  className="col-md-12"
+                  controlId="formGridDescripcion"
+                >
+                  <Form.Label>Descripción del Riesgo</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    placeholder="Ingrese descripción del riesgo"
+                    value={newRisk.descripcion}
+                    onChange={(e) => {
+                      setNewRisk({
+                        ...newRisk,
+                        descripcion: e.target.value,
+                      });
+                    }}
+                  />
+                </Form.Group>
+              </Row>
+            </div>
+            <div className="risk-details">
+              <h5 className="text-secondary">
+                <b>Justificación y Detalles del Riesgo</b>
+              </h5>
+              <div className="container-form-controls">
                 <Row className="mb-3">
                   <Form.Group
                     as={Col}
                     className="col-md-12"
-                    controlId="formGridDescripcion"
+                    controlId="formGridSintomas"
                   >
-                    <Form.Label>Descripción del Riesgo</Form.Label>
+                    <Form.Label>Síntomas del Riesgo</Form.Label>
                     <Form.Control
                       as="textarea"
-                      placeholder="Ingrese descripción del riesgo"
-                      value={newRisk.descripcion}
+                      placeholder="Ingrese sintomas del riesgo"
+                      value={newRisk.sintomas}
                       onChange={(e) => {
                         setNewRisk({
                           ...newRisk,
-                          descripcion: e.target.value,
+                          sintomas: e.target.value,
+                        });
+                      }}
+                    />
+                  </Form.Group>
+                </Row>
+                <Row className="mb-3">
+                  <Form.Group
+                    as={Col}
+                    className="col-md-12"
+                    controlId="formGridCausas"
+                  >
+                    <Form.Label>Causas del Riesgo</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      placeholder="Ingrese causas del riesgo"
+                      value={newRisk.causas}
+                      onChange={(e) => {
+                        setNewRisk({
+                          ...newRisk,
+                          causas: e.target.value,
+                        });
+                      }}
+                    />
+                  </Form.Group>
+                </Row>
+                <Row className="mb-3">
+                  <Form.Group
+                    as={Col}
+                    className="col-md-12"
+                    controlId="formGridPlan"
+                  >
+                    <Form.Label>Plan de Acción</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      placeholder="Ingrese plan de acción del riesgo"
+                      value={newRisk.plan_accion}
+                      onChange={(e) => {
+                        setNewRisk({
+                          ...newRisk,
+                          plan_accion: e.target.value,
+                        });
+                      }}
+                    />
+                  </Form.Group>
+                </Row>
+                <Row className="mb-3">
+                  <Form.Group
+                    as={Col}
+                    className="col-md-12"
+                    controlId="formGridResponsables"
+                  >
+                    <Form.Label>Responsables Encargados</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      placeholder="Ingrese lista de responsables encargados del control del riesgo"
+                      value={newRisk.responsables_encargados}
+                      onChange={(e) => {
+                        setNewRisk({
+                          ...newRisk,
+                          responsables_encargados: e.target.value,
+                        });
+                      }}
+                    />
+                  </Form.Group>
+                </Row>
+                <Row className="mb-3">
+                  <Form.Group
+                    as={Col}
+                    className="col-md-12"
+                    controlId="formGridEspecificaciones"
+                  >
+                    <Form.Label>Especificaciones de Controles</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      placeholder="Ingrese las especificaciones relacionadas a los controles aplicados"
+                      value={newRisk.especificacion}
+                      onChange={(e) => {
+                        setNewRisk({
+                          ...newRisk,
+                          especificacion: e.target.value,
                         });
                       }}
                     />
                   </Form.Group>
                 </Row>
               </div>
-              <div className="risk-details">
-                <h5 className="text-secondary">
-                  <b>Justificación y Detalles del Riesgo</b>
-                </h5>
-                <div className="container-form-controls">
-                  <Row className="mb-3">
-                    <Form.Group
-                      as={Col}
-                      className="col-md-12"
-                      controlId="formGridSintomas"
-                    >
-                      <Form.Label>Síntomas del Riesgo</Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        placeholder="Ingrese sintomas del riesgo"
-                        value={newRisk.sintomas}
-                        onChange={(e) => {
-                          setNewRisk({
-                            ...newRisk,
-                            sintomas: e.target.value,
-                          });
-                        }}
-                      />
-                    </Form.Group>
-                  </Row>
-                  <Row className="mb-3">
-                    <Form.Group
-                      as={Col}
-                      className="col-md-12"
-                      controlId="formGridCausas"
-                    >
-                      <Form.Label>Causas del Riesgo</Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        placeholder="Ingrese causas del riesgo"
-                        value={newRisk.causas}
-                        onChange={(e) => {
-                          setNewRisk({
-                            ...newRisk,
-                            causas: e.target.value,
-                          });
-                        }}
-                      />
-                    </Form.Group>
-                  </Row>
-                  <Row className="mb-3">
-                    <Form.Group
-                      as={Col}
-                      className="col-md-12"
-                      controlId="formGridPlan"
-                    >
-                      <Form.Label>Plan de Acción</Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        placeholder="Ingrese plan de acción del riesgo"
-                        value={newRisk.plan_accion}
-                        onChange={(e) => {
-                          setNewRisk({
-                            ...newRisk,
-                            plan_accion: e.target.value,
-                          });
-                        }}
-                      />
-                    </Form.Group>
-                  </Row>
-                  <Row className="mb-3">
-                    <Form.Group
-                      as={Col}
-                      className="col-md-12"
-                      controlId="formGridResponsables"
-                    >
-                      <Form.Label>Responsables Encargados</Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        placeholder="Ingrese lista de responsables encargados del control del riesgo"
-                        value={newRisk.responsables_encargados}
-                        onChange={(e) => {
-                          setNewRisk({
-                            ...newRisk,
-                            responsables_encargados: e.target.value,
-                          });
-                        }}
-                      />
-                    </Form.Group>
-                  </Row>
-                  <Row className="mb-3">
-                    <Form.Group
-                      as={Col}
-                      className="col-md-12"
-                      controlId="formGridEspecificaciones"
-                    >
-                      <Form.Label>Especificaciones de Controles</Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        placeholder="Ingrese las especificaciones relacionadas a los controles aplicados"
-                        value={newRisk.especificacion}
-                        onChange={(e) => {
-                          setNewRisk({
-                            ...newRisk,
-                            especificacion: e.target.value,
-                          });
-                        }}
-                      />
-                    </Form.Group>
-                  </Row>
-                </div>
-              </div>
             </div>
-          </Form>
-        )}
+          </div>
+        </Form>
+      ) : newRisk != null && riskAreas != null && riskAreas.length <= 0 ? (
+        <div className="no-risk">
+          <p className="text-primary text-center">
+            No es posible crear un riesgo si previamente no se ha actualizado la
+            estructura de la organización en el sistema. Esto se debe a que no
+            se podrá asociar el riesgo a un proceso.
+          </p>
+        </div>
+      ) : (
+        <div
+          style={{
+            width: "100%",
+            height: "120px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Spinner animation="border" variant="primary" size="lg" />
+        </div>
+      )}
     </div>
   );
 }

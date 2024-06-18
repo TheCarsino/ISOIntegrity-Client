@@ -34,6 +34,7 @@ import { getArea, getUnitAreabyAreaId } from "../../../services/area.services";
 import { getProcessbyUnitAreaId } from "../../../services/unitarea.services";
 import { getRiskbyProcessId } from "../../../services/process.services";
 import Helper from "../../../components/PopOvers/Helper";
+import Spinner from "react-bootstrap/esm/Spinner";
 
 function modalLinkDetail(selectedRisk) {
   return (
@@ -338,7 +339,7 @@ function modalNewLink(
 ) {
   return (
     <div className="modal-alert-body">
-      {newLink != null && (
+      {newLink != null && alertAreas != null && alertAreas.length > 0 ? (
         <Form style={{ width: "100%" }}>
           <div className="container-form-controls">
             {alertAreas != null && (
@@ -590,6 +591,26 @@ function modalNewLink(
             )}
           </div>
         </Form>
+      ) : newLink != null && alertAreas != null && alertAreas.length <= 0 ? (
+        <div className="no-risk">
+          <p className="text-primary text-center">
+            No es posible asociar un riesgo si previamente no se ha actualizado
+            la estructura de la organización en el sistema. El sistema no
+            logrará reconocer algún riesgo.
+          </p>
+        </div>
+      ) : (
+        <div
+          style={{
+            width: "100%",
+            height: "120px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Spinner animation="border" variant="primary" size="lg" />
+        </div>
       )}
     </div>
   );
