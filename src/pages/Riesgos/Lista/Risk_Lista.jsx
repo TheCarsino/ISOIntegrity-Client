@@ -1987,7 +1987,7 @@ function Risk_Lista() {
           footer={
             newRisk != null &&
             riskAreas != null &&
-            riskAreas.length > 0 && [("Guardar", "Cerrar")]
+            riskAreas.length > 0 && ["Guardar", "Cerrar"]
           }
           size="lg"
           body={modalNewRisks(
